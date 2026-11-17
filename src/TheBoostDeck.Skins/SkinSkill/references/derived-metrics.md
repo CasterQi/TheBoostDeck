@@ -9,7 +9,7 @@ The host sends only the canonical `snapshot` fields. A skin may calculate additi
 3. Prefer a direct host field when one exists. For example, use `memory.usage` instead of re-deriving used percentage.
 4. Recompute on every `snapshot`; never keep a stale derived value.
 5. Mark the value as derived in the UI (a small label, tooltip, or detail line). Never present an estimate as a measured sensor value.
-6. If an input is missing or unavailable, the derived value is unavailable. Render `—` or a localized no-data state; never substitute zero.
+6. If an input is marked `unavailable` in the platform inventory, omit the derived value from the layout. If a previously available input drops out at runtime, hide or collapse the widget, or show a compact no-data state; never substitute zero.
 7. Do not derive from `platform.json.sensors` or another raw-only sensor at runtime. Those entries are inventory data, not a live feed.
 
 ## Safe starting formulas
@@ -56,4 +56,4 @@ function derivePercent(part, total) {
 }
 ```
 
-Use the nullable result to choose the existing placeholder path. Never turn a missing derived result into `0`.
+Use the nullable result to omit the derived widget when its inputs are unavailable on this machine. Only a metric that was available at export and then disappears at runtime may use a compact temporary no-data state. Never turn a missing derived result into `0`.

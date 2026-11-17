@@ -1,6 +1,6 @@
 ---
 name: theboostdeck-skin-author
-description: Create, redesign, or extend a TheBoostDeck performance HUD as a distributable .boostskin package. Use when the user asks for a custom gaming secondary-display dashboard, a skin/theme, a visual redesign from a reference image, or a telemetry layout for CPU, GPU, memory, storage, network, motherboard, fans, or temperatures. This exported skill contains this machine's complete sensor inventory, latest snapshot, and safe derived-metric candidates; read them before designing so unavailable sensors do not become broken widgets.
+description: Create, redesign, or extend a TheBoostDeck performance HUD as a distributable .boostskin package. Use when the user asks for a custom gaming secondary-display dashboard, a skin/theme, a visual redesign from a reference image, or a telemetry layout for CPU, GPU, memory, storage, network, motherboard, fans, or temperatures. This exported skill contains this machine's complete sensor inventory, latest snapshot, and safe derived-metric candidates; read them before designing so sensors this machine cannot read are omitted instead of becoming empty widgets.
 ---
 
 # TheBoostDeck Skin Author
@@ -12,8 +12,9 @@ Create a complete `.boostskin` package, not just a static mockup.
 1. Read `references/platform-summary.md` first, then `references/platform.json`.
 2. Treat every hardware and sensor name as literal source data. Do not translate, rename, or "clean up" names reported by the hardware layer.
 3. Use `platform.json` to learn what this machine exposes. `snapshot` contains the canonical fields delivered to a running skin. `sensors` is the full raw inventory for discovery; a raw sensor that is not represented in `snapshot` is not available to the skin UI yet.
-4. Read `references/derived-metrics.md` before adding a computed value. `platform.json.derivedMetrics` lists formulas that can be calculated from this machine's direct `snapshot` fields; it is a starting point, not a live data feed.
-5. Never invent a value, a sensor, a hardware capability, or a conversion factor that is not in the inventory or snapshot.
+4. Build the design only from metrics marked `available` in the platform inventory. Metrics and hardware groups that are `unavailable` on this machine must be omitted from the layout; do not reserve empty cards, rows, or "N/A" slots for them.
+5. Read `references/derived-metrics.md` before adding a computed value. `platform.json.derivedMetrics` lists formulas that can be calculated from this machine's direct `snapshot` fields; it is a starting point, not a live data feed.
+6. Never invent a value, a sensor, a hardware capability, or a conversion factor that is not in the inventory or snapshot.
 
 ## Deliverable
 
@@ -29,9 +30,9 @@ python scripts/validate_boostskin.py path/to/your-skin.boostskin
 
 ## Workflow
 
-1. Read the platform files. Note which canonical metrics are `available` and which are unavailable.
+1. Read the platform files. Mark which canonical metrics are `available`; keep only those metrics in the design and omit metrics/groups that are `unavailable` on this machine.
 2. Decide the visual direction from the user's reference image or description. When the request is underspecified, choose a coherent direction rather than producing a generic card grid.
-3. Plan the layout for both 16:9 landscape and 9:16 portrait. The layout must remain usable when a metric or an entire hardware group is unavailable.
+3. Plan the layout for both 16:9 landscape and 9:16 portrait, composed from the available metrics only. If a previously available metric drops out during runtime, the layout must collapse or show a compact no-data state without breaking the composition.
 4. Build the skin:
    - Use plain HTML, CSS, and JavaScript. No React, build step, bundler, or server.
    - Keep the main entry self-contained, or use relative local assets inside the package.
@@ -53,14 +54,15 @@ The host does not send every useful display value. You may compute additional va
 - Good examples are free memory (`total - used`), free VRAM, drive free space, combined network throughput, and CPU + GPU power.
 - Prefer a direct host metric when one exists; use the derivation only as a fallback or a genuinely new presentation value.
 - Never derive FPS, fan RPM from PWM, total PSU power, per-core values from aggregate load, or a value from a raw sensor that is not in `snapshot`.
-- If an input is unavailable, the derived value is unavailable too. Render the same deliberate placeholder; never substitute zero.
+- If an input is unavailable in the platform inventory, omit the derived value from the design. If a previously available input drops out during runtime, hide or collapse the derived widget, or show a compact no-data state; never substitute zero.
 
 ## Design requirements
 
 - Read `references/design-guide.md` before styling. Match the TheBoostDeck visual language unless the user explicitly asks for another direction.
 - Prioritize a high-signal HUD: large primary values, quiet secondary labels, readable at a glance from a secondary display.
 - Landscape and portrait must both be first-class. Use CSS grid/flex and container queries or aspect-ratio media queries; never hardcode a single viewport size.
-- A missing metric must degrade to a deliberate placeholder such as `—` or "No data", with a short reason when useful. Do not show zero unless zero is a real reading.
+- **Widget set comes from platform availability.** Omit metrics marked `unavailable` on this machine; do not reserve empty cards, rows, or "N/A" slots. Omit an entire hardware group when all its metrics are unavailable, and rebalance the available modules.
+- A metric that was available at export but drops out during runtime is a different case: collapse it or show one compact no-data state. Do not show zero unless zero is a real reading.
 - Keep resource usage low: no continuous animation loops that are not needed, no large dependencies, no polling faster than the host snapshot cadence.
 - Use the platform's language conventions. Preserve raw sensor names; UI labels may use the user's language.
 
@@ -76,7 +78,7 @@ The host does not send every useful display value. You may compute additional va
 
 Before finishing, confirm:
 
-1. Every live value in the UI comes from `snapshot`, with a safe unavailable state.
+1. Every live widget is backed by a metric marked `available` in the platform inventory; no permanently unavailable metric is shown.
 2. The layout has been checked at a landscape and a portrait aspect ratio.
 3. No sensor or hardware name has been translated or fabricated.
 4. The archive has `skin.json` at its root and the entry file exists.

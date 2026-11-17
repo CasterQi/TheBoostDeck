@@ -52,7 +52,7 @@ Every leaf metric follows `MetricValue`:
 - `reason`: string or `null`.
 - `source`: string or `null`.
 
-`CpuMetrics.Name` and `GpuMetrics.Name` are strings. `DriveMetrics.Name` and `.Label` are strings. Treat a missing value, a null value, or a non-`available` status as unavailable. Render a placeholder rather than a fabricated number.
+`CpuMetrics.Name` and `GpuMetrics.Name` are strings. `DriveMetrics.Name` and `.Label` are strings. Treat a missing value, a null value, or a non-`available` status as unavailable. If the metric was already unavailable in the platform inventory, do not create a widget for it. For an unexpected runtime loss of a previously available metric, show a compact no-data state; never fabricate a number.
 
 ### `settings`
 
@@ -112,6 +112,6 @@ Derived values must:
 - use the host's units and avoid invented conversion assumptions;
 - be recomputed on every snapshot;
 - be labeled as derived in the UI;
-- fall back to the unavailable placeholder when any input is missing.
+- omit the derived widget when any required input is already unavailable in the platform inventory; if a previously available input drops out at runtime, hide/collapse it or use a compact no-data state.
 
 Do not derive FPS, fan RPM from fan control, total PSU power, per-core values from aggregate CPU load, or any value from a raw-only sensor.

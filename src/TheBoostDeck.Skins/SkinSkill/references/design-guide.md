@@ -35,10 +35,11 @@ Treat both orientations as designed states, not a desktop page squeezed into a p
 
 ## Missing data
 
-A sensor that is unavailable is a legitimate state. Design for it from the start:
+Platform availability decides the widget set, not runtime luck:
 
-- Placeholder: `—` with a short label such as "No sensor" or the localized equivalent.
-- If a whole group is unavailable, collapse it or show one quiet status row instead of an empty card.
+- Metrics marked `unavailable` in `platform.json` are absent on this machine. Omit them from the design entirely: no empty card, no "N/A" slot, no reserved row. If a whole hardware group is unavailable, omit the group and rebalance the remaining modules.
+- Never build a live widget from a raw sensor that is not represented in `snapshot`; it will never receive a live value.
+- If a metric was available at export but drops out during runtime, collapse the widget or show one compact no-data state. This is the only case that needs a temporary placeholder.
 - Never show `0` for a missing reading. `0` is reserved for a real zero, such as a fan reporting 0 RPM.
 - Never translate hardware-provided sensor names; only translate your own labels.
 

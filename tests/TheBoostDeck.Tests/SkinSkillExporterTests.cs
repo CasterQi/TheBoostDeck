@@ -61,6 +61,8 @@ public sealed class SkinSkillExporterTests
         Assert.Contains("CPU Package", summary);
         Assert.Contains("Fan #1", summary);
         Assert.Contains("Runtime metric coverage", summary);
+        Assert.Contains("Metrics marked `unavailable` are absent on this machine", summary);
+        Assert.Contains("do not reserve placeholder cards", summary);
         Assert.Contains("Candidate derived metrics", summary);
         Assert.Contains("memory.free", summary);
     }

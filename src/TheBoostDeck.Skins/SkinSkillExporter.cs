@@ -134,7 +134,7 @@ public static class SkinSkillExporter
 
         builder.AppendLine("## Runtime metric coverage");
         builder.AppendLine();
-        builder.AppendLine("These are the canonical fields the host currently delivers to a running skin. Anything marked `unavailable` must render as a deliberate placeholder.");
+        builder.AppendLine("These are the canonical fields the host currently delivers to a running skin. Build the layout only from metrics marked `available`. Metrics marked `unavailable` are absent on this machine: omit them and do not reserve placeholder cards. If a previously available metric drops out at runtime, use a compact no-data state.");
         builder.AppendLine();
         builder.AppendLine("| Group | Metric | Status | Value | Unit | Source |");
         builder.AppendLine("| --- | --- | --- | --- | --- | --- |");
@@ -148,7 +148,7 @@ public static class SkinSkillExporter
 
         builder.AppendLine("## Candidate derived metrics");
         builder.AppendLine();
-        builder.AppendLine("These candidates are calculated from canonical `snapshot` fields at export time. The host does not send these values; a skin may recompute them from each new snapshot using the formulas in `references/derived-metrics.md`. A candidate is available only when every required input is available.");
+        builder.AppendLine("These candidates are calculated from canonical `snapshot` fields at export time. The host does not send these values; a skin may recompute them from each new snapshot using the formulas in `references/derived-metrics.md`. A candidate is available only when every required input is available. If a candidate is unavailable on this machine, omit it from the layout rather than reserving an empty widget.");
         builder.AppendLine();
         builder.AppendLine("| Group | Id | Label | Formula | Inputs | Available | Value | Unit |");
         builder.AppendLine("| --- | --- | --- | --- | --- | --- | --- | --- |");
@@ -188,10 +188,10 @@ public static class SkinSkillExporter
         builder.AppendLine();
         builder.AppendLine("1. Use only `snapshot` fields for live values; do not build a live widget from an unsupported raw sensor.");
         builder.AppendLine("2. Preserve hardware and sensor names exactly as reported; do not translate them.");
-        builder.AppendLine("3. Show `—` or a localized no-data state for unavailable metrics; never substitute zero.");
-        builder.AppendLine("4. Design 16:9 landscape and 9:16 portrait as first-class layouts.");
+        builder.AppendLine("3. Omit metrics and hardware groups marked `unavailable` in this inventory; do not reserve empty cards, rows, or N/A slots. For a metric that was available at export but drops out at runtime, show a compact no-data state; never substitute zero.");
+        builder.AppendLine("4. Design 16:9 landscape and 9:16 portrait as first-class layouts, using only the metrics available on this machine.");
         builder.AppendLine("5. FPS is intentionally out of scope.");
-        builder.AppendLine("6. Derived values are allowed only from available `snapshot` inputs; label them as derived and recompute them every snapshot.");
+        builder.AppendLine("6. Derived values are allowed only from available `snapshot` inputs; label them as derived and recompute them every snapshot. Omit a derived metric whose inputs are unavailable on this machine.");
         builder.AppendLine("7. Validate the finished `.boostskin` with `scripts/validate_boostskin.py`.");
         return builder.ToString();
     }
