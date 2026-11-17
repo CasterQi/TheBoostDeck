@@ -46,6 +46,19 @@ internal static class UiText
             "SkinBuiltInNoExport" => isEnglish
                 ? "The built-in skin cannot be exported."
                 : "内置皮肤不支持导出。",
+            "SkinSkillExportTitle" => isEnglish ? "Export skin author skill" : "导出皮肤制作 Skill",
+            "SkinSkillExportFilter" => isEnglish
+                ? "TheBoostDeck skill (*.zip)|*.zip|All files (*.*)|*.*"
+                : "TheBoostDeck Skill (*.zip)|*.zip|所有文件 (*.*)|*.*",
+            "SkinSkillExported" => isEnglish
+                ? "Skin author skill exported."
+                : "皮肤制作 Skill 已导出。",
+            "SkinSkillExportFailed" => isEnglish
+                ? "The skin author skill could not be exported. Please try again."
+                : "皮肤制作 Skill 导出失败，请稍后重试。",
+            "SkinSkillNoTelemetry" => isEnglish
+                ? "The hardware collector is not ready; the skill cannot be exported yet."
+                : "硬件采集器尚未就绪，无法导出 Skill。",
             "SkinLoadFailed" => isEnglish
                 ? "The selected skin could not be loaded. The current skin has been kept.\n\nCheck that it is a valid .boostskin package and that its entry HTML exists."
                 : "所选皮肤无法加载，当前皮肤保持不变。\n\n请确认它是有效的 .boostskin 包，且入口 HTML 存在。",

@@ -5,7 +5,7 @@ using TheBoostDeck.Core;
 
 namespace TheBoostDeck.Infrastructure;
 
-public sealed class LhmTelemetryCollector : ITelemetryCollector, IDisposable
+public sealed class LhmTelemetryCollector : ITelemetryCollector, ITelemetryInventoryProvider, IDisposable
 {
     private static readonly string[] VirtualAdapterKeywords =
     [
@@ -44,23 +44,101 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, IDisposable
             ObjectDisposedException.ThrowIf(_disposed, this);
             _computer.Accept(new UpdateVisitor());
             var hardware = _computer.Hardware.SelectMany(Flatten).ToArray();
-
-            var snapshot = new TelemetrySnapshot
-            {
-                Timestamp = DateTimeOffset.Now,
-                MachineName = Environment.MachineName,
-                Cpu = CaptureCpu(hardware),
-                Gpu = CaptureGpu(hardware),
-                Memory = CaptureMemory(hardware),
-                Storage = CaptureStorage(hardware),
-                Network = CaptureNetwork(hardware),
-                System = CaptureSystem(hardware),
-                SensorDriver = _sensorDriver
-            };
-
-            return Task.FromResult(snapshot);
+            return Task.FromResult(BuildSnapshot(hardware));
         }
     }
+
+    public TelemetryInventory CaptureInventory()
+    {
+        lock (_sync)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            _computer.Accept(new UpdateVisitor());
+
+            var hardware = _computer.Hardware.SelectMany(Flatten).ToArray();
+            var entries = new List<SensorInventoryEntry>();
+            foreach (var root in _computer.Hardware)
+                AddInventory(root, string.Empty, entries);
+
+            return new TelemetryInventory
+            {
+                CapturedAt = DateTimeOffset.Now,
+                MachineName = Environment.MachineName,
+                OsDescription = RuntimeInformation.OSDescription,
+                Architecture = RuntimeInformation.OSArchitecture.ToString(),
+                ProcessorCount = Environment.ProcessorCount,
+                Collector = "LibreHardwareMonitor",
+                SensorDriver = _sensorDriver,
+                Sensors = entries,
+                Snapshot = BuildSnapshot(hardware)
+            };
+        }
+    }
+
+    private TelemetrySnapshot BuildSnapshot(IReadOnlyList<IHardware> hardware) => new()
+    {
+        Timestamp = DateTimeOffset.Now,
+        MachineName = Environment.MachineName,
+        Cpu = CaptureCpu(hardware),
+        Gpu = CaptureGpu(hardware),
+        Memory = CaptureMemory(hardware),
+        Storage = CaptureStorage(hardware),
+        Network = CaptureNetwork(hardware),
+        System = CaptureSystem(hardware),
+        SensorDriver = _sensorDriver
+    };
+
+    private static void AddInventory(IHardware hardware, string parentPath, List<SensorInventoryEntry> entries)
+    {
+        var path = string.IsNullOrWhiteSpace(parentPath)
+            ? hardware.Name
+            : $"{parentPath} / {hardware.Name}";
+
+        foreach (var sensor in hardware.Sensors)
+        {
+            var rawValue = sensor.Value;
+            var available = rawValue.HasValue && float.IsFinite(rawValue.Value);
+            entries.Add(new SensorInventoryEntry
+            {
+                HardwareName = hardware.Name,
+                HardwareType = hardware.HardwareType.ToString(),
+                HardwareIdentifier = hardware.Identifier.ToString(),
+                HardwarePath = path,
+                SensorName = sensor.Name,
+                SensorType = sensor.SensorType.ToString(),
+                Unit = SensorUnit(sensor.SensorType),
+                Value = available ? rawValue!.Value : null,
+                Available = available,
+                Source = $"{hardware.Name} / {sensor.Name}"
+            });
+        }
+
+        foreach (var child in hardware.SubHardware)
+            AddInventory(child, path, entries);
+    }
+
+    private static string? SensorUnit(SensorType type) => type switch
+    {
+        SensorType.Voltage => "V",
+        SensorType.Current => "A",
+        SensorType.Power => "W",
+        SensorType.Clock => "MHz",
+        SensorType.Temperature => "°C",
+        SensorType.Load => "%",
+        SensorType.Fan => "RPM",
+        SensorType.Flow => "L/h",
+        SensorType.Control => "%",
+        SensorType.Level => "%",
+        SensorType.Factor => "%",
+        SensorType.Throughput => "B/s",
+        SensorType.TimeSpan => "s",
+        SensorType.Energy => "mWh",
+        SensorType.Noise => "dBA",
+        SensorType.Humidity => "%",
+        SensorType.Data => "GB",
+        SensorType.SmallData => "MB",
+        _ => null
+    };
 
     private static CpuMetrics CaptureCpu(IReadOnlyList<IHardware> hardware)
     {

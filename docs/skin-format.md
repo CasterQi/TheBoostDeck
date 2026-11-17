@@ -126,12 +126,14 @@ https://skin.theboostdeck/<entry>
 { "type": "set-skin", "id": "my-skin" }
 { "type": "import-skin" }
 { "type": "export-skin", "id": "my-skin" }
+{ "type": "export-skill" }
 ```
 
 - `request-skins`：请求宿主重新扫描安装目录并返回 `skin-catalog`。
 - `set-skin`：切换皮肤；宿主会写入设置并重新加载页面。失败时通过 `skin-action` 返回错误。
 - `import-skin`：由宿主打开 Windows 原生文件选择框，导入 `.boostskin`；弹窗导入只导入，不自动切换，刷新目录后由用户点击缩略图切换。托盘菜单导入仍会自动切换。
 - `export-skin`：由宿主打开保存对话框，复制当前已安装的外部包；内置皮肤返回失败。
+- `export-skill`：由宿主打开保存对话框，导出包含本机完整传感器清单与最新快照的皮肤制作 Skill ZIP；用于让 Agent 根据本机能力生成 `.boostskin`。
 
 宿主处理完操作后发送：
 
@@ -139,7 +141,7 @@ https://skin.theboostdeck/<entry>
 { "type": "skin-action", "action": "import", "ok": true, "message": "皮肤已导入。" }
 ```
 
-`action` 为 `select`、`import` 或 `export`；`ok` 为 `false` 时，页面展示本地化的失败提示。
+`action` 为 `select`、`import`、`export` 或 `export-skill`；`ok` 为 `false` 时，页面展示本地化的失败提示。
 
 ## 安装与回退
 
@@ -152,4 +154,26 @@ https://skin.theboostdeck/<entry>
 
 ## 设计边界
 
-皮肤负责横屏 16:9、竖屏 9:16 以及窗口缩放下的布局。宿主只提供 WebView2 画布、遥测消息和窗口控制，不嵌入皮肤的 HTML/CSS/JS 到主程序代码中。未来 Skill 只需生成符合上述格式的 ZIP 包即可。
+皮肤负责横屏 16:9、竖屏 9:16 以及窗口缩放下的布局。宿主只提供 WebView2 画布、遥测消息和窗口控制，不嵌入皮肤的 HTML/CSS/JS 到主程序代码中。Skill 只需生成符合上述格式的 ZIP 包即可。
+
+## 平台专属 Skill 导出
+
+皮肤管理界面的“导出 Skill”会生成一个 ZIP，顶层目录为 `theboostdeck-skin-author/`：
+
+```text
+theboostdeck-skin-author/
+├── SKILL.md
+├── references/
+│   ├── skin-format.md
+│   ├── protocol.md
+│   ├── design-guide.md
+│   ├── platform.json
+│   └── platform-summary.md
+└── scripts/
+    └── validate_boostskin.py
+```
+
+- `platform.json` 在导出时写入：机器名、OS、架构、应用版本、传感器驱动状态、最新 `TelemetrySnapshot`、全部原始硬件传感器条目和规范化指标覆盖摘要。
+- `platform-summary.md` 是同一份平台清单的可读版本，按硬件列出全部传感器，并标明可用与不可用指标。
+- 原始传感器清单用于能力发现；当前皮肤运行时只接收 `snapshot` 中的规范化字段。未映射进 `snapshot` 的原始传感器不能直接作为实时 UI 数据源，Skill 文档已明确这一边界。
+- 导出的是 Skill 文件夹的 ZIP，不是 `.boostskin`；解压后可由 Agent 作为本地 Skill 使用。

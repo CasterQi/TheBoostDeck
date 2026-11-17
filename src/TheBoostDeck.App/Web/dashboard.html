@@ -544,6 +544,7 @@
       <symbol id="i-info" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8m-4-4v8"/></symbol>
       <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v14m-5-5 5 5 5-5M5 21h14"/></symbol>
       <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 21V7m-5 5 5-5 5 5M5 3h14"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.1 5.4L20 10l-5.9 1.6L12 17l-2.1-5.4L4 10l5.9-1.6z"/><path d="m18.5 15.5.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></symbol>
     </defs>
   </svg>
 
@@ -580,6 +581,7 @@
       </div>
       <footer class="skin-dialog-footer">
         <div class="skin-status" id="skin-status" aria-live="polite"></div>
+        <button class="skin-action-button" id="skin-skill-button" type="button" data-i18n-title="skin.exportSkillHint" data-i18n-aria-label="skin.exportSkillHint" title="导出包含本机传感器清单的皮肤制作 Skill" aria-label="导出包含本机传感器清单的皮肤制作 Skill"><svg class="icon"><use href="#i-spark" xlink:href="#i-spark"/></svg><span data-i18n="skin.exportSkill">导出 Skill</span></button>
         <button class="skin-action-button" id="skin-export-button" type="button" disabled><svg class="icon"><use href="#i-download" xlink:href="#i-download"/></svg><span data-i18n="skin.exportCurrent">导出当前皮肤</span></button>
         <button class="skin-action-button primary" id="skin-import-button" type="button"><svg class="icon"><use href="#i-upload" xlink:href="#i-upload"/></svg><span data-i18n="skin.import">导入皮肤</span></button>
       </footer>
@@ -716,6 +718,8 @@
           "skin.builtIn": "内置",
           "skin.noPreview": "无预览图",
           "skin.import": "导入皮肤",
+          "skin.exportSkill": "导出 Skill",
+          "skin.exportSkillHint": "导出包含本机传感器清单的皮肤制作 Skill",
           "skin.exportCurrent": "导出当前皮肤",
           "skin.exportDisabled": "内置皮肤不可导出",
           "skin.requestFailed": "无法读取皮肤列表。",
@@ -814,6 +818,8 @@
           "skin.builtIn": "Built in",
           "skin.noPreview": "No preview",
           "skin.import": "Import skin",
+          "skin.exportSkill": "Export skill",
+          "skin.exportSkillHint": "Export a skin-authoring skill with this machine's sensor inventory",
           "skin.exportCurrent": "Export active skin",
           "skin.exportDisabled": "Built-in skins cannot be exported",
           "skin.requestFailed": "Could not load the skin list.",
@@ -1507,6 +1513,10 @@
       $("skin-import-button").addEventListener("click", () => {
         setSkinStatus("");
         postToHost({ type: "import-skin" });
+      });
+      $("skin-skill-button").addEventListener("click", () => {
+        setSkinStatus("");
+        postToHost({ type: "export-skill" });
       });
       $("skin-export-button").addEventListener("click", () => {
         if (!skinCatalog?.activeId) return;

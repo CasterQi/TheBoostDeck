@@ -365,6 +365,30 @@ public partial class MainWindow : Window
         }
     }
 
+    private void ExportSkinSkillFromUi()
+    {
+        if (_app.TryExportSkinSkillForUi(_latestSnapshot, out var cancelled, out var error))
+        {
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "export-skill",
+                ok = true,
+                message = UiText.Get(_app.Language, "SkinSkillExported")
+            });
+        }
+        else if (!cancelled)
+        {
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "export-skill",
+                ok = false,
+                message = error ?? UiText.Get(_app.Language, "SkinSkillExportFailed")
+            });
+        }
+    }
+
     private void PostJson<T>(T message)
     {
         if (!_webReady || WebView.CoreWebView2 is null)
@@ -418,6 +442,9 @@ public partial class MainWindow : Window
                     break;
                 case "export-skin":
                     ExportSkinFromUi(message.RootElement.TryGetProperty("id", out var exportId) ? exportId.GetString() : null);
+                    break;
+                case "export-skill":
+                    ExportSkinSkillFromUi();
                     break;
             }
         }

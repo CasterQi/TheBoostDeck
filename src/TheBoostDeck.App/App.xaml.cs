@@ -384,6 +384,78 @@ public partial class App : System.Windows.Application
         }
     }
 
+    internal bool TryExportSkinSkillForUi(TelemetrySnapshot? latestSnapshot, out bool cancelled, out string? error)
+    {
+        cancelled = false;
+        error = null;
+
+        var machineName = latestSnapshot?.MachineName;
+        if (string.IsNullOrWhiteSpace(machineName))
+            machineName = Environment.MachineName;
+
+        var dialog = new Microsoft.Win32.SaveFileDialog
+        {
+            Title = UiText.Get(Language, "SkinSkillExportTitle"),
+            Filter = UiText.Get(Language, "SkinSkillExportFilter"),
+            FileName = $"TheBoostDeck-Skin-Skill-{SafeFileStem(machineName)}.zip",
+            DefaultExt = ".zip",
+            AddExtension = true,
+            OverwritePrompt = true
+        };
+
+        if (dialog.ShowDialog() != true)
+        {
+            cancelled = true;
+            return false;
+        }
+
+        TelemetryInventory? inventory = null;
+        if (_collector is ITelemetryInventoryProvider provider)
+        {
+            try
+            {
+                inventory = provider.CaptureInventory();
+            }
+            catch (Exception exception)
+            {
+                _logger?.Error("Hardware inventory capture for skin skill export failed.", exception);
+            }
+        }
+
+        if (inventory is null && latestSnapshot is not null)
+            inventory = TelemetryInventory.FromSnapshot(latestSnapshot, "snapshot-fallback");
+
+        if (inventory is null)
+        {
+            error = UiText.Get(Language, "SkinSkillNoTelemetry");
+            return false;
+        }
+
+        try
+        {
+            var appVersion = typeof(App).Assembly.GetName().Version?.ToString() ?? "0.1.0";
+            SkinSkillExporter.Export(dialog.FileName, inventory, appVersion);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            _logger?.Error("Skin skill export failed.", exception);
+            error = UiText.Get(Language, "SkinSkillExportFailed");
+            return false;
+        }
+    }
+
+    private static string SafeFileStem(string value)
+    {
+        var builder = new System.Text.StringBuilder(value.Length);
+        foreach (var character in value)
+        {
+            if (character == ' ' || character == '-' || character == '_' || char.IsLetterOrDigit(character))
+                builder.Append(character);
+        }
+        return builder.Length == 0 ? "machine" : builder.ToString();
+    }
+
     private static string? FileToDataUrl(string path, string mimeType)
     {
         if (!File.Exists(path))
