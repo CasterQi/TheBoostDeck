@@ -277,7 +277,8 @@ public partial class MainWindow : Window
             topmost = Topmost,
             visible = IsVisible,
             maximized = WindowState == WindowState.Maximized,
-            language = _app.Language
+            language = _app.Language,
+            refreshIntervalMs = _app.RefreshIntervalMs
         });
     }
 
@@ -596,7 +597,7 @@ public partial class MainWindow : Window
     internal WindowSettings CaptureSettings()
     {
         if (WindowState != WindowState.Normal)
-            return _lastSettings with { Topmost = Topmost, Language = _app.Language, SkinId = _app.ActiveSkin.Id };
+            return _lastSettings with { Topmost = Topmost, Language = _app.Language, RefreshIntervalMs = _app.RefreshIntervalMs, SkinId = _app.ActiveSkin.Id };
 
         return new WindowSettings
         {
@@ -606,6 +607,7 @@ public partial class MainWindow : Window
             Height = Height,
             Topmost = Topmost,
             Language = _app.Language,
+            RefreshIntervalMs = _app.RefreshIntervalMs,
             SkinId = _app.ActiveSkin.Id
         };
     }

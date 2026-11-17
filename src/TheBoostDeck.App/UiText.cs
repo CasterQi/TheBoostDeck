@@ -64,6 +64,7 @@ internal static class UiText
                 : "所选皮肤无法加载，当前皮肤保持不变。\n\n请确认它是有效的 .boostskin 包，且入口 HTML 存在。",
             "SkinErrorTitle" => isEnglish ? "Skin could not be loaded" : "皮肤加载失败",
             "AlwaysOnTop" => isEnglish ? "Always on top" : "始终置顶",
+            "RefreshRate" => isEnglish ? "Refresh rate" : "更新频率",
             "Language" => isEnglish ? "Language" : "语言",
             "Chinese" => isEnglish ? "Chinese" : "中文",
             "English" => "English",

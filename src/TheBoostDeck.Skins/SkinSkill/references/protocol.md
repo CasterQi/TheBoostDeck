@@ -62,9 +62,12 @@ Every leaf metric follows `MetricValue`:
   "topmost": true,
   "visible": true,
   "maximized": false,
-  "language": "zh-CN"
+  "language": "zh-CN",
+  "refreshIntervalMs": 1000
 }
 ```
+
+`refreshIntervalMs` is the current telemetry sampling interval. Use it for labels or cadence hints; do not drive a separate polling loop from it.
 
 ### `collection-error`
 

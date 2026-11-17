@@ -76,6 +76,29 @@ public sealed class TelemetryServiceTests
         Assert.Equal(1, collectionCount);
     }
 
+    [Fact]
+    public async Task ChangingIntervalWakesCurrentWaitAndPublishesAgain()
+    {
+        var collectionCount = 0;
+        var first = new TaskCompletionSource<TelemetrySnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var second = new TaskCompletionSource<TelemetrySnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var collector = new FakeCollector(_ =>
+        {
+            var count = Interlocked.Increment(ref collectionCount);
+            var snapshot = new TelemetrySnapshot();
+            if (count == 1) first.TrySetResult(snapshot);
+            if (count >= 2) second.TrySetResult(snapshot);
+            return Task.FromResult(snapshot);
+        });
+
+        await using var service = new TelemetryService(collector, TimeSpan.FromSeconds(5));
+        service.Start();
+        await first.Task.WaitAsync(TimeSpan.FromSeconds(2));
+        service.SetInterval(TimeSpan.FromMilliseconds(50));
+        await second.Task.WaitAsync(TimeSpan.FromSeconds(1));
+        Assert.True(collectionCount >= 2);
+    }
+
     private static void InterlockedMax(ref int target, int value)
     {
         int current;

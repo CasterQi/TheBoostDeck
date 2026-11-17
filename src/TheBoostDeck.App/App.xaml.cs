@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using System.Runtime.InteropServices;
 using TheBoostDeck.Core;
 using TheBoostDeck.Infrastructure;
@@ -10,6 +11,8 @@ namespace TheBoostDeck.App;
 
 public partial class App : System.Windows.Application
 {
+    private static readonly int[] RefreshIntervalOptions = [100, 250, 500, 1000, 2000, 5000];
+
     private Mutex? _singleInstance;
     private bool _ownsMutex;
     private bool _exitRequested;
@@ -29,6 +32,8 @@ public partial class App : System.Windows.Application
     private WinForms.ToolStripMenuItem? _screensMenuItem;
     private WinForms.ToolStripMenuItem? _skinMenuItem;
     private WinForms.ToolStripMenuItem? _topmostMenuItem;
+    private WinForms.ToolStripMenuItem? _refreshMenuItem;
+    private readonly Dictionary<int, WinForms.ToolStripMenuItem> _refreshMenuItems = new();
     private WinForms.ToolStripMenuItem? _languageMenuItem;
     private WinForms.ToolStripMenuItem? _chineseMenuItem;
     private WinForms.ToolStripMenuItem? _englishMenuItem;
@@ -37,6 +42,7 @@ public partial class App : System.Windows.Application
 
     internal bool IsExitRequested => _exitRequested;
     internal string Language => _settings.Language;
+    internal int RefreshIntervalMs => _settings.RefreshIntervalMs;
     internal IAppLogger Logger => _logger ?? throw new InvalidOperationException("The application logger is not initialized.");
     internal TelemetryService Telemetry => _telemetry ?? throw new InvalidOperationException("The telemetry service is not initialized.");
     internal WindowSettingsStore SettingsStore => _settingsStore ?? throw new InvalidOperationException("The settings store is not initialized.");
@@ -59,6 +65,7 @@ public partial class App : System.Windows.Application
         _logger = new FileLogger();
         _settingsStore = new WindowSettingsStore(_logger);
         _settings = _settingsStore.Load();
+        _settings = _settings with { RefreshIntervalMs = NormalizeRefreshInterval(_settings.RefreshIntervalMs) };
 
         _webDirectory = WebAssetExtractor.ExtractDashboard();
         _logoPath = Path.Combine(_webDirectory, "logo.png");
@@ -90,7 +97,7 @@ public partial class App : System.Windows.Application
             _collector = new FaultedTelemetryCollector(UiText.Get(_settings.Language, "HardwareCollectorFailed"));
         }
 
-        _telemetry = new TelemetryService(_collector, TimeSpan.FromSeconds(1));
+        _telemetry = new TelemetryService(_collector, TimeSpan.FromMilliseconds(_settings.RefreshIntervalMs));
         _window = new MainWindow(this, _settings);
         CreateTrayIcon();
         _window.Show();
@@ -120,6 +127,19 @@ public partial class App : System.Windows.Application
         };
         _topmostMenuItem.CheckedChanged += (_, _) => SetTopmost(_topmostMenuItem.Checked);
         menu.Items.Add(_topmostMenuItem);
+
+        _refreshMenuItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "RefreshRate"));
+        foreach (var milliseconds in RefreshIntervalOptions)
+        {
+            var intervalItem = new WinForms.ToolStripMenuItem(FormatRefreshInterval(Language, milliseconds))
+            {
+                Checked = _settings.RefreshIntervalMs == milliseconds
+            };
+            intervalItem.Click += (_, _) => SetRefreshInterval(milliseconds);
+            _refreshMenuItem.DropDownItems.Add(intervalItem);
+            _refreshMenuItems[milliseconds] = intervalItem;
+        }
+        menu.Items.Add(_refreshMenuItem);
 
         _languageMenuItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "Language"));
         _chineseMenuItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "Chinese"))
@@ -566,6 +586,50 @@ public partial class App : System.Windows.Application
         _logger?.Info($"UI language set to {normalized}.");
     }
 
+    internal void SetRefreshInterval(int milliseconds)
+    {
+        var normalized = NormalizeRefreshInterval(milliseconds);
+        if (_settings.RefreshIntervalMs == normalized)
+        {
+            UpdateLocalizedChrome();
+            return;
+        }
+
+        _settings = _settings with { RefreshIntervalMs = normalized };
+        _telemetry?.SetInterval(TimeSpan.FromMilliseconds(normalized));
+        UpdateLocalizedChrome();
+        _settingsStore?.Save(_window?.CaptureSettings() ?? _settings);
+        _window?.SendHostSettings();
+        _logger?.Info($"Telemetry refresh interval set to {normalized} ms.");
+    }
+
+    private static int NormalizeRefreshInterval(int milliseconds)
+    {
+        if (milliseconds <= 0)
+            return 1000;
+
+        var closest = RefreshIntervalOptions[0];
+        var closestDistance = int.MaxValue;
+        foreach (var option in RefreshIntervalOptions)
+        {
+            var distance = Math.Abs(option - milliseconds);
+            if (distance < closestDistance)
+            {
+                closest = option;
+                closestDistance = distance;
+            }
+        }
+        return closest;
+    }
+
+    private static string FormatRefreshInterval(string? language, int milliseconds)
+    {
+        var seconds = (milliseconds / 1000d).ToString("0.##", CultureInfo.InvariantCulture);
+        return UiText.Normalize(language) == UiText.English
+            ? $"{seconds} s"
+            : $"{seconds} 秒";
+    }
+
     private void UpdateLocalizedChrome()
     {
         if (_toggleWindowMenuItem is not null)
@@ -576,6 +640,13 @@ public partial class App : System.Windows.Application
             _skinMenuItem.Text = UiText.Get(Language, "Skins");
         if (_topmostMenuItem is not null)
             _topmostMenuItem.Text = UiText.Get(Language, "AlwaysOnTop");
+        if (_refreshMenuItem is not null)
+            _refreshMenuItem.Text = UiText.Get(Language, "RefreshRate");
+        foreach (var pair in _refreshMenuItems)
+        {
+            pair.Value.Text = FormatRefreshInterval(Language, pair.Key);
+            pair.Value.Checked = _settings.RefreshIntervalMs == pair.Key;
+        }
         if (_languageMenuItem is not null)
             _languageMenuItem.Text = UiText.Get(Language, "Language");
         if (_chineseMenuItem is not null)

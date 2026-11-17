@@ -75,9 +75,11 @@ https://skin.theboostdeck/<entry>
 
 ```json
 { "type": "snapshot", "data": { } }
-{ "type": "settings", "topmost": true, "visible": true, "maximized": false, "language": "zh-CN" }
+{ "type": "settings", "topmost": true, "visible": true, "maximized": false, "language": "zh-CN", "refreshIntervalMs": 1000 }
 { "type": "collection-error", "messageKey": "collectionFailed" }
 ```
+
+`refreshIntervalMs` 是当前遥测采样间隔；皮肤可用它来显示节奏提示，但不要据此自行启动另一套轮询。
 
 皮肤向宿主发送：
 

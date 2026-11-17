@@ -681,7 +681,7 @@
       <summary><span class="status-dot" id="status-dot"></span><span id="data-status" data-i18n="status.waiting">正在等待真实遥测数据</span><span id="issue-count"></span></summary>
       <div class="issue-list" id="issue-list"><div class="issue-item" data-i18n="diagnostics.help">收到传感器数据后，此处会显示不可用指标及原因。TheBoostDeck 不会用 0 或演示数据代替缺失值。</div></div>
     </details>
-    <div class="host-info" id="host-info" data-i18n="footer.host">本地进程内通信 · 无网络服务 · 1 秒采样</div>
+    <div class="host-info" id="host-info">本地进程内通信 · 无网络服务</div>
   </footer>
 
   <script>
@@ -694,6 +694,7 @@
       let hostVisible = true;
       let hostTopmost = true;
       let hostMaximized = false;
+      let hostRefreshIntervalMs = 1000;
       let issueSignature = "";
       const driveRows = new Map();
       let currentLanguage = "zh-CN";
@@ -766,8 +767,8 @@
           "system.unknown": "未知",
           "system.acPower": "交流电源",
           "system.battery": "电池",
-          "footer.host": "本地进程内通信 · 无网络服务 · 1 秒采样",
-          "footer.hostInfo": "{machine} · 本地进程内通信 · 无网络服务",
+          "footer.host": "本地进程内通信 · 无网络服务 · {rate}采样",
+          "footer.hostInfo": "{machine} · 本地进程内通信 · 无网络服务 · {rate}采样",
           "diagnostics.help": "收到传感器数据后，此处会显示不可用指标及原因。TheBoostDeck 不会用 0 或演示数据代替缺失值。",
           "status.waiting": "正在等待真实遥测数据",
           "status.live": "真实数据 · {time}",
@@ -866,8 +867,8 @@
           "system.unknown": "Unknown",
           "system.acPower": "AC power",
           "system.battery": "Battery",
-          "footer.host": "In-process · No network service · 1 s sampling",
-          "footer.hostInfo": "{machine} · In-process · No network service",
+          "footer.host": "In-process · No network service · {rate} sampling",
+          "footer.hostInfo": "{machine} · In-process · No network service · {rate} sampling",
           "diagnostics.help": "Unavailable metrics and reasons will appear here after sensor data arrives. TheBoostDeck never substitutes 0 or demo data for missing values.",
           "status.waiting": "Waiting for live telemetry",
           "status.live": "Live data · {time}",
@@ -946,6 +947,19 @@
         return template.replace(/\{(\w+)\}/g, (_, name) => values[name] ?? "");
       }
 
+      function formatRefreshInterval(milliseconds) {
+        const value = Number(milliseconds);
+        const seconds = Number.isFinite(value) && value > 0 ? value / 1000 : 1;
+        return currentLanguage === "en-US" ? `${seconds} s` : `${seconds} 秒`;
+      }
+
+      function hostInfoText(machine) {
+        const rate = formatRefreshInterval(hostRefreshIntervalMs);
+        return machine
+          ? t("footer.hostInfo", { machine, rate })
+          : t("footer.host", { rate });
+      }
+
       function translateReason(reason) {
         if (!reason) return "";
         if (currentLanguage !== "en-US") return reason;
@@ -996,7 +1010,7 @@
         if (latestSnapshot) {
           updateDashboard(latestSnapshot, false);
         } else {
-          setText("host-info", t("footer.host"));
+          setText("host-info", hostInfoText());
           setText("data-status", t("status.waiting"));
         }
         if (skinCatalog && !$("skin-modal").hidden) {
@@ -1427,7 +1441,7 @@
         setText("vram-name", snapshot.gpu.name);
         // Adapter names and other system/sensor-provided text stay verbatim.
         setText("network-name", snapshot.network.name);
-        setText("host-info", t("footer.hostInfo", { machine: snapshot.machineName }));
+        setText("host-info", hostInfoText(snapshot.machineName));
 
         setMetric("cpu-header", snapshot.cpu.usage, percent);
         setMetric("cpu-trend-value", snapshot.cpu.usage, decimalPercent);
@@ -1540,6 +1554,10 @@
             $("pin-button").setAttribute("aria-pressed", String(hostTopmost));
             setMaximized(message.maximized);
             if (message.language && normalizeLanguage(message.language) !== currentLanguage) applyLanguage(message.language);
+            if (message.refreshIntervalMs) {
+              hostRefreshIntervalMs = Number(message.refreshIntervalMs) || 1000;
+              setText("host-info", hostInfoText(latestSnapshot?.machineName));
+            }
             if (hostVisible) Object.values(charts).forEach(chart => chart.redraw());
           }
           if (message.type === "collection-error") {
