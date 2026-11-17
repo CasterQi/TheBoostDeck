@@ -13,7 +13,7 @@ TheBoostDeck is a Windows desktop performance monitor designed for a gamer's sec
 - Resizable always-on-top window, screen selection, tray hide/show, and persistent placement.
 - Frameless HUD header with language, pin, hide-to-tray, maximize/restore, and close controls; maximize respects the current monitor work area and taskbar.
 - Per-monitor DPI awareness and physical GPU/network filtering.
-- One shared sampling scheduler and one batched process-local message per second.
+- One shared sampling scheduler with a tray-selectable 0.1–5 s cadence; snapshots are batched into one process-local message per tick.
 - Sampling and chart rendering pause when the window is hidden.
 
 ## Requirements

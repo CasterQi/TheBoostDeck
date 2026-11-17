@@ -49,7 +49,7 @@ internal static class BuildInfo
         }
 
         var assemblyVersion = assembly.GetName().Version;
-        return assemblyVersion is null ? "0.1.0" : assemblyVersion.ToString(3);
+        return assemblyVersion is null ? "0.1.1" : assemblyVersion.ToString(3);
     }
 
     private static DateTime GetBuildTimestamp()
