@@ -44,7 +44,7 @@ python scripts/validate_boostskin.py path/to/your-skin.boostskin
 
 ## Runtime contract in one paragraph
 
-The host sends JSON messages through `window.chrome.webview` when available: `snapshot`, `settings`, `collection-error`, `skin-catalog`, and `skin-action`. The skin sends window actions (`begin-drag`, `toggle-topmost`, `hide-window`, `toggle-maximize`, `close-window`), language selection (`set-language`), and skin manager actions (`request-skins`, `set-skin`, `import-skin`, `export-skin`, `export-skill`). Treat every message as untrusted input and update the DOM defensively. `snapshot` is the only supported source for live values; the detailed field shape is in `references/protocol.md`.
+The host sends JSON messages through `window.chrome.webview` when available: `snapshot`, `settings`, `collection-error`, `skin-catalog`, and `skin-action`. `settings` includes `language` and `refreshIntervalMs`; use the interval for cadence labels or hints, never to start a second polling loop. The skin sends window actions (`begin-drag`, `toggle-topmost`, `hide-window`, `toggle-maximize`, `close-window`), language selection (`set-language`), and skin manager actions (`request-skins`, `set-skin`, `import-skin`, `export-skin`, `export-skill`). Treat every message as untrusted input and update the DOM defensively. `snapshot` is the only supported source for live values; the detailed field shape is in `references/protocol.md`.
 
 ## Mandatory controls
 
@@ -105,7 +105,7 @@ The host does not send every useful display value. You may compute additional va
 - Landscape and portrait must both be first-class. Use CSS grid/flex and container queries or aspect-ratio media queries; never hardcode a single viewport size.
 - **Widget set comes from platform availability.** Omit metrics marked `unavailable` on this machine; do not reserve empty cards, rows, or "N/A" slots. Omit an entire hardware group when all its metrics are unavailable, and rebalance the available modules.
 - A metric that was available at export but drops out during runtime is a different case: collapse it or show one compact no-data state. Do not show zero unless zero is a real reading.
-- Keep resource usage low: no continuous animation loops that are not needed, no large dependencies, no polling faster than the host snapshot cadence.
+- Keep resource usage low: no continuous animation loops that are not needed, no large dependencies, no polling faster than the host snapshot cadence. When showing a sampling-rate label, read `settings.refreshIntervalMs` instead of hardcoding `1s`.
 - Use the platform's language conventions. Preserve raw sensor names; UI labels may use the user's language.
 
 ## Package rules
@@ -126,4 +126,5 @@ Before finishing, confirm:
 4. The archive has `skin.json` at its root and the entry file exists.
 5. `validate_boostskin.py` passes.
 6. Every computed value uses only available `snapshot` inputs, has a documented formula, and is labeled as derived.
-7. The skin includes the mandatory controls: a visible skin switch entry, a visible hide/exit entry, and a visible drag region. A single control hub may combine the first two.
+7. Any displayed sampling-rate label follows `settings.refreshIntervalMs`; no hardcoded one-second assumption.
+8. The skin includes the mandatory controls: a visible skin switch entry, a visible hide/exit entry, and a visible drag region. A single control hub may combine the first two.

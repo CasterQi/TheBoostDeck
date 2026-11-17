@@ -6,7 +6,7 @@ The skin runs inside WebView2 at `https://skin.theboostdeck/<entry>`. Use `windo
 
 ### `snapshot`
 
-Sent on a one-second cadence and immediately after navigation completes.
+Sent at the host's current telemetry interval and immediately after navigation completes. The interval defaults to one second and can be read from `settings.refreshIntervalMs`; snapshots follow that cadence after the initial send.
 
 ```json
 {
