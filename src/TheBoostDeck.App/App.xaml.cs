@@ -29,6 +29,7 @@ public partial class App : System.Windows.Application
     private WinForms.ToolStripMenuItem? _screensMenuItem;
     private WinForms.ToolStripMenuItem? _skinMenuItem;
     private WinForms.ToolStripMenuItem? _topmostMenuItem;
+    private WinForms.ToolStripMenuItem? _versionMenuItem;
     private WinForms.ToolStripMenuItem? _exitMenuItem;
 
     internal bool IsExitRequested => _exitRequested;
@@ -117,6 +118,11 @@ public partial class App : System.Windows.Application
         _topmostMenuItem.CheckedChanged += (_, _) => SetTopmost(_topmostMenuItem.Checked);
         menu.Items.Add(_topmostMenuItem);
         menu.Items.Add(new WinForms.ToolStripSeparator());
+        _versionMenuItem = new WinForms.ToolStripMenuItem(BuildInfo.MenuText(Language))
+        {
+            Enabled = false
+        };
+        menu.Items.Add(_versionMenuItem);
         _exitMenuItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "Exit"));
         _exitMenuItem.Click += (_, _) => RequestExit();
         menu.Items.Add(_exitMenuItem);
@@ -551,6 +557,8 @@ public partial class App : System.Windows.Application
             _skinMenuItem.Text = UiText.Get(Language, "Skins");
         if (_topmostMenuItem is not null)
             _topmostMenuItem.Text = UiText.Get(Language, "AlwaysOnTop");
+        if (_versionMenuItem is not null)
+            _versionMenuItem.Text = BuildInfo.MenuText(Language);
         if (_exitMenuItem is not null)
             _exitMenuItem.Text = UiText.Get(Language, "Exit");
         if (_trayIcon is not null)
