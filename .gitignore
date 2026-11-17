@@ -27,3 +27,6 @@ Thumbs.db
 /docs/screenshots/*
 !/docs/screenshots/TheBoostDeck-window-controls.jpg
 !/docs/screenshots/TheBoostDeck-window-controls.png
+
+# Local intermediate files and design references
+/localfile/
