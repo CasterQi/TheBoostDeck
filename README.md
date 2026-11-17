@@ -1,5 +1,7 @@
 # TheBoostDeck
 
+**English** | [简体中文](README.zh-CN.md)
+
 TheBoostDeck is a Windows desktop performance monitor designed for a gamer's secondary display. It combines a WPF host, a WebView2 dashboard, and LibreHardwareMonitor sensors in a ready-to-use, responsive application.
 
 ![TheBoostDeck dashboard](docs/screenshots/TheBoostDeck-window-controls.jpg)
