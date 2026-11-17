@@ -10,15 +10,11 @@ TheBoostDeck is a Windows desktop performance monitor designed for a gamer's sec
 
 - Real-time CPU, GPU, memory, dedicated VRAM, fixed-disk, network, and available motherboard/system sensors.
 - Responsive 16:9 and 9:16 layouts with automatic card reflow during resize or orientation changes.
-- A dark, neon dashboard with bounded 60-second Canvas trends and no demonstration data in the normal application path.
 - Resizable always-on-top window, screen selection, tray hide/show, and persistent placement.
 - Frameless HUD header with language, pin, hide-to-tray, maximize/restore, and close controls; maximize respects the current monitor work area and taskbar.
 - Per-monitor DPI awareness and physical GPU/network filtering.
 - One shared sampling scheduler and one batched process-local message per second.
 - Sampling and chart rendering pause when the window is hidden.
-- Missing or unreliable sensors degrade independently to `--` with an explanation; missing data is never replaced with a fake zero.
-- No HTTP server, WebSocket server, account, cloud synchronization, or firewall exception.
-- CSS variable theming through an optional user `custom.css` file.
 
 ## Requirements
 
