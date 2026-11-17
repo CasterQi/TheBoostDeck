@@ -63,6 +63,9 @@ public sealed class SkinSkillExporterTests
         Assert.Contains("Runtime metric coverage", summary);
         Assert.Contains("Metrics marked `unavailable` are absent on this machine", summary);
         Assert.Contains("do not reserve placeholder cards", summary);
+        Assert.Contains("Required controls", summary);
+        Assert.Contains("skin manager/switch entry", summary);
+        Assert.Contains("visible drag region", summary);
         Assert.Contains("Candidate derived metrics", summary);
         Assert.Contains("memory.free", summary);
     }

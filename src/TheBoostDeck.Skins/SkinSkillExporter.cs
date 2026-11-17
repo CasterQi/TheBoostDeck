@@ -146,6 +146,11 @@ public static class SkinSkillExporter
         }
         builder.AppendLine();
 
+        builder.AppendLine("## Required controls");
+        builder.AppendLine();
+        builder.AppendLine("Every skin must expose a visible skin manager/switch entry, a visible hide/exit entry, and a visible drag region. One control hub may combine the first two. Position is free, but the controls must remain visible and reachable in both 16:9 and 9:16. Do not ask the user whether to include these controls.");
+        builder.AppendLine();
+
         builder.AppendLine("## Candidate derived metrics");
         builder.AppendLine();
         builder.AppendLine("These candidates are calculated from canonical `snapshot` fields at export time. The host does not send these values; a skin may recompute them from each new snapshot using the formulas in `references/derived-metrics.md`. A candidate is available only when every required input is available. If a candidate is unavailable on this machine, omit it from the layout rather than reserving an empty widget.");
@@ -193,6 +198,7 @@ public static class SkinSkillExporter
         builder.AppendLine("5. FPS is intentionally out of scope.");
         builder.AppendLine("6. Derived values are allowed only from available `snapshot` inputs; label them as derived and recompute them every snapshot. Omit a derived metric whose inputs are unavailable on this machine.");
         builder.AppendLine("7. Validate the finished `.boostskin` with `scripts/validate_boostskin.py`.");
+        builder.AppendLine("8. Include the mandatory controls: skin manager/switch, hide/exit, and a drag region. A single control hub may combine the first two.");
         return builder.ToString();
     }
 

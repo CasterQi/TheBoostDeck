@@ -74,6 +74,41 @@ Every leaf metric follows `MetricValue`:
 
 This means the collector is degraded. Keep the last known values if useful, but mark them stale; never present them as live.
 
+### `skin-catalog`
+
+Sent after `{ type: "request-skins" }`. Render the list in the skin's manager panel and send `set-skin` when the user chooses one.
+
+```json
+{
+  "type": "skin-catalog",
+  "activeId": "classic",
+  "skins": [
+    {
+      "id": "classic",
+      "name": "Classic HUD",
+      "version": "built-in",
+      "author": "TheBoostDeck",
+      "description": "Built-in adaptive HUD.",
+      "isBuiltIn": true,
+      "canExport": false,
+      "previewUrl": "data:image/png;base64,..."
+    }
+  ]
+}
+```
+
+`previewUrl` is a data URL and may be `null`; show a neutral placeholder when it is missing or fails to load.
+
+### `skin-action`
+
+Sent after a skin manager operation:
+
+```json
+{ "type": "skin-action", "action": "select", "ok": true, "message": "Skin switched." }
+```
+
+`action` is `select`, `import`, `export`, or `export-skill`. When `ok` is `false`, keep the manager panel open and show the message.
+
 ## Skin to host
 
 Send an object through `window.chrome.webview.postMessage(...)`:
@@ -91,12 +126,22 @@ Window actions:
 - `{ type: "close-window" }`
 - `{ type: "set-language", language: "zh-CN" | "en-US" }`
 
-Skin manager actions (the built-in dashboard uses these; a custom skin may omit them):
+Skin manager actions (required for the skin's visible skin-switch entry; import/export may remain inside that panel):
 
 - `{ type: "request-skins" }` → host sends `skin-catalog`.
 - `{ type: "set-skin", id: "..." }`
 - `{ type: "import-skin" }`
 - `{ type: "export-skin", id: "..." }`
+
+## Required controls
+
+Every custom skin must provide:
+
+1. A visible skin manager/switch entry. It sends `request-skins`, renders the returned `skin-catalog`, and sends `set-skin`. The host does not provide a shared manager popup for external skins; implement a minimal skin-owned panel. It does not need to match the built-in dashboard. Import/export actions may live in the same panel instead of separate top-level buttons.
+2. A visible hide or exit entry. Send `hide-window` or `close-window`; do not rely only on the tray icon.
+3. A visible drag region. Send `begin-drag`; it must work in both landscape and portrait.
+
+A single control hub may combine the skin manager and hide/exit entries. Position is free; the controls must remain visible and reachable in both orientations.
 
 ## Data boundary
 

@@ -178,4 +178,5 @@ theboostdeck-skin-author/
 - `derivedMetrics` 列出可由 `snapshot` 直接字段安全计算的候选，例如内存/显存剩余、每块磁盘剩余空间、磁盘总剩余空间、网络上下行合计、CPU + GPU 功耗；每项包含 `formula`、`inputs`、`available`、`value`、`unit` 与说明。这些值由皮肤在每次 `snapshot` 到达时重新计算，宿主不会直接下发。
 - `platform-summary.md` 是同一份平台清单的可读版本，按硬件列出全部传感器，并包含规范化指标覆盖和派生指标候选表。
 - Skill 的布局规则要求：只为本机标记为 `available` 的指标设计组件；本机 `unavailable` 的指标和整组硬件直接不纳入布局，不保留空卡片、空行或 “N/A” 占位。原始传感器清单用于能力发现；当前皮肤运行时只接收 `snapshot` 中的规范化字段，未映射进 `snapshot` 的原始传感器不能直接作为实时 UI 数据源。派生值也只能基于 `snapshot` 中可用的直接字段，输入不可用时同样不显示。
+- 每个皮肤必须保留三项可用能力：可见的皮肤管理/切换入口、可见的隐藏或退出入口、无边框窗口的可见拖拽区域。前两项可以合并为一个控制中心，位置不固定，但必须在横屏和竖屏下可见可达。外部皮肤不能直接复用内置 dashboard 的管理弹窗，需要通过 `request-skins` / `skin-catalog` 自绘一个最小管理面板，并用 `set-skin` 完成切换。
 - 导出的是 Skill 文件夹的 ZIP，不是 `.boostskin`；解压后可由 Agent 作为本地 Skill 使用。

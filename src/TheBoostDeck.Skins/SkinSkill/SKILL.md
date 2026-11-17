@@ -44,7 +44,17 @@ python scripts/validate_boostskin.py path/to/your-skin.boostskin
 
 ## Runtime contract in one paragraph
 
-The host sends JSON messages through `window.chrome.webview` when available: `snapshot`, `settings`, and `collection-error`. The skin sends window actions (`begin-drag`, `toggle-topmost`, `hide-window`, `toggle-maximize`, `close-window`) and language selection (`set-language`). Treat every message as untrusted input and update the DOM defensively. `snapshot` is the only supported source for live values; the detailed field shape is in `references/protocol.md`.
+The host sends JSON messages through `window.chrome.webview` when available: `snapshot`, `settings`, `collection-error`, and `skin-catalog`. The skin sends window actions (`begin-drag`, `toggle-topmost`, `hide-window`, `toggle-maximize`, `close-window`), language selection (`set-language`), and skin manager actions (`request-skins`, `set-skin`, `import-skin`, `export-skin`). Treat every message as untrusted input and update the DOM defensively. `snapshot` is the only supported source for live values; the detailed field shape is in `references/protocol.md`.
+
+## Mandatory controls
+
+Every skin must expose these capabilities, no matter how minimal the visual design is. Do **not** ask the user whether to include them; they are non-negotiable. Ask only about visual treatment, placement, or optional controls.
+
+1. **Skin manager / switch entry** — a visible control that opens a skin manager panel where the user can choose another installed skin. Use `request-skins`; the host responds with `skin-catalog`, and the panel sends `set-skin`. The host does not provide a shared manager popup for external skins, so implement a minimal skin-owned panel; it does not need to copy the built-in dashboard styling. Import/export actions may live inside this panel instead of as separate top-level buttons.
+2. **Hide or exit entry** — a visible control that sends `hide-window` or `close-window`. Do not rely on the tray icon as the only way out of a full-screen skin.
+3. **Drag region** — a visible drag area that sends `begin-drag` so the frameless window can be moved. It can be a title strip, an edge grip, or a dedicated handle, but it must be available in both orientations.
+
+A single visible control hub is acceptable: for example, one button that opens a small menu containing “Switch skin” and “Hide/Exit”. That satisfies the minimum requirement. There is no required top-right position; place the controls wherever they fit the composition, as long as they remain visible and reachable in both 16:9 and 9:16.
 
 ## Derived values
 
@@ -84,3 +94,4 @@ Before finishing, confirm:
 4. The archive has `skin.json` at its root and the entry file exists.
 5. `validate_boostskin.py` passes.
 6. Every computed value uses only available `snapshot` inputs, has a documented formula, and is labeled as derived.
+7. The skin includes the mandatory controls: a visible skin switch entry, a visible hide/exit entry, and a visible drag region. A single control hub may combine the first two.

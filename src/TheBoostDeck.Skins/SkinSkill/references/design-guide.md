@@ -14,6 +14,18 @@ TheBoostDeck is a gaming secondary-display HUD, not a web dashboard. It should f
 - Use tabular numerals for changing values so the layout does not jitter.
 - Icons should be inline SVG and share one stroke language; do not use emoji.
 
+## Controls
+
+Controls are part of the HUD's usability, not optional decoration. Every skin must expose:
+
+- a visible skin manager/switch entry;
+- a visible hide or exit entry;
+- a visible drag region for the frameless window.
+
+A single control hub may contain the skin switch and hide/exit actions, so a minimal skin only needs one visible control. Do not assume the top-right corner: place the hub wherever it supports the composition and remains reachable in both 16:9 and 9:16. If space is tight, merge controls into a compact menu instead of removing them.
+
+Optional controls such as topmost, language, and maximize can be added when the design or user asks for them. Import/export should live inside the skin manager panel, not as separate top-level buttons.
+
 ## Information hierarchy
 
 1. CPU and GPU are the primary story: usage, temperature, power, frequency, and fan when available.
