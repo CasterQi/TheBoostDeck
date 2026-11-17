@@ -441,6 +441,7 @@
           <div class="metric-row"><svg class="icon"><use href="#i-temp" xlink:href="#i-temp"/></svg><div class="metric-name" data-i18n="metric.temperature">温度</div><div class="metric-value" id="cpu-temperature">--</div></div>
           <div class="metric-row"><svg class="icon"><use href="#i-power" xlink:href="#i-power"/></svg><div class="metric-name" data-i18n="metric.power">功耗</div><div class="metric-value" id="cpu-power">--</div></div>
           <div class="metric-row"><svg class="icon"><use href="#i-clock" xlink:href="#i-clock"/></svg><div class="metric-name" data-i18n="metric.frequency">频率</div><div class="metric-value" id="cpu-frequency">--</div></div>
+          <div class="metric-row"><svg class="icon"><use href="#i-fan" xlink:href="#i-fan"/></svg><div class="metric-name" data-i18n="metric.cpuFan">CPU 风扇</div><div class="metric-value" id="cpu-fan">--</div></div>
         </div>
         <div class="trend"><div class="trend-heading"><span data-i18n="trend.cpu">CPU 使用率 · 60 秒</span><strong id="cpu-trend-value">--</strong></div><div class="chart-wrap"><div class="chart-ylabels"><span>100%</span><span>50%</span><span>0%</span></div><canvas id="cpu-chart" data-i18n-aria-label="trend.cpu" aria-label="CPU 使用率趋势"></canvas></div></div>
       </div>
@@ -500,7 +501,6 @@
       <div class="system-content">
         <div class="system-list">
           <div class="system-row"><span class="system-label" data-i18n="system.motherboardTemp">主板温度</span><span class="system-value" id="system-temperature">--</span></div>
-          <div class="system-row"><span class="system-label" data-i18n="system.fan">系统风扇</span><span class="system-value" id="system-fan">--</span></div>
           <div class="system-row"><span class="system-label" data-i18n="system.power">系统功耗</span><span class="system-value" id="system-power">--</span></div>
           <div class="system-row"><span class="system-label" data-i18n="system.powerSource">电源状态</span><span class="system-value" id="system-source" data-i18n="system.unknown">未知</span></div>
         </div>
@@ -560,6 +560,7 @@
           "metric.power": "功耗",
           "metric.frequency": "频率",
           "metric.fan": "风扇",
+          "metric.cpuFan": "CPU 风扇",
           "metric.used": "已用",
           "metric.total": "总计",
           "trend.cpu": "CPU 使用率 · 60 秒",
@@ -577,7 +578,6 @@
           "network.title": "网络",
           "system.title": "系统信息",
           "system.motherboardTemp": "主板温度",
-          "system.fan": "系统风扇",
           "system.power": "系统功耗",
           "system.powerSource": "电源状态",
           "system.unknown": "未知",
@@ -603,13 +603,13 @@
           "issue.cpuTemperature": "CPU 温度",
           "issue.cpuPower": "CPU 功耗",
           "issue.cpuFrequency": "CPU 频率",
+          "issue.cpuFan": "CPU 风扇",
           "issue.gpuTemperature": "GPU 温度",
           "issue.gpuPower": "GPU 功耗",
           "issue.gpuFrequency": "GPU 频率",
           "issue.gpuFan": "GPU 风扇",
           "issue.gpuMemory": "专用显存",
           "issue.motherboardTemperature": "主板温度",
-          "issue.systemFan": "系统风扇",
           "issue.systemPower": "系统功耗",
           "issue.diskRead": "磁盘读取",
           "issue.diskWrite": "磁盘写入",
@@ -640,6 +640,7 @@
           "metric.power": "Power",
           "metric.frequency": "Clock",
           "metric.fan": "Fan",
+          "metric.cpuFan": "CPU fan",
           "metric.used": "Used",
           "metric.total": "Total",
           "trend.cpu": "CPU usage · 60 s",
@@ -657,7 +658,6 @@
           "network.title": "Network",
           "system.title": "System",
           "system.motherboardTemp": "Motherboard temp",
-          "system.fan": "System fan",
           "system.power": "System power",
           "system.powerSource": "Power source",
           "system.unknown": "Unknown",
@@ -683,13 +683,13 @@
           "issue.cpuTemperature": "CPU temperature",
           "issue.cpuPower": "CPU power",
           "issue.cpuFrequency": "CPU clock",
+          "issue.cpuFan": "CPU fan",
           "issue.gpuTemperature": "GPU temperature",
           "issue.gpuPower": "GPU power",
           "issue.gpuFrequency": "GPU clock",
           "issue.gpuFan": "GPU fan",
           "issue.gpuMemory": "Dedicated VRAM",
           "issue.motherboardTemperature": "Motherboard temp",
-          "issue.systemFan": "System fan",
           "issue.systemPower": "System power",
           "issue.diskRead": "Disk read",
           "issue.diskWrite": "Disk write",
@@ -707,7 +707,7 @@
         "无法根据已用与可用内存计算总量": "Total memory could not be derived from used and available values",
         "未检测到活动物理网卡": "No active physical network adapter was detected",
         "未检测到可用的主板温度传感器；可检查 BIOS、驱动或传感器库支持": "No usable motherboard temperature sensor; check BIOS, drivers, or sensor-library support",
-        "未检测到可用的 CPU / 系统风扇传感器；GPU 风扇不计入此项": "No usable CPU / system fan sensor; GPU fans are not included",
+        "未检测到 CPU 风扇转速传感器；部分 3-pin 风扇或无测速线风扇不会返回转速": "No CPU fan speed sensor was detected; some 3-pin fans or fans without a tach wire do not report RPM",
         "整机功耗通常需要受支持的电源或专用传感器，当前未检测到": "Whole-system power requires a supported PSU or dedicated sensor; none was detected",
         "CPU 核心频率传感器未返回有效数据，可能受权限或平台支持限制": "The CPU core clock sensor returned no valid data; permissions or platform support may limit it",
         "传感器已识别但未返回有效数据，可能受权限、驱动或平台支持限制": "The sensor was found but returned no valid data; permissions, drivers, or platform support may limit it",
@@ -1022,9 +1022,9 @@
           : [];
         return [
           ...driverIssue,
-          ["issue.cpuTemperature", snapshot.cpu.temperature], ["issue.cpuPower", snapshot.cpu.power], ["issue.cpuFrequency", snapshot.cpu.frequency],
+          ["issue.cpuTemperature", snapshot.cpu.temperature], ["issue.cpuPower", snapshot.cpu.power], ["issue.cpuFrequency", snapshot.cpu.frequency], ["issue.cpuFan", snapshot.cpu.fanSpeed],
           ["issue.gpuTemperature", snapshot.gpu.temperature], ["issue.gpuPower", snapshot.gpu.power], ["issue.gpuFrequency", snapshot.gpu.frequency], ["issue.gpuFan", snapshot.gpu.fanSpeed],
-          ["issue.gpuMemory", snapshot.gpu.memoryUsage], ["issue.motherboardTemperature", snapshot.system.motherboardTemperature], ["issue.systemFan", snapshot.system.fanSpeed], ["issue.systemPower", snapshot.system.power],
+          ["issue.gpuMemory", snapshot.gpu.memoryUsage], ["issue.motherboardTemperature", snapshot.system.motherboardTemperature], ["issue.systemPower", snapshot.system.power],
           ["issue.diskRead", snapshot.storage.readRate], ["issue.diskWrite", snapshot.storage.writeRate], ["issue.networkDownload", snapshot.network.download], ["issue.networkUpload", snapshot.network.upload]
         ];
       };
@@ -1088,6 +1088,7 @@
         setMetric("cpu-temperature", snapshot.cpu.temperature, temperature);
         setMetric("cpu-power", snapshot.cpu.power, watts);
         setMetric("cpu-frequency", snapshot.cpu.frequency, gigahertz);
+        setMetric("cpu-fan", snapshot.cpu.fanSpeed, rpm);
         updateGauge("cpu-gauge", snapshot.cpu.usage);
 
         setMetric("gpu-header", snapshot.gpu.usage, percent);
@@ -1115,7 +1116,6 @@
         setMetric("network-download", snapshot.network.download, networkRate);
         setMetric("network-upload", snapshot.network.upload, networkRate);
         setMetric("system-temperature", snapshot.system.motherboardTemperature, temperature);
-        setMetric("system-fan", snapshot.system.fanSpeed, rpm);
         setMetric("system-power", snapshot.system.power, watts);
         setText("system-source", localizePowerSource(snapshot.system.powerSource));
 

@@ -37,6 +37,7 @@ public sealed record CpuMetrics
     public MetricValue Temperature { get; init; } = MetricValue.Unavailable("°C", "尚未采集");
     public MetricValue Power { get; init; } = MetricValue.Unavailable("W", "尚未采集");
     public MetricValue Frequency { get; init; } = MetricValue.Unavailable("GHz", "尚未采集");
+    public MetricValue FanSpeed { get; init; } = MetricValue.Unavailable("RPM", "尚未采集");
 }
 
 public sealed record GpuMetrics
@@ -85,7 +86,6 @@ public sealed record NetworkMetrics
 public sealed record SystemMetrics
 {
     public MetricValue MotherboardTemperature { get; init; } = MetricValue.Unavailable("°C", "尚未采集");
-    public MetricValue FanSpeed { get; init; } = MetricValue.Unavailable("RPM", "尚未采集");
     public MetricValue Power { get; init; } = MetricValue.Unavailable("W", "尚未采集");
     public string PowerSource { get; init; } = "未知";
 }

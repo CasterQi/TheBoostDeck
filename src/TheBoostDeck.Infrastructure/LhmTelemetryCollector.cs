@@ -13,6 +13,8 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, IDisposable
         "idd", "todesk", "oray", "gameviewer", "parsec", "hyper-v", "default switch"
     ];
 
+    private static readonly string[] CpuFanKeywords = ["cpu", "processor", "aio", "pump"];
+
     private readonly object _sync = new();
     private readonly Computer _computer;
     private readonly SensorDriverInfo _sensorDriver;
@@ -78,7 +80,8 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, IDisposable
             Usage = ReadSensor(cpu, SensorType.Load, "CPU Total", "%", "未检测到 CPU 总占用传感器"),
             Temperature = ReadSensor(cpu, SensorType.Temperature, "CPU Package", "°C", "未检测到 CPU 封装温度传感器"),
             Power = ReadSensor(cpu, SensorType.Power, "CPU Package", "W", "未检测到 CPU 封装功耗传感器", zeroIsInvalid: true),
-            Frequency = ReadAverageCpuFrequency(cpu)
+            Frequency = ReadAverageCpuFrequency(cpu),
+            FanSpeed = ReadCpuFan(hardware)
         };
     }
 
@@ -246,12 +249,6 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, IDisposable
             .OrderByDescending(sensor => sensor.Name.Contains("CPU", StringComparison.OrdinalIgnoreCase))
             .FirstOrDefault();
 
-        var fan = superIo
-            .SelectMany(item => item.Sensors)
-            .Where(sensor => sensor.SensorType == SensorType.Fan && IsValid(sensor.Value))
-            .OrderByDescending(sensor => sensor.Name.Contains("CPU", StringComparison.OrdinalIgnoreCase))
-            .FirstOrDefault();
-
         var power = superIo
             .SelectMany(item => item.Sensors)
             .FirstOrDefault(sensor => sensor.SensorType == SensorType.Power && IsValid(sensor.Value) && sensor.Value > 0);
@@ -261,14 +258,35 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, IDisposable
             MotherboardTemperature = motherboardTemperature is null
                 ? MetricValue.Unavailable("°C", "未检测到可用的主板温度传感器；可检查 BIOS、驱动或传感器库支持")
                 : MetricFromSensor(motherboardTemperature, "°C"),
-            FanSpeed = fan is null
-                ? MetricValue.Unavailable("RPM", "未检测到可用的 CPU / 系统风扇传感器；GPU 风扇不计入此项")
-                : MetricFromSensor(fan, "RPM"),
             Power = power is null
                 ? MetricValue.Unavailable("W", "整机功耗通常需要受支持的电源或专用传感器，当前未检测到")
                 : MetricFromSensor(power, "W"),
             PowerSource = ReadPowerSource()
         };
+    }
+
+    private static MetricValue ReadCpuFan(IReadOnlyList<IHardware> hardware)
+    {
+        var fanSensors = hardware
+            .Where(item => item.HardwareType is not HardwareType.GpuAmd and not HardwareType.GpuIntel and not HardwareType.GpuNvidia)
+            .SelectMany(item => item.Sensors)
+            .Where(sensor => sensor.SensorType == SensorType.Fan && IsValid(sensor.Value))
+            .ToArray();
+
+        var namedCpuFan = fanSensors.FirstOrDefault(sensor =>
+            CpuFanKeywords.Any(keyword => sensor.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)));
+
+        if (namedCpuFan is not null)
+            return MetricFromSensor(namedCpuFan, "RPM");
+
+        var fallbackFan = hardware
+            .Where(item => item.HardwareType == HardwareType.SuperIO)
+            .SelectMany(item => item.Sensors)
+            .FirstOrDefault(sensor => sensor.SensorType == SensorType.Fan && IsValid(sensor.Value));
+
+        return fallbackFan is null
+            ? MetricValue.Unavailable("RPM", "未检测到 CPU 风扇转速传感器；部分 3-pin 风扇或无测速线风扇不会返回转速")
+            : MetricFromSensor(fallbackFan, "RPM");
     }
 
     private static MetricValue ReadAverageCpuFrequency(IHardware cpu)

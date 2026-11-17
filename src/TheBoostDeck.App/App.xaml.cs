@@ -271,7 +271,11 @@ public partial class App : System.Windows.Application
         {
             var snapshot = new TelemetrySnapshot
             {
-                Cpu = new CpuMetrics { Usage = MetricValue.Unavailable("%", _reason) },
+                Cpu = new CpuMetrics
+                {
+                    Usage = MetricValue.Unavailable("%", _reason),
+                    FanSpeed = MetricValue.Unavailable("RPM", _reason)
+                },
                 Gpu = new GpuMetrics { Usage = MetricValue.Unavailable("%", _reason) },
                 Memory = new MemoryMetrics { Usage = MetricValue.Unavailable("%", _reason) },
                 Storage = new StorageMetrics
@@ -287,7 +291,6 @@ public partial class App : System.Windows.Application
                 System = new SystemMetrics
                 {
                     MotherboardTemperature = MetricValue.Unavailable("°C", _reason),
-                    FanSpeed = MetricValue.Unavailable("RPM", _reason),
                     Power = MetricValue.Unavailable("W", _reason)
                 }
             };

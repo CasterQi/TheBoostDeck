@@ -8,7 +8,7 @@ TheBoostDeck is a Windows desktop performance monitor designed for a gamer's sec
 
 ## Highlights
 
-- Real-time CPU, GPU, memory, dedicated VRAM, fixed-disk, network, and available motherboard/system sensors.
+- Real-time CPU, GPU, memory, dedicated VRAM, fixed-disk, network, and available motherboard sensors, including CPU fan RPM when exposed.
 - Responsive 16:9 and 9:16 layouts with automatic card reflow during resize or orientation changes.
 - Resizable always-on-top window, screen selection, tray hide/show, and persistent placement.
 - Frameless HUD header with language, pin, hide-to-tray, maximize/restore, and close controls; maximize respects the current monitor work area and taskbar.
