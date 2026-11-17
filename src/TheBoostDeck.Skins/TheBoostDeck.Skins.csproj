@@ -9,6 +9,7 @@
     <EmbeddedResource Include="SkinSkill\references\skin-format.md" LogicalName="TheBoostDeck.Skins.SkinSkill.references.skin-format.md" />
     <EmbeddedResource Include="SkinSkill\references\protocol.md" LogicalName="TheBoostDeck.Skins.SkinSkill.references.protocol.md" />
     <EmbeddedResource Include="SkinSkill\references\design-guide.md" LogicalName="TheBoostDeck.Skins.SkinSkill.references.design-guide.md" />
+    <EmbeddedResource Include="SkinSkill\references\derived-metrics.md" LogicalName="TheBoostDeck.Skins.SkinSkill.references.derived-metrics.md" />
     <EmbeddedResource Include="SkinSkill\scripts\validate_boostskin.py" LogicalName="TheBoostDeck.Skins.SkinSkill.scripts.validate_boostskin.py" />
   </ItemGroup>
 

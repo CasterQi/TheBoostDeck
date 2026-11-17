@@ -101,3 +101,17 @@ Skin manager actions (the built-in dashboard uses these; a custom skin may omit 
 ## Data boundary
 
 The `snapshot` payload is the live data contract. The exported `platform.json` also contains a `sensors` array with every raw sensor that the hardware collector can enumerate. That array is discovery metadata: a raw sensor not represented in `snapshot` is not currently delivered to the skin. Do not build a live widget that reads an unsupported raw field.
+
+## Derived values
+
+A skin may compute presentation values from two or more canonical `snapshot` fields. The host does not publish these derived values; the skin owns the calculation. `platform.json.derivedMetrics` is a generated candidate list, and `references/derived-metrics.md` documents the allowed formulas.
+
+Derived values must:
+
+- use only `available` fields from the same snapshot;
+- use the host's units and avoid invented conversion assumptions;
+- be recomputed on every snapshot;
+- be labeled as derived in the UI;
+- fall back to the unavailable placeholder when any input is missing.
+
+Do not derive FPS, fan RPM from fan control, total PSU power, per-core values from aggregate CPU load, or any value from a raw-only sensor.

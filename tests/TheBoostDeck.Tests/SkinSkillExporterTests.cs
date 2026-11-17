@@ -23,6 +23,7 @@ public sealed class SkinSkillExporterTests
         Assert.Contains("theboostdeck-skin-author/references/skin-format.md", names);
         Assert.Contains("theboostdeck-skin-author/references/protocol.md", names);
         Assert.Contains("theboostdeck-skin-author/references/design-guide.md", names);
+        Assert.Contains("theboostdeck-skin-author/references/derived-metrics.md", names);
         Assert.Contains("theboostdeck-skin-author/references/platform.json", names);
         Assert.Contains("theboostdeck-skin-author/references/platform-summary.md", names);
         Assert.Contains("theboostdeck-skin-author/scripts/validate_boostskin.py", names);
@@ -38,10 +39,30 @@ public sealed class SkinSkillExporterTests
         Assert.Equal("unavailable", root.GetProperty("metrics")[4].GetProperty("status").GetString());
         Assert.Equal("Test CPU", root.GetProperty("snapshot").GetProperty("cpu").GetProperty("name").GetString());
 
+        var derived = root.GetProperty("derivedMetrics").EnumerateArray().ToList();
+        var memoryFree = derived.Single(metric => metric.GetProperty("id").GetString() == "memory.free");
+        Assert.True(memoryFree.GetProperty("available").GetBoolean());
+        Assert.Equal(19.5, memoryFree.GetProperty("value").GetDouble());
+        Assert.Equal("GB", memoryFree.GetProperty("unit").GetString());
+
+        var networkTotal = derived.Single(metric => metric.GetProperty("id").GetString() == "network.total");
+        Assert.True(networkTotal.GetProperty("available").GetBoolean());
+        Assert.Equal(150, networkTotal.GetProperty("value").GetDouble());
+
+        var computePower = derived.Single(metric => metric.GetProperty("id").GetString() == "power.computeTotal");
+        Assert.True(computePower.GetProperty("available").GetBoolean());
+        Assert.Equal(100, computePower.GetProperty("value").GetDouble());
+
+        var totalFree = derived.Single(metric => metric.GetProperty("id").GetString() == "storage.freeTotal");
+        Assert.False(totalFree.GetProperty("available").GetBoolean());
+        Assert.False(totalFree.TryGetProperty("value", out _));
+
         var summary = ReadEntry(archive, "theboostdeck-skin-author/references/platform-summary.md");
         Assert.Contains("CPU Package", summary);
         Assert.Contains("Fan #1", summary);
         Assert.Contains("Runtime metric coverage", summary);
+        Assert.Contains("Candidate derived metrics", summary);
+        Assert.Contains("memory.free", summary);
     }
 
     [Fact]
@@ -68,12 +89,27 @@ public sealed class SkinSkillExporterTests
             {
                 Name = "Test CPU",
                 Usage = MetricValue.Available(12.5, "%", "CPU Total"),
+                Power = MetricValue.Available(65, "W", "CPU Package"),
                 FanSpeed = MetricValue.Unavailable("RPM", "No fan sensor")
             },
-            Gpu = new GpuMetrics { Name = "Test GPU" },
-            Memory = new MemoryMetrics(),
+            Gpu = new GpuMetrics
+            {
+                Name = "Test GPU",
+                Power = MetricValue.Available(35, "W", "GPU Package"),
+                MemoryUsed = MetricValue.Available(2.5, "GB", "GPU Memory Used"),
+                MemoryTotal = MetricValue.Available(8, "GB", "GPU Memory Total")
+            },
+            Memory = new MemoryMetrics
+            {
+                Used = MetricValue.Available(12.5, "GB", "Memory Used"),
+                Total = MetricValue.Available(32, "GB", "Memory Total")
+            },
             Storage = new StorageMetrics(),
-            Network = new NetworkMetrics(),
+            Network = new NetworkMetrics
+            {
+                Download = MetricValue.Available(100, "B/s", "Network Download"),
+                Upload = MetricValue.Available(50, "B/s", "Network Upload")
+            },
             System = new SystemMetrics(),
             SensorDriver = new SensorDriverInfo { Name = "PawnIO", Status = "ready", Ready = true }
         };

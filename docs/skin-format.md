@@ -167,13 +167,15 @@ theboostdeck-skin-author/
 │   ├── skin-format.md
 │   ├── protocol.md
 │   ├── design-guide.md
+│   ├── derived-metrics.md
 │   ├── platform.json
 │   └── platform-summary.md
 └── scripts/
     └── validate_boostskin.py
 ```
 
-- `platform.json` 在导出时写入：机器名、OS、架构、应用版本、传感器驱动状态、最新 `TelemetrySnapshot`、全部原始硬件传感器条目和规范化指标覆盖摘要。
-- `platform-summary.md` 是同一份平台清单的可读版本，按硬件列出全部传感器，并标明可用与不可用指标。
-- 原始传感器清单用于能力发现；当前皮肤运行时只接收 `snapshot` 中的规范化字段。未映射进 `snapshot` 的原始传感器不能直接作为实时 UI 数据源，Skill 文档已明确这一边界。
+- `platform.json` 在导出时写入：机器名、OS、架构、应用版本、传感器驱动状态、最新 `TelemetrySnapshot`、全部原始硬件传感器条目、规范化指标覆盖摘要，以及 `derivedMetrics` 二次计算候选。
+- `derivedMetrics` 列出可由 `snapshot` 直接字段安全计算的候选，例如内存/显存剩余、每块磁盘剩余空间、磁盘总剩余空间、网络上下行合计、CPU + GPU 功耗；每项包含 `formula`、`inputs`、`available`、`value`、`unit` 与说明。这些值由皮肤在每次 `snapshot` 到达时重新计算，宿主不会直接下发。
+- `platform-summary.md` 是同一份平台清单的可读版本，按硬件列出全部传感器，并包含规范化指标覆盖和派生指标候选表。
+- 原始传感器清单用于能力发现；当前皮肤运行时只接收 `snapshot` 中的规范化字段。未映射进 `snapshot` 的原始传感器不能直接作为实时 UI 数据源，Skill 文档已明确这一边界，并说明派生值也只能基于 `snapshot` 中可用的直接字段。
 - 导出的是 Skill 文件夹的 ZIP，不是 `.boostskin`；解压后可由 Agent 作为本地 Skill 使用。

@@ -1,6 +1,6 @@
 ---
 name: theboostdeck-skin-author
-description: Create, redesign, or extend a TheBoostDeck performance HUD as a distributable .boostskin package. Use when the user asks for a custom gaming secondary-display dashboard, a skin/theme, a visual redesign from a reference image, or a telemetry layout for CPU, GPU, memory, storage, network, motherboard, fans, or temperatures. This exported skill contains this machine's complete sensor inventory and latest snapshot; read it before designing so unavailable sensors do not become broken widgets.
+description: Create, redesign, or extend a TheBoostDeck performance HUD as a distributable .boostskin package. Use when the user asks for a custom gaming secondary-display dashboard, a skin/theme, a visual redesign from a reference image, or a telemetry layout for CPU, GPU, memory, storage, network, motherboard, fans, or temperatures. This exported skill contains this machine's complete sensor inventory, latest snapshot, and safe derived-metric candidates; read them before designing so unavailable sensors do not become broken widgets.
 ---
 
 # TheBoostDeck Skin Author
@@ -12,7 +12,8 @@ Create a complete `.boostskin` package, not just a static mockup.
 1. Read `references/platform-summary.md` first, then `references/platform.json`.
 2. Treat every hardware and sensor name as literal source data. Do not translate, rename, or "clean up" names reported by the hardware layer.
 3. Use `platform.json` to learn what this machine exposes. `snapshot` contains the canonical fields delivered to a running skin. `sensors` is the full raw inventory for discovery; a raw sensor that is not represented in `snapshot` is not available to the skin UI yet.
-4. Never invent a value, a sensor, or a hardware capability that is not in the inventory.
+4. Read `references/derived-metrics.md` before adding a computed value. `platform.json.derivedMetrics` lists formulas that can be calculated from this machine's direct `snapshot` fields; it is a starting point, not a live data feed.
+5. Never invent a value, a sensor, a hardware capability, or a conversion factor that is not in the inventory or snapshot.
 
 ## Deliverable
 
@@ -44,6 +45,16 @@ python scripts/validate_boostskin.py path/to/your-skin.boostskin
 
 The host sends JSON messages through `window.chrome.webview` when available: `snapshot`, `settings`, and `collection-error`. The skin sends window actions (`begin-drag`, `toggle-topmost`, `hide-window`, `toggle-maximize`, `close-window`) and language selection (`set-language`). Treat every message as untrusted input and update the DOM defensively. `snapshot` is the only supported source for live values; the detailed field shape is in `references/protocol.md`.
 
+## Derived values
+
+The host does not send every useful display value. You may compute additional values from canonical `snapshot` fields when the formula is deterministic, every input is available in that same snapshot, and the result is labeled as derived in the UI.
+
+- Start from `platform.json.derivedMetrics` and `references/derived-metrics.md`.
+- Good examples are free memory (`total - used`), free VRAM, drive free space, combined network throughput, and CPU + GPU power.
+- Prefer a direct host metric when one exists; use the derivation only as a fallback or a genuinely new presentation value.
+- Never derive FPS, fan RPM from PWM, total PSU power, per-core values from aggregate load, or a value from a raw sensor that is not in `snapshot`.
+- If an input is unavailable, the derived value is unavailable too. Render the same deliberate placeholder; never substitute zero.
+
 ## Design requirements
 
 - Read `references/design-guide.md` before styling. Match the TheBoostDeck visual language unless the user explicitly asks for another direction.
@@ -70,3 +81,4 @@ Before finishing, confirm:
 3. No sensor or hardware name has been translated or fabricated.
 4. The archive has `skin.json` at its root and the entry file exists.
 5. `validate_boostskin.py` passes.
+6. Every computed value uses only available `snapshot` inputs, has a documented formula, and is labeled as derived.

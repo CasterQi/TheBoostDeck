@@ -31,6 +31,7 @@ public static class SkinSkillExporter
         ("references/skin-format.md", "TheBoostDeck.Skins.SkinSkill.references.skin-format.md"),
         ("references/protocol.md", "TheBoostDeck.Skins.SkinSkill.references.protocol.md"),
         ("references/design-guide.md", "TheBoostDeck.Skins.SkinSkill.references.design-guide.md"),
+        ("references/derived-metrics.md", "TheBoostDeck.Skins.SkinSkill.references.derived-metrics.md"),
         ("scripts/validate_boostskin.py", "TheBoostDeck.Skins.SkinSkill.scripts.validate_boostskin.py")
     ];
 
@@ -104,6 +105,7 @@ public static class SkinSkillExporter
         SensorCount: inventory.Sensors.Count,
         Sensors: inventory.Sensors,
         Metrics: BuildMetricCoverage(inventory.Snapshot),
+        DerivedMetrics: BuildDerivedMetrics(inventory.Snapshot),
         Snapshot: inventory.Snapshot);
 
     private static string BuildPlatformSummary(
@@ -144,6 +146,21 @@ public static class SkinSkillExporter
         }
         builder.AppendLine();
 
+        builder.AppendLine("## Candidate derived metrics");
+        builder.AppendLine();
+        builder.AppendLine("These candidates are calculated from canonical `snapshot` fields at export time. The host does not send these values; a skin may recompute them from each new snapshot using the formulas in `references/derived-metrics.md`. A candidate is available only when every required input is available.");
+        builder.AppendLine();
+        builder.AppendLine("| Group | Id | Label | Formula | Inputs | Available | Value | Unit |");
+        builder.AppendLine("| --- | --- | --- | --- | --- | --- | --- | --- |");
+        foreach (var derived in BuildDerivedMetrics(inventory.Snapshot))
+        {
+            builder.AppendLine(
+                $"| {Escape(derived.Group)} | {Escape(derived.Id)} | {Escape(derived.Label)} | " +
+                $"{Escape(derived.Formula)} | {Escape(string.Join(", ", derived.Inputs))} | " +
+                $"{(derived.Available ? "yes" : "no")} | {Escape(FormatValue(derived.Value))} | {Escape(derived.Unit)} |");
+        }
+        builder.AppendLine();
+
         builder.AppendLine("## All hardware sensors");
         builder.AppendLine();
         builder.AppendLine("This table is the complete raw inventory returned by the collector. It is discovery data: only fields represented in the runtime metric coverage above are delivered to skins today.");
@@ -174,7 +191,8 @@ public static class SkinSkillExporter
         builder.AppendLine("3. Show `—` or a localized no-data state for unavailable metrics; never substitute zero.");
         builder.AppendLine("4. Design 16:9 landscape and 9:16 portrait as first-class layouts.");
         builder.AppendLine("5. FPS is intentionally out of scope.");
-        builder.AppendLine("6. Validate the finished `.boostskin` with `scripts/validate_boostskin.py`.");
+        builder.AppendLine("6. Derived values are allowed only from available `snapshot` inputs; label them as derived and recompute them every snapshot.");
+        builder.AppendLine("7. Validate the finished `.boostskin` with `scripts/validate_boostskin.py`.");
         return builder.ToString();
     }
 
@@ -223,6 +241,108 @@ public static class SkinSkillExporter
             Source: value.Source,
             Reason: value.Reason));
 
+    private static IReadOnlyList<DerivedMetricEntry> BuildDerivedMetrics(TelemetrySnapshot snapshot)
+    {
+        var derived = new List<DerivedMetricEntry>();
+
+        var memoryFree = Difference(snapshot.Memory.Total, snapshot.Memory.Used);
+        AddDerived(derived, "Memory", "memory.free", "Memory free", "memory.total - memory.used", "GB",
+            ["memory.total", "memory.used"], memoryFree,
+            "Derived free capacity; the host does not send this field.");
+        var memoryFreePercent = Percentage(Difference(snapshot.Memory.Total, snapshot.Memory.Used), snapshot.Memory.Total);
+        AddDerived(derived, "Memory", "memory.freePercent", "Memory free percent", "(memory.total - memory.used) / memory.total * 100", "%",
+            ["memory.total", "memory.used"], memoryFreePercent,
+            "Use host memory.usage for the used percentage when it is available.");
+
+        var gpuFree = Difference(snapshot.Gpu.MemoryTotal, snapshot.Gpu.MemoryUsed);
+        AddDerived(derived, "GPU", "gpu.vramFree", "VRAM free", "gpu.memoryTotal - gpu.memoryUsed", "GB",
+            ["gpu.memoryTotal", "gpu.memoryUsed"], gpuFree,
+            "Derived free VRAM; the host does not send this field.");
+        var gpuFreePercent = Percentage(gpuFree, snapshot.Gpu.MemoryTotal);
+        AddDerived(derived, "GPU", "gpu.vramFreePercent", "VRAM free percent", "(gpu.memoryTotal - gpu.memoryUsed) / gpu.memoryTotal * 100", "%",
+            ["gpu.memoryTotal", "gpu.memoryUsed"], gpuFreePercent,
+            "Use host gpu.memoryUsage when it is available.");
+
+        var driveFreeValues = new List<double>();
+        var allDrivesAvailable = true;
+        for (var index = 0; index < snapshot.Storage.Drives.Count; index++)
+        {
+            var drive = snapshot.Storage.Drives[index];
+            var driveLabel = string.IsNullOrWhiteSpace(drive.Label) ? drive.Name : drive.Label;
+            var driveFree = Difference(drive.Total, drive.Used);
+            var driveFreePercent = Percentage(driveFree, drive.Total);
+            if (driveFree.HasValue)
+                driveFreeValues.Add(driveFree.Value);
+            if (!IsAvailable(drive.Total) || !IsAvailable(drive.Used))
+                allDrivesAvailable = false;
+
+            AddDerived(derived, "Storage", $"storage.drive{index}.free", $"Free space ({driveLabel})",
+                "storage.drives[i].total - storage.drives[i].used", "GB",
+                [$"storage.drives[{index}].total", $"storage.drives[{index}].used"], driveFree,
+                "Derived per-drive free space; recompute from each snapshot.");
+            AddDerived(derived, "Storage", $"storage.drive{index}.freePercent", $"Free space percent ({driveLabel})",
+                "(storage.drives[i].total - storage.drives[i].used) / storage.drives[i].total * 100", "%",
+                [$"storage.drives[{index}].total", $"storage.drives[{index}].used"], driveFreePercent,
+                "Use the host drive usage when it is available.");
+        }
+
+        double? totalFree = allDrivesAvailable && snapshot.Storage.Drives.Count > 0
+                            && driveFreeValues.Count == snapshot.Storage.Drives.Count
+            ? driveFreeValues.Sum()
+            : null;
+        AddDerived(derived, "Storage", "storage.freeTotal", "Total free space",
+            "sum(storage.drives[i].total - storage.drives[i].used)", "GB",
+            [.. snapshot.Storage.Drives.Select((_, index) => $"storage.drives[{index}].total"), .. snapshot.Storage.Drives.Select((_, index) => $"storage.drives[{index}].used")],
+            totalFree,
+            "Only available when every drive reports both total and used capacity.");
+
+        var networkTotal = Sum(snapshot.Network.Download, snapshot.Network.Upload);
+        AddDerived(derived, "Network", "network.total", "Combined throughput",
+            "network.download + network.upload", "B/s",
+            ["network.download", "network.upload"], networkTotal,
+            "Combined adapter throughput; not an internet speed test.");
+
+        var computePower = Sum(snapshot.Cpu.Power, snapshot.Gpu.Power);
+        AddDerived(derived, "Power", "power.computeTotal", "CPU + GPU power",
+            "cpu.power + gpu.power", "W",
+            ["cpu.power", "gpu.power"], computePower,
+            "Partial system power estimate; never label it as total PSU draw.");
+
+        return derived;
+    }
+
+    private static void AddDerived(
+        List<DerivedMetricEntry> target,
+        string group,
+        string id,
+        string label,
+        string formula,
+        string unit,
+        IReadOnlyList<string> inputs,
+        double? value,
+        string? note) =>
+        target.Add(new DerivedMetricEntry(group, id, label, formula, inputs, unit, value, value.HasValue, note));
+
+    private static bool IsAvailable(MetricValue value) =>
+        value.Status == MetricStatus.Available && value.Value.HasValue && double.IsFinite(value.Value.Value);
+
+    private static double? Difference(MetricValue minuend, MetricValue subtrahend) =>
+        IsAvailable(minuend) && IsAvailable(subtrahend)
+            ? minuend.Value!.Value - subtrahend.Value!.Value
+            : null;
+
+    private static double? Percentage(double? part, MetricValue total)
+    {
+        if (part is null || !IsAvailable(total) || total.Value!.Value <= 0)
+            return null;
+        return part.Value / total.Value.Value * 100;
+    }
+
+    private static double? Sum(MetricValue first, MetricValue second) =>
+        IsAvailable(first) && IsAvailable(second)
+            ? first.Value!.Value + second.Value!.Value
+            : null;
+
     private static string FormatValue(double? value) =>
         value.HasValue ? value.Value.ToString("0.##", CultureInfo.InvariantCulture) : "—";
 
@@ -255,6 +375,7 @@ public static class SkinSkillExporter
         int SensorCount,
         IReadOnlyList<SensorInventoryEntry> Sensors,
         IReadOnlyList<MetricCoverageEntry> Metrics,
+        IReadOnlyList<DerivedMetricEntry> DerivedMetrics,
         TelemetrySnapshot Snapshot);
 
     private sealed record MetricCoverageEntry(
@@ -265,4 +386,15 @@ public static class SkinSkillExporter
         string Unit,
         string? Source,
         string? Reason);
+
+    private sealed record DerivedMetricEntry(
+        string Group,
+        string Id,
+        string Label,
+        string Formula,
+        IReadOnlyList<string> Inputs,
+        string Unit,
+        double? Value,
+        bool Available,
+        string? Note);
 }
