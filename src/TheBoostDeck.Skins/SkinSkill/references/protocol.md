@@ -137,7 +137,7 @@ Skin manager actions (required for the skin's visible skin-switch entry; import/
 
 Every custom skin must provide:
 
-1. A visible skin manager/switch entry. It sends `request-skins`, renders the returned `skin-catalog`, and sends `set-skin`. The host does not provide a shared manager popup for external skins; implement a minimal skin-owned panel. It does not need to match the built-in dashboard. Import/export actions may live in the same panel instead of separate top-level buttons.
+1. A visible skin manager/switch entry. Copy the shared `assets/skin-manager/` component, include its HTML/CSS/JS in the package, and mount it from the trigger. It sends `request-skins`, renders the returned `skin-catalog`, and sends `set-skin`. The host does not provide a shared manager popup; the shared Skill component is the reusable panel. Import/export actions live in the same panel instead of separate top-level buttons.
 2. A visible hide or exit entry. Send `hide-window` or `close-window`; do not rely only on the tray icon.
 3. A visible drag region. Send `begin-drag`; it must work in both landscape and portrait.
 

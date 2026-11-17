@@ -24,6 +24,9 @@ public sealed class SkinSkillExporterTests
         Assert.Contains("theboostdeck-skin-author/references/protocol.md", names);
         Assert.Contains("theboostdeck-skin-author/references/design-guide.md", names);
         Assert.Contains("theboostdeck-skin-author/references/derived-metrics.md", names);
+        Assert.Contains("theboostdeck-skin-author/assets/skin-manager/skin-manager.html", names);
+        Assert.Contains("theboostdeck-skin-author/assets/skin-manager/skin-manager.css", names);
+        Assert.Contains("theboostdeck-skin-author/assets/skin-manager/skin-manager.js", names);
         Assert.Contains("theboostdeck-skin-author/references/platform.json", names);
         Assert.Contains("theboostdeck-skin-author/references/platform-summary.md", names);
         Assert.Contains("theboostdeck-skin-author/scripts/validate_boostskin.py", names);
@@ -66,8 +69,18 @@ public sealed class SkinSkillExporterTests
         Assert.Contains("Required controls", summary);
         Assert.Contains("skin manager/switch entry", summary);
         Assert.Contains("visible drag region", summary);
+        Assert.Contains("assets/skin-manager/", summary);
         Assert.Contains("Candidate derived metrics", summary);
         Assert.Contains("memory.free", summary);
+
+        var managerScript = ReadEntry(archive, "theboostdeck-skin-author/assets/skin-manager/skin-manager.js");
+        Assert.Contains("TheBoostDeckSkinManager", managerScript);
+        Assert.Contains("skin-catalog", managerScript);
+        var managerCss = ReadEntry(archive, "theboostdeck-skin-author/assets/skin-manager/skin-manager.css");
+        Assert.Contains(".tbd-sm-overlay", managerCss);
+        var managerHtml = ReadEntry(archive, "theboostdeck-skin-author/assets/skin-manager/skin-manager.html");
+        Assert.Contains("data-tbd-skin-manager", managerHtml);
+        Assert.Contains("data-tbd-export-skill", managerHtml);
     }
 
     [Fact]

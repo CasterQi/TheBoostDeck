@@ -44,17 +44,49 @@ python scripts/validate_boostskin.py path/to/your-skin.boostskin
 
 ## Runtime contract in one paragraph
 
-The host sends JSON messages through `window.chrome.webview` when available: `snapshot`, `settings`, `collection-error`, and `skin-catalog`. The skin sends window actions (`begin-drag`, `toggle-topmost`, `hide-window`, `toggle-maximize`, `close-window`), language selection (`set-language`), and skin manager actions (`request-skins`, `set-skin`, `import-skin`, `export-skin`). Treat every message as untrusted input and update the DOM defensively. `snapshot` is the only supported source for live values; the detailed field shape is in `references/protocol.md`.
+The host sends JSON messages through `window.chrome.webview` when available: `snapshot`, `settings`, `collection-error`, `skin-catalog`, and `skin-action`. The skin sends window actions (`begin-drag`, `toggle-topmost`, `hide-window`, `toggle-maximize`, `close-window`), language selection (`set-language`), and skin manager actions (`request-skins`, `set-skin`, `import-skin`, `export-skin`, `export-skill`). Treat every message as untrusted input and update the DOM defensively. `snapshot` is the only supported source for live values; the detailed field shape is in `references/protocol.md`.
 
 ## Mandatory controls
 
 Every skin must expose these capabilities, no matter how minimal the visual design is. Do **not** ask the user whether to include them; they are non-negotiable. Ask only about visual treatment, placement, or optional controls.
 
-1. **Skin manager / switch entry** — a visible control that opens a skin manager panel where the user can choose another installed skin. Use `request-skins`; the host responds with `skin-catalog`, and the panel sends `set-skin`. The host does not provide a shared manager popup for external skins, so implement a minimal skin-owned panel; it does not need to copy the built-in dashboard styling. Import/export actions may live inside this panel instead of as separate top-level buttons.
+1. **Skin manager / switch entry** — a visible control that opens the shared skin manager panel where the user can choose another installed skin. Copy the `assets/skin-manager/` component; it sends `request-skins`, renders `skin-catalog`, and sends `set-skin`. The host does not provide a host-level manager popup for external skins, so the shared Skill component is the reusable panel. Import/export/export-skill actions live inside this panel instead of as separate top-level buttons.
 2. **Hide or exit entry** — a visible control that sends `hide-window` or `close-window`. Do not rely on the tray icon as the only way out of a full-screen skin.
 3. **Drag region** — a visible drag area that sends `begin-drag` so the frameless window can be moved. It can be a title strip, an edge grip, or a dedicated handle, but it must be available in both orientations.
 
 A single visible control hub is acceptable: for example, one button that opens a small menu containing “Switch skin” and “Hide/Exit”. That satisfies the minimum requirement. There is no required top-right position; place the controls wherever they fit the composition, as long as they remain visible and reachable in both 16:9 and 9:16.
+
+## Reuse the shared manager panel
+
+Do not redesign the skin manager for every skin. The package includes a reusable manager made of `assets/skin-manager/skin-manager.html`, `skin-manager.css`, and `skin-manager.js`. It mirrors the built-in manager: preview cards, active state, skin switching, import, export, export-skill, Esc/backdrop close, and zh-CN/en-US labels.
+
+Copy it into the skin package and mount it:
+
+1. Copy the three files under `assets/skin-manager/`, preserving that relative path.
+2. Add the stylesheet in `<head>`:
+   ```html
+   <link rel="stylesheet" href="assets/skin-manager/skin-manager.css">
+   ```
+3. Paste the modal block from `skin-manager.html` into `index.html` before `</body>`.
+4. Add one visible trigger to your control hub. Any button or menu item works; this is only a starting point:
+   ```html
+   <button class="tbd-sm-trigger" type="button" data-tbd-skin-manager-trigger aria-label="Skin manager">
+     <svg class="tbd-sm-icon" viewBox="0 0 24 24" aria-hidden="true">
+       <path d="M12 3a9 9 0 100 18h2.1a2.1 2.1 0 001.4-3.7 2.1 2.1 0 011.5-3.6H19a4 4 0 00-7-8Z"/>
+     </svg>
+   </button>
+   ```
+5. Load and mount the controller after the markup:
+   ```html
+   <script src="assets/skin-manager/skin-manager.js"></script>
+   <script>
+     TheBoostDeckSkinManager.mount({
+       trigger: document.querySelector('[data-tbd-skin-manager-trigger]')
+     });
+   </script>
+   ```
+
+The trigger position and visual shell are yours; the panel itself should remain the shared component. You may override the `--tbd-sm-*` variables on `.tbd-sm-overlay` to match the skin, but do not remove the skin switch, hide/exit capability, import/export, or keyboard/backdrop close behavior. If the skin changes the manager UI, it must preserve the same host messages and fallback states.
 
 ## Derived values
 

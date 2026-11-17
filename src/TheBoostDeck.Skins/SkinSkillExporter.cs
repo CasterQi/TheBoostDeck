@@ -32,6 +32,9 @@ public static class SkinSkillExporter
         ("references/protocol.md", "TheBoostDeck.Skins.SkinSkill.references.protocol.md"),
         ("references/design-guide.md", "TheBoostDeck.Skins.SkinSkill.references.design-guide.md"),
         ("references/derived-metrics.md", "TheBoostDeck.Skins.SkinSkill.references.derived-metrics.md"),
+        ("assets/skin-manager/skin-manager.html", "TheBoostDeck.Skins.SkinSkill.assets.skin-manager.skin-manager.html"),
+        ("assets/skin-manager/skin-manager.css", "TheBoostDeck.Skins.SkinSkill.assets.skin-manager.skin-manager.css"),
+        ("assets/skin-manager/skin-manager.js", "TheBoostDeck.Skins.SkinSkill.assets.skin-manager.skin-manager.js"),
         ("scripts/validate_boostskin.py", "TheBoostDeck.Skins.SkinSkill.scripts.validate_boostskin.py")
     ];
 
@@ -148,7 +151,7 @@ public static class SkinSkillExporter
 
         builder.AppendLine("## Required controls");
         builder.AppendLine();
-        builder.AppendLine("Every skin must expose a visible skin manager/switch entry, a visible hide/exit entry, and a visible drag region. One control hub may combine the first two. Position is free, but the controls must remain visible and reachable in both 16:9 and 9:16. Do not ask the user whether to include these controls.");
+        builder.AppendLine("Every skin must expose a visible skin manager/switch entry, a visible hide/exit entry, and a visible drag region. One control hub may combine the first two. Copy `assets/skin-manager/` for the shared manager panel; do not redesign it per skin. Position is free, but the controls must remain visible and reachable in both 16:9 and 9:16. Do not ask the user whether to include these controls.");
         builder.AppendLine();
 
         builder.AppendLine("## Candidate derived metrics");
@@ -198,7 +201,7 @@ public static class SkinSkillExporter
         builder.AppendLine("5. FPS is intentionally out of scope.");
         builder.AppendLine("6. Derived values are allowed only from available `snapshot` inputs; label them as derived and recompute them every snapshot. Omit a derived metric whose inputs are unavailable on this machine.");
         builder.AppendLine("7. Validate the finished `.boostskin` with `scripts/validate_boostskin.py`.");
-        builder.AppendLine("8. Include the mandatory controls: skin manager/switch, hide/exit, and a drag region. A single control hub may combine the first two.");
+        builder.AppendLine("8. Include the mandatory controls: skin manager/switch, hide/exit, and a drag region. A single control hub may combine the first two. Copy the shared `assets/skin-manager/` panel instead of reimplementing it.");
         return builder.ToString();
     }
 

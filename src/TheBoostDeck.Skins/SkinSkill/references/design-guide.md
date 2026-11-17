@@ -24,6 +24,8 @@ Controls are part of the HUD's usability, not optional decoration. Every skin mu
 
 A single control hub may contain the skin switch and hide/exit actions, so a minimal skin only needs one visible control. Do not assume the top-right corner: place the hub wherever it supports the composition and remains reachable in both 16:9 and 9:16. If space is tight, merge controls into a compact menu instead of removing them.
 
+Use the shared `assets/skin-manager/` component for the panel itself. The skin may style the trigger or override the component's CSS variables, but it should not reimplement catalog rendering, import/export, or switching from scratch. The manager handles the host contract and preserves behavior across skins.
+
 Optional controls such as topmost, language, and maximize can be added when the design or user asks for them. Import/export should live inside the skin manager panel, not as separate top-level buttons.
 
 ## Information hierarchy
