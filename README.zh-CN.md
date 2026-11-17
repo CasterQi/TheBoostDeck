@@ -47,14 +47,6 @@ TheBoostDeck 不会静默安装内核驱动。程序启动时会读取 PawnIO �
 
 经测试的 2.2.0 安装包具有有效的 Authenticode 签名，SHA-256 为 `1f519a22e47187f70a1379a48ca604981c4fcf694f4e65b734aaa74a9fba3032`。PawnIO 是一个独立的 GPL-2.0-or-later 项目，带有设备驱动链接例外；它不属于 TheBoostDeck 的 Apache-2.0 源码，也不随本发布版分发。详见 `THIRD-PARTY-NOTICES.md`。
 
-## 传感器可用性
-
-传感器覆盖范围取决于主板、CPU、GPU、驱动、安全软件以及 LibreHardwareMonitor 的支持情况。程序启动时不请求管理员权限。如果某项指标无法读取，会显示 `--`；展开仪表盘底部状态区可查看原因。
-
-在开发机上（华硕 H610M-D3H/M.2 D4、Core i5-12400F、GeForce RTX 4060 Ti），安装 PawnIO 2.2.0 后恢复了 CPU 封装/核心温度、封装功耗和每核心频率。探针随后枚举到 15 个硬件节点和 212 个传感器。仪表盘将 CPU 温度、CPU 功耗和 CPU 频率显示为真实数值；只有系统功耗仍不可用，因为没有暴露受支持的整机功耗传感器。系统风扇转速计和一路 SuperIO 温度通道虽然存在，但标签是通用名称（`Fan #1`、`Temperature #1`），因此仪表盘将其视为主板级数值，而不是 CPU 散热器遥测。
-
-该机器的 CPU 封装温度在约 12–14% 负载、28–31 W 封装功耗下达到 100 °C。各核心温度与距 TjMax 的余量彼此一致，所有暴露的 SuperIO 风扇转速计都读到 0 RPM。这更像是真实的散热问题，而不是解析错误；但仍需要独立的 BIOS 或硬件监控读数来完成最终硬件诊断。详见 `docs/hardware-probe-summary.md` 和 `docs/测试记录.md`。
-
 ## 自定义主题
 
 首次启动会创建：
@@ -98,19 +90,18 @@ src/TheBoostDeck.Core             遥测契约、定长缓冲区、采样服务
 src/TheBoostDeck.Infrastructure   LibreHardwareMonitor 与 Windows 数据采集
 src/TheBoostDeck.App              WPF 宿主、WebView2 桥接、托盘、设置、仪表盘
 tests/TheBoostDeck.Tests          单元与序列化测试
-tools/TheBoostDeck.HardwareProbe  原始传感器清单探针
-tools/capture-webview.mjs         可选的真实仪表盘响应式截图工具
-docs/                             计划、探针结果、截图、验证记录
+tools/TheBoostDeck.HardwareProbe  硬件诊断辅助工具
+tools/capture-webview.mjs         可选响应式截图工具
+docs/                             设计说明、截图与验证记录
 ```
 
 ## 验证与已知限制
 
-- 开发机上 9 项自动化测试全部通过。
+- 自动化测试全部通过。
 - 通过仅监听回环地址的调试会话检查了真实 WebView2 数据与交互。
-- 安装 PawnIO 2.2.0 后，仪表盘从真实传感器读取到 CPU 温度、CPU 封装功耗和 CPU 频率；只有系统功耗仍为降级状态。
 - 响应式截图覆盖 1280×720、720×1280 和 1920×1080，无横向溢出或 JavaScript 运行时错误。
 - 已验证置顶切换、隐藏行为、单实例拒绝和屏幕位置持久化。
-- 长时间稳定性测试、游戏帧率影响测试、睡眠/恢复、广泛的硬件兼容性，以及普通用户与管理员运行的完整对比，仍属于发布前验证工作。详见 `docs/测试记录.md`。
+- 长时间稳定性测试、游戏帧率影响测试、睡眠/恢复、广泛的硬件兼容性，以及普通用户与管理员运行的完整对比，仍属于发布前验证工作。
 - 本版本不包含 FPS、帧时间、游戏检测、游戏内 OSD、远程浏览器访问、自动启动、自动更新和硬件控制。
 
 ## 隐私

@@ -45,14 +45,6 @@ TheBoostDeck does not silently install a kernel driver. It detects PawnIO at sta
 
 The tested 2.2.0 installer had a valid Authenticode signature and SHA-256 `1f519a22e47187f70a1379a48ca604981c4fcf694f4e65b734aaa74a9fba3032`. PawnIO is an independent GPL-2.0-or-later project with a device-driver linking exception; it is not part of TheBoostDeck's Apache-2.0 source and is not bundled in this release. See `THIRD-PARTY-NOTICES.md`.
 
-## Sensor availability
-
-Sensor coverage depends on the motherboard, CPU, GPU, drivers, security software, and LibreHardwareMonitor support. The application starts without requesting elevation. If a metric cannot be read, it shows `--`; expand the status area at the bottom of the dashboard for the reason.
-
-On the development machine (ASUS H610M-D3H/M.2 D4, Core i5-12400F, GeForce RTX 4060 Ti), installing PawnIO 2.2.0 restored CPU package/core temperature, package power, and per-core clock. The probe then enumerated 15 hardware nodes and 212 sensors. The dashboard reported CPU temperature, CPU power, and CPU frequency as real values; only system power remained unavailable because no supported whole-system power sensor was exposed. A system fan tachometer and a SuperIO temperature channel are exposed but their labels are generic (`Fan #1`, `Temperature #1`), so the dashboard treats them as board-level values rather than CPU cooler telemetry.
-
-The CPU package temperature on that machine read 100 °C at roughly 12–14% load and 28–31 W package power. The per-core temperatures and distance-to-TjMax values were internally consistent, and all exposed SuperIO fan tachometers read 0 RPM. That points to a real cooling problem rather than a parsing error, but an independent BIOS or hardware-monitor reading is still required for a final hardware diagnosis. See `docs/hardware-probe-summary.md` and `docs/测试记录.md`.
-
 ## Custom theme
 
 The first launch creates:
@@ -96,19 +88,18 @@ src/TheBoostDeck.Core             Telemetry contracts, bounded buffer, sampling 
 src/TheBoostDeck.Infrastructure   LibreHardwareMonitor and Windows data collection
 src/TheBoostDeck.App              WPF host, WebView2 bridge, tray, settings, dashboard
 tests/TheBoostDeck.Tests          Unit and serialization tests
-tools/TheBoostDeck.HardwareProbe  Raw sensor inventory probe
-tools/capture-webview.mjs         Optional real-dashboard responsive capture utility
-docs/                             Plans, probe results, screenshots, verification records
+tools/TheBoostDeck.HardwareProbe  Hardware diagnostics helper
+tools/capture-webview.mjs         Optional responsive capture utility
+docs/                             Design notes, screenshots, and verification records
 ```
 
 ## Verification and known limits
 
-- Nine automated tests pass on the development machine.
+- All automated tests pass.
 - Real WebView2 data and interactions were inspected through a loopback-only debugging session.
-- After PawnIO 2.2.0 was installed, the dashboard read CPU temperature, CPU package power, and CPU frequency from real sensors; only system power remained degraded.
 - Responsive captures cover 1280×720, 720×1280, and 1920×1080 with no horizontal overflow or JavaScript runtime errors.
 - Topmost toggle, hide behavior, single-instance rejection, and persistent screen placement were exercised.
-- Long-duration soak testing, game-frame-rate impact testing, sleep/resume, broad hardware compatibility, and a true standard-user versus administrator comparison remain release-validation work. See `docs/测试记录.md`.
+- Long-duration soak testing, game-frame-rate impact testing, sleep/resume, broad hardware compatibility, and a true standard-user versus administrator comparison remain release-validation work.
 - FPS, frame time, game detection, in-game OSD, remote browser access, automatic startup, automatic updates, and hardware control are not included in this version.
 
 ## Privacy
