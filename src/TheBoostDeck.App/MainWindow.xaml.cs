@@ -521,6 +521,11 @@ public partial class MainWindow : Window
         var chrome = WindowChrome.GetWindowChrome(this);
         if (chrome is not null)
             chrome.ResizeBorderThickness = new Thickness(thickness);
+
+        // WebView2 is a child HWND and otherwise captures the mouse over the
+        // whole client area, leaving no parent hit-test surface for WindowChrome
+        // to turn into HTLEFT/HTRIGHT/HTTOP/HTBOTTOM resize edges.
+        WebView.Margin = new Thickness(thickness);
     }
 
     private void RestorePlacement()
