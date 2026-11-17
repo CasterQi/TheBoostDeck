@@ -29,6 +29,9 @@ public partial class App : System.Windows.Application
     private WinForms.ToolStripMenuItem? _screensMenuItem;
     private WinForms.ToolStripMenuItem? _skinMenuItem;
     private WinForms.ToolStripMenuItem? _topmostMenuItem;
+    private WinForms.ToolStripMenuItem? _languageMenuItem;
+    private WinForms.ToolStripMenuItem? _chineseMenuItem;
+    private WinForms.ToolStripMenuItem? _englishMenuItem;
     private WinForms.ToolStripMenuItem? _versionMenuItem;
     private WinForms.ToolStripMenuItem? _exitMenuItem;
 
@@ -117,6 +120,22 @@ public partial class App : System.Windows.Application
         };
         _topmostMenuItem.CheckedChanged += (_, _) => SetTopmost(_topmostMenuItem.Checked);
         menu.Items.Add(_topmostMenuItem);
+
+        _languageMenuItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "Language"));
+        _chineseMenuItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "Chinese"))
+        {
+            Checked = UiText.Normalize(Language) == UiText.Chinese
+        };
+        _englishMenuItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "English"))
+        {
+            Checked = UiText.Normalize(Language) == UiText.English
+        };
+        _chineseMenuItem.Click += (_, _) => SetLanguage(UiText.Chinese);
+        _englishMenuItem.Click += (_, _) => SetLanguage(UiText.English);
+        _languageMenuItem.DropDownItems.Add(_chineseMenuItem);
+        _languageMenuItem.DropDownItems.Add(_englishMenuItem);
+        menu.Items.Add(_languageMenuItem);
+
         menu.Items.Add(new WinForms.ToolStripSeparator());
         _versionMenuItem = new WinForms.ToolStripMenuItem(BuildInfo.MenuText(Language))
         {
@@ -557,6 +576,18 @@ public partial class App : System.Windows.Application
             _skinMenuItem.Text = UiText.Get(Language, "Skins");
         if (_topmostMenuItem is not null)
             _topmostMenuItem.Text = UiText.Get(Language, "AlwaysOnTop");
+        if (_languageMenuItem is not null)
+            _languageMenuItem.Text = UiText.Get(Language, "Language");
+        if (_chineseMenuItem is not null)
+        {
+            _chineseMenuItem.Text = UiText.Get(Language, "Chinese");
+            _chineseMenuItem.Checked = UiText.Normalize(Language) == UiText.Chinese;
+        }
+        if (_englishMenuItem is not null)
+        {
+            _englishMenuItem.Text = UiText.Get(Language, "English");
+            _englishMenuItem.Checked = UiText.Normalize(Language) == UiText.English;
+        }
         if (_versionMenuItem is not null)
             _versionMenuItem.Text = BuildInfo.MenuText(Language);
         if (_exitMenuItem is not null)
