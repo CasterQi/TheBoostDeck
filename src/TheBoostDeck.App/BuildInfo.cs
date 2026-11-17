@@ -54,13 +54,15 @@ internal static class BuildInfo
 
     private static DateTime GetBuildTimestamp()
     {
-        var assemblyPath = typeof(App).Assembly.Location;
-        if (!string.IsNullOrWhiteSpace(assemblyPath) && File.Exists(assemblyPath))
-            return File.GetLastWriteTime(assemblyPath);
-
+        // Assembly.Location is empty inside a single-file publish. The process
+        // executable is the stable timestamp source for both debug and release.
         var processPath = Environment.ProcessPath;
         if (!string.IsNullOrWhiteSpace(processPath) && File.Exists(processPath))
             return File.GetLastWriteTime(processPath);
+
+        var appHostPath = Path.Combine(AppContext.BaseDirectory, "TheBoostDeck.exe");
+        if (File.Exists(appHostPath))
+            return File.GetLastWriteTime(appHostPath);
 
         return DateTime.Now;
     }
