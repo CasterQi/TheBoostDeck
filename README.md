@@ -1,6 +1,6 @@
 # TheBoostDeck
 
-**English** | [简体中文](README.zh-CN.md)
+**English** | [Chinese](README.zh-CN.md)
 
 TheBoostDeck is a Windows desktop performance monitor designed for a gamer's secondary display. It combines a WPF host, a WebView2 dashboard, and LibreHardwareMonitor sensors in a ready-to-use, responsive application.
 
@@ -8,6 +8,7 @@ TheBoostDeck is a Windows desktop performance monitor designed for a gamer's sec
 
 ## Highlights
 
+- **Skill-generated skins.** A platform-aware authoring Skill turns a reference image or text description directly into a complete, sensor-aware `.boostskin` package.
 - Real-time CPU, GPU, memory, dedicated VRAM, fixed-disk, network, and available motherboard sensors, including CPU fan RPM when exposed.
 - Responsive 16:9 and 9:16 layouts with automatic card reflow during resize or orientation changes.
 - Resizable always-on-top window, screen selection, tray hide/show, and persistent placement.
@@ -15,6 +16,12 @@ TheBoostDeck is a Windows desktop performance monitor designed for a gamer's sec
 - Per-monitor DPI awareness and physical GPU/network filtering.
 - One shared sampling scheduler with a tray-selectable 0.1–5 s cadence; snapshots are batched into one process-local message per tick.
 - Sampling and chart rendering pause when the window is hidden.
+
+## Skins
+
+The dashboard is fully skin-driven. A skin is a portable `.boostskin` package that can replace the whole UI. Use the in-app skin manager to preview and switch installed skins, import packages from other players, or export the current skin. The bundled authoring Skill can produce a complete, platform-aware skin from a reference image or a text description.
+
+![Neon Core HUD skin](docs/screenshots/TheBoostDeck-neon-core-hud.png)
 
 ## Requirements
 
@@ -30,8 +37,8 @@ TheBoostDeck is a Windows desktop performance monitor designed for a gamer's sec
 3. The window opens on the Windows primary display by default. Use the tray menu to move it to another monitor.
 4. Use the pin button or tray menu to toggle always-on-top.
 5. Use the tray menu to move the window to another screen.
-6. Minimizing or closing the window through the Windows shell hides it to the tray and pauses sampling. Double-click the tray icon or choose **显示 / 隐藏** to restore it.
-7. Use the header close button or choose **退出** in the tray menu to exit completely.
+6. Minimizing or closing the window through the Windows shell hides it to the tray and pauses sampling. Double-click the tray icon or choose **Show / Hide** to restore it.
+7. Use the header close button or choose **Exit** in the tray menu to exit completely.
 
 The first release is not code-signed, so Windows SmartScreen may show a warning.
 

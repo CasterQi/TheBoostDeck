@@ -27,6 +27,7 @@ Thumbs.db
 /docs/screenshots/*
 !/docs/screenshots/TheBoostDeck-window-controls.jpg
 !/docs/screenshots/TheBoostDeck-window-controls.png
+!/docs/screenshots/TheBoostDeck-neon-core-hud.png
 
 # Local intermediate files and design references
 /localfile/
