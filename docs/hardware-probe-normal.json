@@ -1,0 +1,4663 @@
+{
+  "capturedAt": "2026-11-16T17:54:05.0704772+08:00",
+  "operatingSystem": "Microsoft Windows NT 10.0.19045.0",
+  "isAdministrator": true,
+  "samples": [
+    {
+      "capturedAt": "2026-11-16T17:54:01.5929272+08:00",
+      "hardware": [
+        {
+          "name": "ASUS H610M-D3H/M.2 D4",
+          "identifier": "/motherboard",
+          "type": "Motherboard",
+          "sensors": [],
+          "subHardware": []
+        },
+        {
+          "name": "12th Gen Intel Core i5-12400F",
+          "identifier": "/intelcpu/0",
+          "type": "Cpu",
+          "sensors": [
+            {
+              "name": "CPU Core #1 Thread #1",
+              "identifier": "/intelcpu/0/load/2",
+              "type": "Load",
+              "index": 2,
+              "value": 57.81,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1 Thread #2",
+              "identifier": "/intelcpu/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 54.69,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Thread #1",
+              "identifier": "/intelcpu/0/load/4",
+              "type": "Load",
+              "index": 4,
+              "value": 57.81,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Thread #2",
+              "identifier": "/intelcpu/0/load/5",
+              "type": "Load",
+              "index": 5,
+              "value": 62.5,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Thread #1",
+              "identifier": "/intelcpu/0/load/6",
+              "type": "Load",
+              "index": 6,
+              "value": 53.85,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Thread #2",
+              "identifier": "/intelcpu/0/load/7",
+              "type": "Load",
+              "index": 7,
+              "value": 62.12,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Thread #1",
+              "identifier": "/intelcpu/0/load/8",
+              "type": "Load",
+              "index": 8,
+              "value": 70.15,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Thread #2",
+              "identifier": "/intelcpu/0/load/9",
+              "type": "Load",
+              "index": 9,
+              "value": 58.21,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Thread #1",
+              "identifier": "/intelcpu/0/load/10",
+              "type": "Load",
+              "index": 10,
+              "value": 67.65,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Thread #2",
+              "identifier": "/intelcpu/0/load/11",
+              "type": "Load",
+              "index": 11,
+              "value": 58.82,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Thread #1",
+              "identifier": "/intelcpu/0/load/12",
+              "type": "Load",
+              "index": 12,
+              "value": 69.12,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Thread #2",
+              "identifier": "/intelcpu/0/load/13",
+              "type": "Load",
+              "index": 13,
+              "value": 57.35,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Total",
+              "identifier": "/intelcpu/0/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 60.84,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core Max",
+              "identifier": "/intelcpu/0/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 70.15,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "Core Max",
+              "identifier": "/intelcpu/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "Core Average",
+              "identifier": "/intelcpu/0/temperature/1",
+              "type": "Temperature",
+              "index": 1,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1",
+              "identifier": "/intelcpu/0/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2",
+              "identifier": "/intelcpu/0/temperature/3",
+              "type": "Temperature",
+              "index": 3,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3",
+              "identifier": "/intelcpu/0/temperature/4",
+              "type": "Temperature",
+              "index": 4,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4",
+              "identifier": "/intelcpu/0/temperature/5",
+              "type": "Temperature",
+              "index": 5,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5",
+              "identifier": "/intelcpu/0/temperature/6",
+              "type": "Temperature",
+              "index": 6,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6",
+              "identifier": "/intelcpu/0/temperature/7",
+              "type": "Temperature",
+              "index": 7,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Package",
+              "identifier": "/intelcpu/0/temperature/8",
+              "type": "Temperature",
+              "index": 8,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/9",
+              "type": "Temperature",
+              "index": 9,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/10",
+              "type": "Temperature",
+              "index": 10,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/11",
+              "type": "Temperature",
+              "index": 11,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/12",
+              "type": "Temperature",
+              "index": 12,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/13",
+              "type": "Temperature",
+              "index": 13,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/14",
+              "type": "Temperature",
+              "index": 14,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1",
+              "identifier": "/intelcpu/0/clock/1",
+              "type": "Clock",
+              "index": 1,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2",
+              "identifier": "/intelcpu/0/clock/2",
+              "type": "Clock",
+              "index": 2,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3",
+              "identifier": "/intelcpu/0/clock/3",
+              "type": "Clock",
+              "index": 3,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4",
+              "identifier": "/intelcpu/0/clock/4",
+              "type": "Clock",
+              "index": 4,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5",
+              "identifier": "/intelcpu/0/clock/5",
+              "type": "Clock",
+              "index": 5,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6",
+              "identifier": "/intelcpu/0/clock/6",
+              "type": "Clock",
+              "index": 6,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Package",
+              "identifier": "/intelcpu/0/power/0",
+              "type": "Power",
+              "index": 0,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Cores",
+              "identifier": "/intelcpu/0/power/1",
+              "type": "Power",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Memory",
+              "identifier": "/intelcpu/0/power/3",
+              "type": "Power",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Platform",
+              "identifier": "/intelcpu/0/power/4",
+              "type": "Power",
+              "index": 4,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "Virtual Memory",
+          "identifier": "/vram",
+          "type": "Memory",
+          "sensors": [
+            {
+              "name": "Memory Used",
+              "identifier": "/vram/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 26.885788,
+              "hardwareName": "Virtual Memory"
+            },
+            {
+              "name": "Memory Available",
+              "identifier": "/vram/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 24.93201,
+              "hardwareName": "Virtual Memory"
+            },
+            {
+              "name": "Memory",
+              "identifier": "/vram/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 51.885235,
+              "hardwareName": "Virtual Memory"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "Total Memory",
+          "identifier": "/ram",
+          "type": "Memory",
+          "sensors": [
+            {
+              "name": "Memory Used",
+              "identifier": "/ram/data/0",
+              "type": "Data",
+              "index": 0,
+              "value": 15.148113,
+              "hardwareName": "Total Memory"
+            },
+            {
+              "name": "Memory Available",
+              "identifier": "/ram/data/1",
+              "type": "Data",
+              "index": 1,
+              "value": 16.669685,
+              "hardwareName": "Total Memory"
+            },
+            {
+              "name": "Memory",
+              "identifier": "/ram/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 47.60893,
+              "hardwareName": "Total Memory"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "NVIDIA GeForce RTX 4060 Ti",
+          "identifier": "/gpu-nvidia/0",
+          "type": "GpuNvidia",
+          "sensors": [
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 43,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/clock/0",
+              "type": "Clock",
+              "index": 0,
+              "value": 525,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory",
+              "identifier": "/gpu-nvidia/0/clock/4",
+              "type": "Clock",
+              "index": 4,
+              "value": 810,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Fan",
+              "identifier": "/gpu-nvidia/0/fan/1",
+              "type": "Fan",
+              "index": 1,
+              "value": 1194,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Fan",
+              "identifier": "/gpu-nvidia/0/control/1",
+              "type": "Control",
+              "index": 1,
+              "value": 30,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 36,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Controller",
+              "identifier": "/gpu-nvidia/0/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 44,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Video Engine",
+              "identifier": "/gpu-nvidia/0/load/2",
+              "type": "Load",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Bus",
+              "identifier": "/gpu-nvidia/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 1,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Power",
+              "identifier": "/gpu-nvidia/0/load/4",
+              "type": "Load",
+              "index": 4,
+              "value": 11.309,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Board Power",
+              "identifier": "/gpu-nvidia/0/load/5",
+              "type": "Load",
+              "index": 5,
+              "value": 19.309,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core Voltage",
+              "identifier": "/gpu-nvidia/0/voltage/0",
+              "type": "Voltage",
+              "index": 0,
+              "value": 0.86,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Dedicated Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/3",
+              "type": "SmallData",
+              "index": 3,
+              "value": 2881.6953,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Shared Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/4",
+              "type": "SmallData",
+              "index": 4,
+              "value": 160.39844,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D 3D",
+              "identifier": "/gpu-nvidia/0/load/7",
+              "type": "Load",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Overlay",
+              "identifier": "/gpu-nvidia/0/load/10",
+              "type": "Load",
+              "index": 10,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Decode",
+              "identifier": "/gpu-nvidia/0/load/12",
+              "type": "Load",
+              "index": 12,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Copy",
+              "identifier": "/gpu-nvidia/0/load/8",
+              "type": "Load",
+              "index": 8,
+              "value": 0.119696245,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Copy",
+              "identifier": "/gpu-nvidia/0/load/9",
+              "type": "Load",
+              "index": 9,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Security",
+              "identifier": "/gpu-nvidia/0/load/11",
+              "type": "Load",
+              "index": 11,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Encode",
+              "identifier": "/gpu-nvidia/0/load/13",
+              "type": "Load",
+              "index": 13,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Processing",
+              "identifier": "/gpu-nvidia/0/load/14",
+              "type": "Load",
+              "index": 14,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D VR",
+              "identifier": "/gpu-nvidia/0/load/15",
+              "type": "Load",
+              "index": 15,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Hot Spot",
+              "identifier": "/gpu-nvidia/0/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": 52.1875,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Total",
+              "identifier": "/gpu-nvidia/0/smalldata/2",
+              "type": "SmallData",
+              "index": 2,
+              "value": 16380,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Free",
+              "identifier": "/gpu-nvidia/0/smalldata/0",
+              "type": "SmallData",
+              "index": 0,
+              "value": 13237,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/1",
+              "type": "SmallData",
+              "index": 1,
+              "value": 3142,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory",
+              "identifier": "/gpu-nvidia/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 19.187391,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Package",
+              "identifier": "/gpu-nvidia/0/power/0",
+              "type": "Power",
+              "index": 0,
+              "value": 18.574,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU PCIe Rx",
+              "identifier": "/gpu-nvidia/0/throughput/0",
+              "type": "Throughput",
+              "index": 0,
+              "value": 22528,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU PCIe Tx",
+              "identifier": "/gpu-nvidia/0/throughput/1",
+              "type": "Throughput",
+              "index": 1,
+              "value": 12288,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "KINGBANK KP260",
+          "identifier": "/nvme/1",
+          "type": "Storage",
+          "sensors": [
+            {
+              "name": "Composite Temperature",
+              "identifier": "/nvme/1/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 69,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Temperature #1",
+              "identifier": "/nvme/1/temperature/1",
+              "type": "Temperature",
+              "index": 1,
+              "value": 68.850006,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Temperature #2",
+              "identifier": "/nvme/1/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": 55.850006,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Warning Temperature",
+              "identifier": "/nvme/1/temperature/10",
+              "type": "Temperature",
+              "index": 10,
+              "value": 89,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Critical Temperature",
+              "identifier": "/nvme/1/temperature/11",
+              "type": "Temperature",
+              "index": 11,
+              "value": 94,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Life",
+              "identifier": "/nvme/1/level/20",
+              "type": "Level",
+              "index": 20,
+              "value": 90,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Data Read",
+              "identifier": "/nvme/1/data/21",
+              "type": "Data",
+              "index": 21,
+              "value": 52277,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Data Written",
+              "identifier": "/nvme/1/data/22",
+              "type": "Data",
+              "index": 22,
+              "value": 51212,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Power On Count",
+              "identifier": "/nvme/1/factor/23",
+              "type": "Factor",
+              "index": 23,
+              "value": 2114,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Power On Hours",
+              "identifier": "/nvme/1/factor/24",
+              "type": "Factor",
+              "index": 24,
+              "value": 17833,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Used Space",
+              "identifier": "/nvme/1/load/30",
+              "type": "Load",
+              "index": 30,
+              "value": 85.072784,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Free Space",
+              "identifier": "/nvme/1/data/31",
+              "type": "Data",
+              "index": 31,
+              "value": 152.88599,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Total Space",
+              "identifier": "/nvme/1/data/32",
+              "type": "Data",
+              "index": 32,
+              "value": 1024.2096,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Read Activity",
+              "identifier": "/nvme/1/load/51",
+              "type": "Load",
+              "index": 51,
+              "value": 8.594327E-06,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Write Activity",
+              "identifier": "/nvme/1/load/52",
+              "type": "Load",
+              "index": 52,
+              "value": 1.1584686E-06,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Total Activity",
+              "identifier": "/nvme/1/load/53",
+              "type": "Load",
+              "index": 53,
+              "value": 99.999886,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Read Rate",
+              "identifier": "/nvme/1/throughput/54",
+              "type": "Throughput",
+              "index": 54,
+              "value": null,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Write Rate",
+              "identifier": "/nvme/1/throughput/55",
+              "type": "Throughput",
+              "index": 55,
+              "value": null,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Available Spare",
+              "identifier": "/nvme/1/level/100",
+              "type": "Level",
+              "index": 100,
+              "value": 100,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Available Spare Threshold",
+              "identifier": "/nvme/1/level/101",
+              "type": "Level",
+              "index": 101,
+              "value": 10,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Percentage Used",
+              "identifier": "/nvme/1/level/102",
+              "type": "Level",
+              "index": 102,
+              "value": 10,
+              "hardwareName": "KINGBANK KP260"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "WDC WD40EZAX-00C8UB0",
+          "identifier": "/hdd/0",
+          "type": "Storage",
+          "sensors": [
+            {
+              "name": "Temperature",
+              "identifier": "/hdd/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 46,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Power On Count",
+              "identifier": "/hdd/0/factor/23",
+              "type": "Factor",
+              "index": 23,
+              "value": 822,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Power On Hours",
+              "identifier": "/hdd/0/factor/24",
+              "type": "Factor",
+              "index": 24,
+              "value": 12225,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Used Space",
+              "identifier": "/hdd/0/load/30",
+              "type": "Load",
+              "index": 30,
+              "value": 41.04917,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Free Space",
+              "identifier": "/hdd/0/data/31",
+              "type": "Data",
+              "index": 31,
+              "value": 2358.497,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Total Space",
+              "identifier": "/hdd/0/data/32",
+              "type": "Data",
+              "index": 32,
+              "value": 4000.787,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Read Activity",
+              "identifier": "/hdd/0/load/51",
+              "type": "Load",
+              "index": 51,
+              "value": 9.00832E-06,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Write Activity",
+              "identifier": "/hdd/0/load/52",
+              "type": "Load",
+              "index": 52,
+              "value": 1.3833386E-06,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Total Activity",
+              "identifier": "/hdd/0/load/53",
+              "type": "Load",
+              "index": 53,
+              "value": 99.99989,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Read Rate",
+              "identifier": "/hdd/0/throughput/54",
+              "type": "Throughput",
+              "index": 54,
+              "value": null,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Write Rate",
+              "identifier": "/hdd/0/throughput/55",
+              "type": "Throughput",
+              "index": 55,
+              "value": null,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3",
+          "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51",
+          "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 2.7308137,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 4.4612184,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 251621.23,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 1359484.6,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 1.2888846,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51 2",
+          "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51 4",
+          "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "vEthernet (Default Switch)",
+          "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0.000390945,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            }
+          ],
+          "subHardware": []
+        }
+      ]
+    },
+    {
+      "capturedAt": "2026-11-16T17:54:02.8437468+08:00",
+      "hardware": [
+        {
+          "name": "ASUS H610M-D3H/M.2 D4",
+          "identifier": "/motherboard",
+          "type": "Motherboard",
+          "sensors": [],
+          "subHardware": []
+        },
+        {
+          "name": "12th Gen Intel Core i5-12400F",
+          "identifier": "/intelcpu/0",
+          "type": "Cpu",
+          "sensors": [
+            {
+              "name": "CPU Core #1 Thread #1",
+              "identifier": "/intelcpu/0/load/2",
+              "type": "Load",
+              "index": 2,
+              "value": 100,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1 Thread #2",
+              "identifier": "/intelcpu/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 100,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Thread #1",
+              "identifier": "/intelcpu/0/load/4",
+              "type": "Load",
+              "index": 4,
+              "value": 100,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Thread #2",
+              "identifier": "/intelcpu/0/load/5",
+              "type": "Load",
+              "index": 5,
+              "value": 98.78,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Thread #1",
+              "identifier": "/intelcpu/0/load/6",
+              "type": "Load",
+              "index": 6,
+              "value": 96.3,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Thread #2",
+              "identifier": "/intelcpu/0/load/7",
+              "type": "Load",
+              "index": 7,
+              "value": 98.75,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Thread #1",
+              "identifier": "/intelcpu/0/load/8",
+              "type": "Load",
+              "index": 8,
+              "value": 98.73,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Thread #2",
+              "identifier": "/intelcpu/0/load/9",
+              "type": "Load",
+              "index": 9,
+              "value": 97.47,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Thread #1",
+              "identifier": "/intelcpu/0/load/10",
+              "type": "Load",
+              "index": 10,
+              "value": 96.15,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Thread #2",
+              "identifier": "/intelcpu/0/load/11",
+              "type": "Load",
+              "index": 11,
+              "value": 98.72,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Thread #1",
+              "identifier": "/intelcpu/0/load/12",
+              "type": "Load",
+              "index": 12,
+              "value": 97.44,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Thread #2",
+              "identifier": "/intelcpu/0/load/13",
+              "type": "Load",
+              "index": 13,
+              "value": 98.72,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Total",
+              "identifier": "/intelcpu/0/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 98.42,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core Max",
+              "identifier": "/intelcpu/0/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 100,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "Core Max",
+              "identifier": "/intelcpu/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "Core Average",
+              "identifier": "/intelcpu/0/temperature/1",
+              "type": "Temperature",
+              "index": 1,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1",
+              "identifier": "/intelcpu/0/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2",
+              "identifier": "/intelcpu/0/temperature/3",
+              "type": "Temperature",
+              "index": 3,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3",
+              "identifier": "/intelcpu/0/temperature/4",
+              "type": "Temperature",
+              "index": 4,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4",
+              "identifier": "/intelcpu/0/temperature/5",
+              "type": "Temperature",
+              "index": 5,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5",
+              "identifier": "/intelcpu/0/temperature/6",
+              "type": "Temperature",
+              "index": 6,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6",
+              "identifier": "/intelcpu/0/temperature/7",
+              "type": "Temperature",
+              "index": 7,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Package",
+              "identifier": "/intelcpu/0/temperature/8",
+              "type": "Temperature",
+              "index": 8,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/9",
+              "type": "Temperature",
+              "index": 9,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/10",
+              "type": "Temperature",
+              "index": 10,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/11",
+              "type": "Temperature",
+              "index": 11,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/12",
+              "type": "Temperature",
+              "index": 12,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/13",
+              "type": "Temperature",
+              "index": 13,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/14",
+              "type": "Temperature",
+              "index": 14,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1",
+              "identifier": "/intelcpu/0/clock/1",
+              "type": "Clock",
+              "index": 1,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2",
+              "identifier": "/intelcpu/0/clock/2",
+              "type": "Clock",
+              "index": 2,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3",
+              "identifier": "/intelcpu/0/clock/3",
+              "type": "Clock",
+              "index": 3,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4",
+              "identifier": "/intelcpu/0/clock/4",
+              "type": "Clock",
+              "index": 4,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5",
+              "identifier": "/intelcpu/0/clock/5",
+              "type": "Clock",
+              "index": 5,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6",
+              "identifier": "/intelcpu/0/clock/6",
+              "type": "Clock",
+              "index": 6,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Package",
+              "identifier": "/intelcpu/0/power/0",
+              "type": "Power",
+              "index": 0,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Cores",
+              "identifier": "/intelcpu/0/power/1",
+              "type": "Power",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Memory",
+              "identifier": "/intelcpu/0/power/3",
+              "type": "Power",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Platform",
+              "identifier": "/intelcpu/0/power/4",
+              "type": "Power",
+              "index": 4,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "Virtual Memory",
+          "identifier": "/vram",
+          "type": "Memory",
+          "sensors": [
+            {
+              "name": "Memory Used",
+              "identifier": "/vram/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 26.629078,
+              "hardwareName": "Virtual Memory"
+            },
+            {
+              "name": "Memory Available",
+              "identifier": "/vram/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 25.18872,
+              "hardwareName": "Virtual Memory"
+            },
+            {
+              "name": "Memory",
+              "identifier": "/vram/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 51.389828,
+              "hardwareName": "Virtual Memory"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "Total Memory",
+          "identifier": "/ram",
+          "type": "Memory",
+          "sensors": [
+            {
+              "name": "Memory Used",
+              "identifier": "/ram/data/0",
+              "type": "Data",
+              "index": 0,
+              "value": 15.043903,
+              "hardwareName": "Total Memory"
+            },
+            {
+              "name": "Memory Available",
+              "identifier": "/ram/data/1",
+              "type": "Data",
+              "index": 1,
+              "value": 16.773895,
+              "hardwareName": "Total Memory"
+            },
+            {
+              "name": "Memory",
+              "identifier": "/ram/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 47.28141,
+              "hardwareName": "Total Memory"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "NVIDIA GeForce RTX 4060 Ti",
+          "identifier": "/gpu-nvidia/0",
+          "type": "GpuNvidia",
+          "sensors": [
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 43,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/clock/0",
+              "type": "Clock",
+              "index": 0,
+              "value": 510,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory",
+              "identifier": "/gpu-nvidia/0/clock/4",
+              "type": "Clock",
+              "index": 4,
+              "value": 810,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Fan",
+              "identifier": "/gpu-nvidia/0/fan/1",
+              "type": "Fan",
+              "index": 1,
+              "value": 1205,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Fan",
+              "identifier": "/gpu-nvidia/0/control/1",
+              "type": "Control",
+              "index": 1,
+              "value": 30,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 37,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Controller",
+              "identifier": "/gpu-nvidia/0/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 44,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Video Engine",
+              "identifier": "/gpu-nvidia/0/load/2",
+              "type": "Load",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Bus",
+              "identifier": "/gpu-nvidia/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 1,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Power",
+              "identifier": "/gpu-nvidia/0/load/4",
+              "type": "Load",
+              "index": 4,
+              "value": 11.232,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Board Power",
+              "identifier": "/gpu-nvidia/0/load/5",
+              "type": "Load",
+              "index": 5,
+              "value": 19.13,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core Voltage",
+              "identifier": "/gpu-nvidia/0/voltage/0",
+              "type": "Voltage",
+              "index": 0,
+              "value": 0.86,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Dedicated Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/3",
+              "type": "SmallData",
+              "index": 3,
+              "value": 2881.2578,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Shared Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/4",
+              "type": "SmallData",
+              "index": 4,
+              "value": 160.49219,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D 3D",
+              "identifier": "/gpu-nvidia/0/load/7",
+              "type": "Load",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Overlay",
+              "identifier": "/gpu-nvidia/0/load/10",
+              "type": "Load",
+              "index": 10,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Decode",
+              "identifier": "/gpu-nvidia/0/load/12",
+              "type": "Load",
+              "index": 12,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Copy",
+              "identifier": "/gpu-nvidia/0/load/8",
+              "type": "Load",
+              "index": 8,
+              "value": 0.52821326,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Copy",
+              "identifier": "/gpu-nvidia/0/load/9",
+              "type": "Load",
+              "index": 9,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Security",
+              "identifier": "/gpu-nvidia/0/load/11",
+              "type": "Load",
+              "index": 11,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Encode",
+              "identifier": "/gpu-nvidia/0/load/13",
+              "type": "Load",
+              "index": 13,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Processing",
+              "identifier": "/gpu-nvidia/0/load/14",
+              "type": "Load",
+              "index": 14,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D VR",
+              "identifier": "/gpu-nvidia/0/load/15",
+              "type": "Load",
+              "index": 15,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Hot Spot",
+              "identifier": "/gpu-nvidia/0/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": 52.1875,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Total",
+              "identifier": "/gpu-nvidia/0/smalldata/2",
+              "type": "SmallData",
+              "index": 2,
+              "value": 16380,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Free",
+              "identifier": "/gpu-nvidia/0/smalldata/0",
+              "type": "SmallData",
+              "index": 0,
+              "value": 13237,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/1",
+              "type": "SmallData",
+              "index": 1,
+              "value": 3142,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory",
+              "identifier": "/gpu-nvidia/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 19.18472,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Package",
+              "identifier": "/gpu-nvidia/0/power/0",
+              "type": "Power",
+              "index": 0,
+              "value": 18.477,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU PCIe Rx",
+              "identifier": "/gpu-nvidia/0/throughput/0",
+              "type": "Throughput",
+              "index": 0,
+              "value": 8192,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU PCIe Tx",
+              "identifier": "/gpu-nvidia/0/throughput/1",
+              "type": "Throughput",
+              "index": 1,
+              "value": 15360,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "KINGBANK KP260",
+          "identifier": "/nvme/1",
+          "type": "Storage",
+          "sensors": [
+            {
+              "name": "Composite Temperature",
+              "identifier": "/nvme/1/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 69,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Temperature #1",
+              "identifier": "/nvme/1/temperature/1",
+              "type": "Temperature",
+              "index": 1,
+              "value": 68.850006,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Temperature #2",
+              "identifier": "/nvme/1/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": 55.850006,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Warning Temperature",
+              "identifier": "/nvme/1/temperature/10",
+              "type": "Temperature",
+              "index": 10,
+              "value": 89,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Critical Temperature",
+              "identifier": "/nvme/1/temperature/11",
+              "type": "Temperature",
+              "index": 11,
+              "value": 94,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Life",
+              "identifier": "/nvme/1/level/20",
+              "type": "Level",
+              "index": 20,
+              "value": 90,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Data Read",
+              "identifier": "/nvme/1/data/21",
+              "type": "Data",
+              "index": 21,
+              "value": 52277,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Data Written",
+              "identifier": "/nvme/1/data/22",
+              "type": "Data",
+              "index": 22,
+              "value": 51212,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Power On Count",
+              "identifier": "/nvme/1/factor/23",
+              "type": "Factor",
+              "index": 23,
+              "value": 2114,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Power On Hours",
+              "identifier": "/nvme/1/factor/24",
+              "type": "Factor",
+              "index": 24,
+              "value": 17833,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Used Space",
+              "identifier": "/nvme/1/load/30",
+              "type": "Load",
+              "index": 30,
+              "value": 85.072426,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Free Space",
+              "identifier": "/nvme/1/data/31",
+              "type": "Data",
+              "index": 31,
+              "value": 152.88962,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Total Space",
+              "identifier": "/nvme/1/data/32",
+              "type": "Data",
+              "index": 32,
+              "value": 1024.2096,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Read Activity",
+              "identifier": "/nvme/1/load/51",
+              "type": "Load",
+              "index": 51,
+              "value": 0.4537556,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Write Activity",
+              "identifier": "/nvme/1/load/52",
+              "type": "Load",
+              "index": 52,
+              "value": 5.3426504,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Total Activity",
+              "identifier": "/nvme/1/load/53",
+              "type": "Load",
+              "index": 53,
+              "value": 8.188119,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Read Rate",
+              "identifier": "/nvme/1/throughput/54",
+              "type": "Throughput",
+              "index": 54,
+              "value": 190608.48,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Write Rate",
+              "identifier": "/nvme/1/throughput/55",
+              "type": "Throughput",
+              "index": 55,
+              "value": 16802318,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Available Spare",
+              "identifier": "/nvme/1/level/100",
+              "type": "Level",
+              "index": 100,
+              "value": 100,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Available Spare Threshold",
+              "identifier": "/nvme/1/level/101",
+              "type": "Level",
+              "index": 101,
+              "value": 10,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Percentage Used",
+              "identifier": "/nvme/1/level/102",
+              "type": "Level",
+              "index": 102,
+              "value": 10,
+              "hardwareName": "KINGBANK KP260"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "WDC WD40EZAX-00C8UB0",
+          "identifier": "/hdd/0",
+          "type": "Storage",
+          "sensors": [
+            {
+              "name": "Temperature",
+              "identifier": "/hdd/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 46,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Power On Count",
+              "identifier": "/hdd/0/factor/23",
+              "type": "Factor",
+              "index": 23,
+              "value": 822,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Power On Hours",
+              "identifier": "/hdd/0/factor/24",
+              "type": "Factor",
+              "index": 24,
+              "value": 12225,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Used Space",
+              "identifier": "/hdd/0/load/30",
+              "type": "Load",
+              "index": 30,
+              "value": 41.04917,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Free Space",
+              "identifier": "/hdd/0/data/31",
+              "type": "Data",
+              "index": 31,
+              "value": 2358.497,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Total Space",
+              "identifier": "/hdd/0/data/32",
+              "type": "Data",
+              "index": 32,
+              "value": 4000.787,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Read Activity",
+              "identifier": "/hdd/0/load/51",
+              "type": "Load",
+              "index": 51,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Write Activity",
+              "identifier": "/hdd/0/load/52",
+              "type": "Load",
+              "index": 52,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Total Activity",
+              "identifier": "/hdd/0/load/53",
+              "type": "Load",
+              "index": 53,
+              "value": 0.053452242,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Read Rate",
+              "identifier": "/hdd/0/throughput/54",
+              "type": "Throughput",
+              "index": 54,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Write Rate",
+              "identifier": "/hdd/0/throughput/55",
+              "type": "Throughput",
+              "index": 55,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3",
+          "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51",
+          "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 2.7309213,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 4.4613566,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 92337.695,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 118677.41,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0.16881208,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51 2",
+          "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51 4",
+          "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "vEthernet (Default Switch)",
+          "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0.000390945,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            }
+          ],
+          "subHardware": []
+        }
+      ]
+    },
+    {
+      "capturedAt": "2026-11-16T17:54:03.9669902+08:00",
+      "hardware": [
+        {
+          "name": "ASUS H610M-D3H/M.2 D4",
+          "identifier": "/motherboard",
+          "type": "Motherboard",
+          "sensors": [],
+          "subHardware": []
+        },
+        {
+          "name": "12th Gen Intel Core i5-12400F",
+          "identifier": "/intelcpu/0",
+          "type": "Cpu",
+          "sensors": [
+            {
+              "name": "CPU Core #1 Thread #1",
+              "identifier": "/intelcpu/0/load/2",
+              "type": "Load",
+              "index": 2,
+              "value": 31.25,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1 Thread #2",
+              "identifier": "/intelcpu/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 33.75,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Thread #1",
+              "identifier": "/intelcpu/0/load/4",
+              "type": "Load",
+              "index": 4,
+              "value": 51.25,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Thread #2",
+              "identifier": "/intelcpu/0/load/5",
+              "type": "Load",
+              "index": 5,
+              "value": 30,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Thread #1",
+              "identifier": "/intelcpu/0/load/6",
+              "type": "Load",
+              "index": 6,
+              "value": 31.25,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Thread #2",
+              "identifier": "/intelcpu/0/load/7",
+              "type": "Load",
+              "index": 7,
+              "value": 41.25,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Thread #1",
+              "identifier": "/intelcpu/0/load/8",
+              "type": "Load",
+              "index": 8,
+              "value": 42.5,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Thread #2",
+              "identifier": "/intelcpu/0/load/9",
+              "type": "Load",
+              "index": 9,
+              "value": 42.5,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Thread #1",
+              "identifier": "/intelcpu/0/load/10",
+              "type": "Load",
+              "index": 10,
+              "value": 27.5,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Thread #2",
+              "identifier": "/intelcpu/0/load/11",
+              "type": "Load",
+              "index": 11,
+              "value": 41.25,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Thread #1",
+              "identifier": "/intelcpu/0/load/12",
+              "type": "Load",
+              "index": 12,
+              "value": 38.75,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Thread #2",
+              "identifier": "/intelcpu/0/load/13",
+              "type": "Load",
+              "index": 13,
+              "value": 40,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Total",
+              "identifier": "/intelcpu/0/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 37.6,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core Max",
+              "identifier": "/intelcpu/0/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 51.25,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "Core Max",
+              "identifier": "/intelcpu/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "Core Average",
+              "identifier": "/intelcpu/0/temperature/1",
+              "type": "Temperature",
+              "index": 1,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1",
+              "identifier": "/intelcpu/0/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2",
+              "identifier": "/intelcpu/0/temperature/3",
+              "type": "Temperature",
+              "index": 3,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3",
+              "identifier": "/intelcpu/0/temperature/4",
+              "type": "Temperature",
+              "index": 4,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4",
+              "identifier": "/intelcpu/0/temperature/5",
+              "type": "Temperature",
+              "index": 5,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5",
+              "identifier": "/intelcpu/0/temperature/6",
+              "type": "Temperature",
+              "index": 6,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6",
+              "identifier": "/intelcpu/0/temperature/7",
+              "type": "Temperature",
+              "index": 7,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Package",
+              "identifier": "/intelcpu/0/temperature/8",
+              "type": "Temperature",
+              "index": 8,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/9",
+              "type": "Temperature",
+              "index": 9,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/10",
+              "type": "Temperature",
+              "index": 10,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/11",
+              "type": "Temperature",
+              "index": 11,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/12",
+              "type": "Temperature",
+              "index": 12,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/13",
+              "type": "Temperature",
+              "index": 13,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/14",
+              "type": "Temperature",
+              "index": 14,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1",
+              "identifier": "/intelcpu/0/clock/1",
+              "type": "Clock",
+              "index": 1,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2",
+              "identifier": "/intelcpu/0/clock/2",
+              "type": "Clock",
+              "index": 2,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3",
+              "identifier": "/intelcpu/0/clock/3",
+              "type": "Clock",
+              "index": 3,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4",
+              "identifier": "/intelcpu/0/clock/4",
+              "type": "Clock",
+              "index": 4,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5",
+              "identifier": "/intelcpu/0/clock/5",
+              "type": "Clock",
+              "index": 5,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6",
+              "identifier": "/intelcpu/0/clock/6",
+              "type": "Clock",
+              "index": 6,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Package",
+              "identifier": "/intelcpu/0/power/0",
+              "type": "Power",
+              "index": 0,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Cores",
+              "identifier": "/intelcpu/0/power/1",
+              "type": "Power",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Memory",
+              "identifier": "/intelcpu/0/power/3",
+              "type": "Power",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Platform",
+              "identifier": "/intelcpu/0/power/4",
+              "type": "Power",
+              "index": 4,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "Virtual Memory",
+          "identifier": "/vram",
+          "type": "Memory",
+          "sensors": [
+            {
+              "name": "Memory Used",
+              "identifier": "/vram/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 26.573006,
+              "hardwareName": "Virtual Memory"
+            },
+            {
+              "name": "Memory Available",
+              "identifier": "/vram/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 25.244793,
+              "hardwareName": "Virtual Memory"
+            },
+            {
+              "name": "Memory",
+              "identifier": "/vram/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 51.28162,
+              "hardwareName": "Virtual Memory"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "Total Memory",
+          "identifier": "/ram",
+          "type": "Memory",
+          "sensors": [
+            {
+              "name": "Memory Used",
+              "identifier": "/ram/data/0",
+              "type": "Data",
+              "index": 0,
+              "value": 15.007473,
+              "hardwareName": "Total Memory"
+            },
+            {
+              "name": "Memory Available",
+              "identifier": "/ram/data/1",
+              "type": "Data",
+              "index": 1,
+              "value": 16.810326,
+              "hardwareName": "Total Memory"
+            },
+            {
+              "name": "Memory",
+              "identifier": "/ram/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 47.166912,
+              "hardwareName": "Total Memory"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "NVIDIA GeForce RTX 4060 Ti",
+          "identifier": "/gpu-nvidia/0",
+          "type": "GpuNvidia",
+          "sensors": [
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 43,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/clock/0",
+              "type": "Clock",
+              "index": 0,
+              "value": 555,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory",
+              "identifier": "/gpu-nvidia/0/clock/4",
+              "type": "Clock",
+              "index": 4,
+              "value": 810,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Fan",
+              "identifier": "/gpu-nvidia/0/fan/1",
+              "type": "Fan",
+              "index": 1,
+              "value": 1195,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Fan",
+              "identifier": "/gpu-nvidia/0/control/1",
+              "type": "Control",
+              "index": 1,
+              "value": 30,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 39,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Controller",
+              "identifier": "/gpu-nvidia/0/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 45,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Video Engine",
+              "identifier": "/gpu-nvidia/0/load/2",
+              "type": "Load",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Bus",
+              "identifier": "/gpu-nvidia/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 1,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Power",
+              "identifier": "/gpu-nvidia/0/load/4",
+              "type": "Load",
+              "index": 4,
+              "value": 11.258,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Board Power",
+              "identifier": "/gpu-nvidia/0/load/5",
+              "type": "Load",
+              "index": 5,
+              "value": 19.074,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core Voltage",
+              "identifier": "/gpu-nvidia/0/voltage/0",
+              "type": "Voltage",
+              "index": 0,
+              "value": 0.86,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Dedicated Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/3",
+              "type": "SmallData",
+              "index": 3,
+              "value": 2881.1758,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Shared Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/4",
+              "type": "SmallData",
+              "index": 4,
+              "value": 160.39844,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D 3D",
+              "identifier": "/gpu-nvidia/0/load/7",
+              "type": "Load",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Overlay",
+              "identifier": "/gpu-nvidia/0/load/10",
+              "type": "Load",
+              "index": 10,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Decode",
+              "identifier": "/gpu-nvidia/0/load/12",
+              "type": "Load",
+              "index": 12,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Copy",
+              "identifier": "/gpu-nvidia/0/load/8",
+              "type": "Load",
+              "index": 8,
+              "value": 0.28062588,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Copy",
+              "identifier": "/gpu-nvidia/0/load/9",
+              "type": "Load",
+              "index": 9,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Security",
+              "identifier": "/gpu-nvidia/0/load/11",
+              "type": "Load",
+              "index": 11,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Encode",
+              "identifier": "/gpu-nvidia/0/load/13",
+              "type": "Load",
+              "index": 13,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Processing",
+              "identifier": "/gpu-nvidia/0/load/14",
+              "type": "Load",
+              "index": 14,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D VR",
+              "identifier": "/gpu-nvidia/0/load/15",
+              "type": "Load",
+              "index": 15,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Hot Spot",
+              "identifier": "/gpu-nvidia/0/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": 52.21875,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Total",
+              "identifier": "/gpu-nvidia/0/smalldata/2",
+              "type": "SmallData",
+              "index": 2,
+              "value": 16380,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Free",
+              "identifier": "/gpu-nvidia/0/smalldata/0",
+              "type": "SmallData",
+              "index": 0,
+              "value": 13237,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/1",
+              "type": "SmallData",
+              "index": 1,
+              "value": 3142,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory",
+              "identifier": "/gpu-nvidia/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 19.184242,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Package",
+              "identifier": "/gpu-nvidia/0/power/0",
+              "type": "Power",
+              "index": 0,
+              "value": 18.683,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU PCIe Rx",
+              "identifier": "/gpu-nvidia/0/throughput/0",
+              "type": "Throughput",
+              "index": 0,
+              "value": 7168,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU PCIe Tx",
+              "identifier": "/gpu-nvidia/0/throughput/1",
+              "type": "Throughput",
+              "index": 1,
+              "value": 2048,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "KINGBANK KP260",
+          "identifier": "/nvme/1",
+          "type": "Storage",
+          "sensors": [
+            {
+              "name": "Composite Temperature",
+              "identifier": "/nvme/1/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 69,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Temperature #1",
+              "identifier": "/nvme/1/temperature/1",
+              "type": "Temperature",
+              "index": 1,
+              "value": 68.850006,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Temperature #2",
+              "identifier": "/nvme/1/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": 55.850006,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Warning Temperature",
+              "identifier": "/nvme/1/temperature/10",
+              "type": "Temperature",
+              "index": 10,
+              "value": 89,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Critical Temperature",
+              "identifier": "/nvme/1/temperature/11",
+              "type": "Temperature",
+              "index": 11,
+              "value": 94,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Life",
+              "identifier": "/nvme/1/level/20",
+              "type": "Level",
+              "index": 20,
+              "value": 90,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Data Read",
+              "identifier": "/nvme/1/data/21",
+              "type": "Data",
+              "index": 21,
+              "value": 52277,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Data Written",
+              "identifier": "/nvme/1/data/22",
+              "type": "Data",
+              "index": 22,
+              "value": 51212,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Power On Count",
+              "identifier": "/nvme/1/factor/23",
+              "type": "Factor",
+              "index": 23,
+              "value": 2114,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Power On Hours",
+              "identifier": "/nvme/1/factor/24",
+              "type": "Factor",
+              "index": 24,
+              "value": 17833,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Used Space",
+              "identifier": "/nvme/1/load/30",
+              "type": "Load",
+              "index": 30,
+              "value": 85.07237,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Free Space",
+              "identifier": "/nvme/1/data/31",
+              "type": "Data",
+              "index": 31,
+              "value": 152.89018,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Total Space",
+              "identifier": "/nvme/1/data/32",
+              "type": "Data",
+              "index": 32,
+              "value": 1024.2096,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Read Activity",
+              "identifier": "/nvme/1/load/51",
+              "type": "Load",
+              "index": 51,
+              "value": 0.43332624,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Write Activity",
+              "identifier": "/nvme/1/load/52",
+              "type": "Load",
+              "index": 52,
+              "value": 0.7267442,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Total Activity",
+              "identifier": "/nvme/1/load/53",
+              "type": "Load",
+              "index": 53,
+              "value": 1.9997468,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Read Rate",
+              "identifier": "/nvme/1/throughput/54",
+              "type": "Throughput",
+              "index": 54,
+              "value": 411002,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Write Rate",
+              "identifier": "/nvme/1/throughput/55",
+              "type": "Throughput",
+              "index": 55,
+              "value": 5949585.5,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Available Spare",
+              "identifier": "/nvme/1/level/100",
+              "type": "Level",
+              "index": 100,
+              "value": 100,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Available Spare Threshold",
+              "identifier": "/nvme/1/level/101",
+              "type": "Level",
+              "index": 101,
+              "value": 10,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Percentage Used",
+              "identifier": "/nvme/1/level/102",
+              "type": "Level",
+              "index": 102,
+              "value": 10,
+              "hardwareName": "KINGBANK KP260"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "WDC WD40EZAX-00C8UB0",
+          "identifier": "/hdd/0",
+          "type": "Storage",
+          "sensors": [
+            {
+              "name": "Temperature",
+              "identifier": "/hdd/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 46,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Power On Count",
+              "identifier": "/hdd/0/factor/23",
+              "type": "Factor",
+              "index": 23,
+              "value": 822,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Power On Hours",
+              "identifier": "/hdd/0/factor/24",
+              "type": "Factor",
+              "index": 24,
+              "value": 12225,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Used Space",
+              "identifier": "/hdd/0/load/30",
+              "type": "Load",
+              "index": 30,
+              "value": 41.04917,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Free Space",
+              "identifier": "/hdd/0/data/31",
+              "type": "Data",
+              "index": 31,
+              "value": 2358.497,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Total Space",
+              "identifier": "/hdd/0/data/32",
+              "type": "Data",
+              "index": 32,
+              "value": 4000.787,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Read Activity",
+              "identifier": "/hdd/0/load/51",
+              "type": "Load",
+              "index": 51,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Write Activity",
+              "identifier": "/hdd/0/load/52",
+              "type": "Load",
+              "index": 52,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Total Activity",
+              "identifier": "/hdd/0/load/53",
+              "type": "Load",
+              "index": 53,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Read Rate",
+              "identifier": "/hdd/0/throughput/54",
+              "type": "Throughput",
+              "index": 54,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Write Rate",
+              "identifier": "/hdd/0/throughput/55",
+              "type": "Throughput",
+              "index": 55,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3",
+          "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51",
+          "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 2.7309723,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 4.461822,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 48647.613,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 444899.12,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0.39483738,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51 2",
+          "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51 4",
+          "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "vEthernet (Default Switch)",
+          "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0.000390945,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            }
+          ],
+          "subHardware": []
+        }
+      ]
+    },
+    {
+      "capturedAt": "2026-11-16T17:54:05.0629526+08:00",
+      "hardware": [
+        {
+          "name": "ASUS H610M-D3H/M.2 D4",
+          "identifier": "/motherboard",
+          "type": "Motherboard",
+          "sensors": [],
+          "subHardware": []
+        },
+        {
+          "name": "12th Gen Intel Core i5-12400F",
+          "identifier": "/intelcpu/0",
+          "type": "Cpu",
+          "sensors": [
+            {
+              "name": "CPU Core #1 Thread #1",
+              "identifier": "/intelcpu/0/load/2",
+              "type": "Load",
+              "index": 2,
+              "value": 12.68,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1 Thread #2",
+              "identifier": "/intelcpu/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 7.04,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Thread #1",
+              "identifier": "/intelcpu/0/load/4",
+              "type": "Load",
+              "index": 4,
+              "value": 11.27,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Thread #2",
+              "identifier": "/intelcpu/0/load/5",
+              "type": "Load",
+              "index": 5,
+              "value": 8.45,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Thread #1",
+              "identifier": "/intelcpu/0/load/6",
+              "type": "Load",
+              "index": 6,
+              "value": 12.68,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Thread #2",
+              "identifier": "/intelcpu/0/load/7",
+              "type": "Load",
+              "index": 7,
+              "value": 9.86,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Thread #1",
+              "identifier": "/intelcpu/0/load/8",
+              "type": "Load",
+              "index": 8,
+              "value": 12.68,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Thread #2",
+              "identifier": "/intelcpu/0/load/9",
+              "type": "Load",
+              "index": 9,
+              "value": 9.86,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Thread #1",
+              "identifier": "/intelcpu/0/load/10",
+              "type": "Load",
+              "index": 10,
+              "value": 7.04,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Thread #2",
+              "identifier": "/intelcpu/0/load/11",
+              "type": "Load",
+              "index": 11,
+              "value": 4.23,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Thread #1",
+              "identifier": "/intelcpu/0/load/12",
+              "type": "Load",
+              "index": 12,
+              "value": 15.49,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Thread #2",
+              "identifier": "/intelcpu/0/load/13",
+              "type": "Load",
+              "index": 13,
+              "value": 18.31,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Total",
+              "identifier": "/intelcpu/0/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 10.8,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core Max",
+              "identifier": "/intelcpu/0/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 18.31,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "Core Max",
+              "identifier": "/intelcpu/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "Core Average",
+              "identifier": "/intelcpu/0/temperature/1",
+              "type": "Temperature",
+              "index": 1,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1",
+              "identifier": "/intelcpu/0/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2",
+              "identifier": "/intelcpu/0/temperature/3",
+              "type": "Temperature",
+              "index": 3,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3",
+              "identifier": "/intelcpu/0/temperature/4",
+              "type": "Temperature",
+              "index": 4,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4",
+              "identifier": "/intelcpu/0/temperature/5",
+              "type": "Temperature",
+              "index": 5,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5",
+              "identifier": "/intelcpu/0/temperature/6",
+              "type": "Temperature",
+              "index": 6,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6",
+              "identifier": "/intelcpu/0/temperature/7",
+              "type": "Temperature",
+              "index": 7,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Package",
+              "identifier": "/intelcpu/0/temperature/8",
+              "type": "Temperature",
+              "index": 8,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/9",
+              "type": "Temperature",
+              "index": 9,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/10",
+              "type": "Temperature",
+              "index": 10,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/11",
+              "type": "Temperature",
+              "index": 11,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/12",
+              "type": "Temperature",
+              "index": 12,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/13",
+              "type": "Temperature",
+              "index": 13,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6 Distance to TjMax",
+              "identifier": "/intelcpu/0/temperature/14",
+              "type": "Temperature",
+              "index": 14,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #1",
+              "identifier": "/intelcpu/0/clock/1",
+              "type": "Clock",
+              "index": 1,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #2",
+              "identifier": "/intelcpu/0/clock/2",
+              "type": "Clock",
+              "index": 2,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #3",
+              "identifier": "/intelcpu/0/clock/3",
+              "type": "Clock",
+              "index": 3,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #4",
+              "identifier": "/intelcpu/0/clock/4",
+              "type": "Clock",
+              "index": 4,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #5",
+              "identifier": "/intelcpu/0/clock/5",
+              "type": "Clock",
+              "index": 5,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Core #6",
+              "identifier": "/intelcpu/0/clock/6",
+              "type": "Clock",
+              "index": 6,
+              "value": null,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Package",
+              "identifier": "/intelcpu/0/power/0",
+              "type": "Power",
+              "index": 0,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Cores",
+              "identifier": "/intelcpu/0/power/1",
+              "type": "Power",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Memory",
+              "identifier": "/intelcpu/0/power/3",
+              "type": "Power",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            },
+            {
+              "name": "CPU Platform",
+              "identifier": "/intelcpu/0/power/4",
+              "type": "Power",
+              "index": 4,
+              "value": 0,
+              "hardwareName": "12th Gen Intel Core i5-12400F"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "Virtual Memory",
+          "identifier": "/vram",
+          "type": "Memory",
+          "sensors": [
+            {
+              "name": "Memory Used",
+              "identifier": "/vram/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 26.574364,
+              "hardwareName": "Virtual Memory"
+            },
+            {
+              "name": "Memory Available",
+              "identifier": "/vram/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 25.243435,
+              "hardwareName": "Virtual Memory"
+            },
+            {
+              "name": "Memory",
+              "identifier": "/vram/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 51.284237,
+              "hardwareName": "Virtual Memory"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "Total Memory",
+          "identifier": "/ram",
+          "type": "Memory",
+          "sensors": [
+            {
+              "name": "Memory Used",
+              "identifier": "/ram/data/0",
+              "type": "Data",
+              "index": 0,
+              "value": 15.005188,
+              "hardwareName": "Total Memory"
+            },
+            {
+              "name": "Memory Available",
+              "identifier": "/ram/data/1",
+              "type": "Data",
+              "index": 1,
+              "value": 16.81261,
+              "hardwareName": "Total Memory"
+            },
+            {
+              "name": "Memory",
+              "identifier": "/ram/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 47.15973,
+              "hardwareName": "Total Memory"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "NVIDIA GeForce RTX 4060 Ti",
+          "identifier": "/gpu-nvidia/0",
+          "type": "GpuNvidia",
+          "sensors": [
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 43,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/clock/0",
+              "type": "Clock",
+              "index": 0,
+              "value": 585,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory",
+              "identifier": "/gpu-nvidia/0/clock/4",
+              "type": "Clock",
+              "index": 4,
+              "value": 810,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Fan",
+              "identifier": "/gpu-nvidia/0/fan/1",
+              "type": "Fan",
+              "index": 1,
+              "value": 1209,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Fan",
+              "identifier": "/gpu-nvidia/0/control/1",
+              "type": "Control",
+              "index": 1,
+              "value": 30,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core",
+              "identifier": "/gpu-nvidia/0/load/0",
+              "type": "Load",
+              "index": 0,
+              "value": 36,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Controller",
+              "identifier": "/gpu-nvidia/0/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 44,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Video Engine",
+              "identifier": "/gpu-nvidia/0/load/2",
+              "type": "Load",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Bus",
+              "identifier": "/gpu-nvidia/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 1,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Power",
+              "identifier": "/gpu-nvidia/0/load/4",
+              "type": "Load",
+              "index": 4,
+              "value": 11.314,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Board Power",
+              "identifier": "/gpu-nvidia/0/load/5",
+              "type": "Load",
+              "index": 5,
+              "value": 18.688,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Core Voltage",
+              "identifier": "/gpu-nvidia/0/voltage/0",
+              "type": "Voltage",
+              "index": 0,
+              "value": 0.86,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Dedicated Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/3",
+              "type": "SmallData",
+              "index": 3,
+              "value": 2881.7383,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Shared Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/4",
+              "type": "SmallData",
+              "index": 4,
+              "value": 160.49219,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D 3D",
+              "identifier": "/gpu-nvidia/0/load/7",
+              "type": "Load",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Overlay",
+              "identifier": "/gpu-nvidia/0/load/10",
+              "type": "Load",
+              "index": 10,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Decode",
+              "identifier": "/gpu-nvidia/0/load/12",
+              "type": "Load",
+              "index": 12,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Copy",
+              "identifier": "/gpu-nvidia/0/load/8",
+              "type": "Load",
+              "index": 8,
+              "value": 0.35942855,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Copy",
+              "identifier": "/gpu-nvidia/0/load/9",
+              "type": "Load",
+              "index": 9,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Security",
+              "identifier": "/gpu-nvidia/0/load/11",
+              "type": "Load",
+              "index": 11,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Encode",
+              "identifier": "/gpu-nvidia/0/load/13",
+              "type": "Load",
+              "index": 13,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D Video Processing",
+              "identifier": "/gpu-nvidia/0/load/14",
+              "type": "Load",
+              "index": 14,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "D3D VR",
+              "identifier": "/gpu-nvidia/0/load/15",
+              "type": "Load",
+              "index": 15,
+              "value": 0,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Hot Spot",
+              "identifier": "/gpu-nvidia/0/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": 52.1875,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Total",
+              "identifier": "/gpu-nvidia/0/smalldata/2",
+              "type": "SmallData",
+              "index": 2,
+              "value": 16380,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Free",
+              "identifier": "/gpu-nvidia/0/smalldata/0",
+              "type": "SmallData",
+              "index": 0,
+              "value": 13237,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory Used",
+              "identifier": "/gpu-nvidia/0/smalldata/1",
+              "type": "SmallData",
+              "index": 1,
+              "value": 3142,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Memory",
+              "identifier": "/gpu-nvidia/0/load/3",
+              "type": "Load",
+              "index": 3,
+              "value": 19.187677,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU Package",
+              "identifier": "/gpu-nvidia/0/power/0",
+              "type": "Power",
+              "index": 0,
+              "value": 18.857,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU PCIe Rx",
+              "identifier": "/gpu-nvidia/0/throughput/0",
+              "type": "Throughput",
+              "index": 0,
+              "value": 8192,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            },
+            {
+              "name": "GPU PCIe Tx",
+              "identifier": "/gpu-nvidia/0/throughput/1",
+              "type": "Throughput",
+              "index": 1,
+              "value": 13312,
+              "hardwareName": "NVIDIA GeForce RTX 4060 Ti"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "KINGBANK KP260",
+          "identifier": "/nvme/1",
+          "type": "Storage",
+          "sensors": [
+            {
+              "name": "Composite Temperature",
+              "identifier": "/nvme/1/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 69,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Temperature #1",
+              "identifier": "/nvme/1/temperature/1",
+              "type": "Temperature",
+              "index": 1,
+              "value": 68.850006,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Temperature #2",
+              "identifier": "/nvme/1/temperature/2",
+              "type": "Temperature",
+              "index": 2,
+              "value": 55.850006,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Warning Temperature",
+              "identifier": "/nvme/1/temperature/10",
+              "type": "Temperature",
+              "index": 10,
+              "value": 89,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Critical Temperature",
+              "identifier": "/nvme/1/temperature/11",
+              "type": "Temperature",
+              "index": 11,
+              "value": 94,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Life",
+              "identifier": "/nvme/1/level/20",
+              "type": "Level",
+              "index": 20,
+              "value": 90,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Data Read",
+              "identifier": "/nvme/1/data/21",
+              "type": "Data",
+              "index": 21,
+              "value": 52277,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Data Written",
+              "identifier": "/nvme/1/data/22",
+              "type": "Data",
+              "index": 22,
+              "value": 51212,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Power On Count",
+              "identifier": "/nvme/1/factor/23",
+              "type": "Factor",
+              "index": 23,
+              "value": 2114,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Power On Hours",
+              "identifier": "/nvme/1/factor/24",
+              "type": "Factor",
+              "index": 24,
+              "value": 17833,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Used Space",
+              "identifier": "/nvme/1/load/30",
+              "type": "Load",
+              "index": 30,
+              "value": 85.07237,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Free Space",
+              "identifier": "/nvme/1/data/31",
+              "type": "Data",
+              "index": 31,
+              "value": 152.89018,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Total Space",
+              "identifier": "/nvme/1/data/32",
+              "type": "Data",
+              "index": 32,
+              "value": 1024.2096,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Read Activity",
+              "identifier": "/nvme/1/load/51",
+              "type": "Load",
+              "index": 51,
+              "value": 0,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Write Activity",
+              "identifier": "/nvme/1/load/52",
+              "type": "Load",
+              "index": 52,
+              "value": 0.1541952,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Total Activity",
+              "identifier": "/nvme/1/load/53",
+              "type": "Load",
+              "index": 53,
+              "value": 2.3404934,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Read Rate",
+              "identifier": "/nvme/1/throughput/54",
+              "type": "Throughput",
+              "index": 54,
+              "value": 0,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Write Rate",
+              "identifier": "/nvme/1/throughput/55",
+              "type": "Throughput",
+              "index": 55,
+              "value": 2486791.2,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Available Spare",
+              "identifier": "/nvme/1/level/100",
+              "type": "Level",
+              "index": 100,
+              "value": 100,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Available Spare Threshold",
+              "identifier": "/nvme/1/level/101",
+              "type": "Level",
+              "index": 101,
+              "value": 10,
+              "hardwareName": "KINGBANK KP260"
+            },
+            {
+              "name": "Percentage Used",
+              "identifier": "/nvme/1/level/102",
+              "type": "Level",
+              "index": 102,
+              "value": 10,
+              "hardwareName": "KINGBANK KP260"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "WDC WD40EZAX-00C8UB0",
+          "identifier": "/hdd/0",
+          "type": "Storage",
+          "sensors": [
+            {
+              "name": "Temperature",
+              "identifier": "/hdd/0/temperature/0",
+              "type": "Temperature",
+              "index": 0,
+              "value": 46,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Power On Count",
+              "identifier": "/hdd/0/factor/23",
+              "type": "Factor",
+              "index": 23,
+              "value": 822,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Power On Hours",
+              "identifier": "/hdd/0/factor/24",
+              "type": "Factor",
+              "index": 24,
+              "value": 12225,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Used Space",
+              "identifier": "/hdd/0/load/30",
+              "type": "Load",
+              "index": 30,
+              "value": 41.04917,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Free Space",
+              "identifier": "/hdd/0/data/31",
+              "type": "Data",
+              "index": 31,
+              "value": 2358.497,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Total Space",
+              "identifier": "/hdd/0/data/32",
+              "type": "Data",
+              "index": 32,
+              "value": 4000.787,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Read Activity",
+              "identifier": "/hdd/0/load/51",
+              "type": "Load",
+              "index": 51,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Write Activity",
+              "identifier": "/hdd/0/load/52",
+              "type": "Load",
+              "index": 52,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Total Activity",
+              "identifier": "/hdd/0/load/53",
+              "type": "Load",
+              "index": 53,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Read Rate",
+              "identifier": "/hdd/0/throughput/54",
+              "type": "Throughput",
+              "index": 54,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            },
+            {
+              "name": "Write Rate",
+              "identifier": "/hdd/0/throughput/55",
+              "type": "Throughput",
+              "index": 55,
+              "value": 0,
+              "hardwareName": "WDC WD40EZAX-00C8UB0"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3",
+          "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B61C65899-EE1E-4439-8878-6CB853C8A8D4%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u84DD\u7259\u7F51\u7EDC\u8FDE\u63A5 3"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51",
+          "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 2.7309828,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 4.4622364,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 10328.951,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 405665,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B8AD9CA65-F9E5-493A-A618-53F2C71CAB21%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0.33279517,
+              "hardwareName": "\u4EE5\u592A\u7F51"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51 2",
+          "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B56C3BAE3-F998-4575-B5B1-758AC9B5EFB1%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 2"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "\u4EE5\u592A\u7F51 4",
+          "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B19E0114C-76EE-4ADF-9F23-AF59B6F9DB89%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "\u4EE5\u592A\u7F51 4"
+            }
+          ],
+          "subHardware": []
+        },
+        {
+          "name": "vEthernet (Default Switch)",
+          "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D",
+          "type": "Network",
+          "sensors": [
+            {
+              "name": "Data Uploaded",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/data/2",
+              "type": "Data",
+              "index": 2,
+              "value": 0.000390945,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Data Downloaded",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/data/3",
+              "type": "Data",
+              "index": 3,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Upload Speed",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/throughput/7",
+              "type": "Throughput",
+              "index": 7,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Download Speed",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/throughput/8",
+              "type": "Throughput",
+              "index": 8,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            },
+            {
+              "name": "Network Utilization",
+              "identifier": "/nic/%7B168D72AE-C8E8-412E-B37A-0E9D200AD6F2%7D/load/1",
+              "type": "Load",
+              "index": 1,
+              "value": 0,
+              "hardwareName": "vEthernet (Default Switch)"
+            }
+          ],
+          "subHardware": []
+        }
+      ]
+    }
+  ]
+}

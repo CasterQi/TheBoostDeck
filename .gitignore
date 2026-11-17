@@ -1,0 +1,29 @@
+.vs/
+.vscode/
+.idea/
+**/bin/
+**/obj/
+TestResults/
+artifacts/
+*.user
+*.suo
+*.nupkg
+*.snupkg
+*.log
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+
+# Local test captures
+/maximized.png
+/narrow-*.png
+
+# Third-party UI references, not part of the project
+/参考UI*.jpg
+
+# Public repository keeps only the latest real-window screenshot.
+# Older screenshots remain local for history but are not published.
+/docs/screenshots/*
+!/docs/screenshots/TheBoostDeck-window-controls.jpg
+!/docs/screenshots/TheBoostDeck-window-controls.png

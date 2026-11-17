@@ -1,0 +1,9 @@
+Mono.Posix.NETStandard 1.0.0 declares the following license URL in its NuGet package metadata:
+
+https://go.microsoft.com/fwlink/?linkid=869050
+
+Project URL declared by the package:
+
+https://go.microsoft.com/fwlink/?linkid=869051
+
+This file records the package-provided locations because the package does not include a standalone license text file.

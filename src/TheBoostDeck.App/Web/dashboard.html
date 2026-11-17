@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>TheBoostDeck</title>
+  <link rel="icon" href="logo.png">
+  <style>
+    :root {
+      --bg: #040a15;
+      --panel: rgba(7, 21, 41, .94);
+      --panel-soft: rgba(10, 29, 53, .76);
+      --line: rgba(75, 201, 255, .26);
+      --line-strong: rgba(75, 201, 255, .58);
+      --text: #edf7ff;
+      --muted: #7f9db8;
+      --cyan: #4bc9ff;
+      --blue: #557cff;
+      --green: #46f0b0;
+      --purple: #a881ff;
+      --amber: #ffbf69;
+      --danger: #ff7b86;
+      --radius: 16px;
+      --gap: 16px;
+      font-family: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 360px; background: var(--bg); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 50% -20%, rgba(29, 103, 167, .22), transparent 58%),
+        linear-gradient(rgba(61, 137, 191, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(61, 137, 191, .025) 1px, transparent 1px),
+        var(--bg);
+      background-size: auto, 32px 32px, 32px 32px, auto;
+      overflow-x: hidden;
+    }
+
+    button { font: inherit; }
+    button:focus-visible, summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+    .icon { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+    .app-header {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
+      align-items: center;
+      gap: 20px;
+      padding: 20px 24px 10px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 11px;
+      background: #fff;
+      box-shadow: 0 0 20px rgba(75, 201, 255, .16);
+    }
+    .brand-logo { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .brand-name { font-size: 21px; font-weight: 650; letter-spacing: .02em; }
+    .brand-subtitle { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+    .clock { text-align: center; font-variant-numeric: tabular-nums; }
+    .clock-time { font-size: 28px; font-weight: 300; letter-spacing: .08em; line-height: 1; }
+    .clock-date { color: var(--muted); font-size: 12px; margin-top: 7px; }
+    .window-actions { display: flex; justify-content: flex-end; align-items: center; gap: 8px; }
+    .icon-button {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: rgba(10, 30, 52, .72);
+      color: var(--muted);
+      cursor: pointer;
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .icon-button:hover { color: var(--text); border-color: var(--line-strong); background: rgba(20, 55, 84, .85); }
+    .icon-button[aria-pressed="true"] { color: var(--cyan); border-color: var(--line-strong); }
+    .icon-button.close-button:hover { color: #ff9b9b; border-color: rgba(255, 120, 120, .5); background: rgba(82, 20, 27, .5); }
+    .icon-button svg { width: 18px; height: 18px; }
+    .language-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: rgba(10, 30, 52, .72);
+      color: var(--muted);
+      cursor: pointer;
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .language-button:hover { color: var(--text); border-color: var(--line-strong); background: rgba(20, 55, 84, .85); }
+    .language-option { font-size: 11px; font-weight: 600; line-height: 1; opacity: .48; transition: color .15s, opacity .15s; }
+    .language-option.is-active { color: var(--cyan); opacity: 1; }
+    .language-divider { width: 1px; height: 12px; background: var(--line); }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-auto-flow: dense;
+      gap: var(--gap);
+      padding: 12px 24px 18px;
+    }
+    .card {
+      position: relative;
+      min-width: 0;
+      grid-column: span 6;
+      container-type: inline-size;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(10, 30, 54, .95), var(--panel));
+      box-shadow: inset 0 1px rgba(255, 255, 255, .025), 0 12px 36px rgba(0, 0, 0, .17);
+      overflow: hidden;
+    }
+    .card::before, .card::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      pointer-events: none;
+    }
+    .card::before { top: 7px; left: 7px; border-top: 1px solid var(--line-strong); border-left: 1px solid var(--line-strong); }
+    .card::after { right: 7px; bottom: 7px; border-right: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); }
+    .card.primary { min-height: 294px; }
+    .card.secondary { min-height: 270px; }
+    .card.storage { grid-column: span 5; }
+    .card.network { grid-column: span 3; }
+    .card.system { grid-column: span 4; }
+
+    .card-header { display: flex; align-items: center; gap: 10px; min-width: 0; margin-bottom: 15px; }
+    .card-header > .icon { flex: 0 0 auto; color: var(--accent, var(--cyan)); }
+    .card-title { font-size: 22px; font-weight: 650; white-space: nowrap; }
+    .device-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .header-value {
+      margin-left: auto;
+      flex: 0 0 auto;
+      color: var(--accent, var(--cyan));
+      font-size: 22px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .accent-cpu { --accent: var(--cyan); }
+    .accent-gpu, .accent-green { --accent: var(--green); }
+    .accent-memory { --accent: var(--purple); }
+
+    .primary-body { display: grid; grid-template-columns: 156px minmax(125px, .8fr) minmax(220px, 1.5fr); align-items: center; gap: 16px; }
+    .secondary-body { display: grid; grid-template-columns: 132px minmax(115px, .8fr) minmax(180px, 1.4fr); align-items: center; gap: 14px; }
+    .gauge { position: relative; width: 146px; height: 146px; flex: 0 0 auto; }
+    .secondary .gauge { width: 124px; height: 124px; }
+    .gauge svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+    .gauge-track { fill: none; stroke: rgba(102, 145, 177, .15); stroke-width: 9; }
+    .gauge-value {
+      fill: none;
+      stroke: var(--accent, var(--cyan));
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-dasharray: 339.292;
+      stroke-dashoffset: 339.292;
+      filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent, var(--cyan)) 55%, transparent));
+      transition: stroke-dashoffset .35s ease;
+    }
+    .gauge-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+    .gauge-number { font-size: 39px; font-weight: 650; line-height: 1; font-variant-numeric: tabular-nums; }
+    .secondary .gauge-number { font-size: 32px; }
+    .gauge-label { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .gauge.is-unavailable .gauge-value { opacity: .18; }
+    .gauge.is-unavailable .gauge-number { color: var(--muted); }
+
+    .metric-list { display: grid; gap: 12px; min-width: 0; }
+    .metric-row { display: grid; grid-template-columns: 18px minmax(0, 1fr); column-gap: 8px; align-items: center; }
+    .metric-row .icon { width: 17px; height: 17px; color: var(--accent, var(--cyan)); grid-row: span 2; }
+    .metric-name { color: var(--muted); font-size: 12px; }
+    .metric-value { margin-top: 2px; font-size: 20px; font-weight: 550; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .metric-value small { color: var(--muted); font-size: 11px; font-weight: 400; margin-left: 4px; }
+    [data-unavailable="true"] { color: var(--muted) !important; }
+
+    .trend { min-width: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+    .trend-heading { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; color: var(--muted); font-size: 12px; }
+    .trend-heading strong { color: var(--accent, var(--cyan)); font-size: 15px; font-weight: 550; font-variant-numeric: tabular-nums; }
+    .chart-wrap { position: relative; height: 148px; min-width: 0; }
+    .secondary .chart-wrap { height: 132px; }
+    .chart-wrap canvas { display: block; width: 100%; height: 100%; }
+    .chart-ylabels { position: absolute; inset: 0 auto 0 0; display: flex; flex-direction: column; justify-content: space-between; color: rgba(127, 157, 184, .7); font-size: 9px; pointer-events: none; transform: translateX(-2px); }
+    .chart-ylabels + canvas { padding-left: 26px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 6px; color: var(--muted); font-size: 11px; }
+    .legend span::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: var(--legend); }
+
+    .drive-list { display: grid; gap: 7px; margin-bottom: 10px; }
+    .drive-item { display: grid; gap: 2px; }
+    .drive-row { display: grid; grid-template-columns: minmax(92px, auto) minmax(90px, 1fr) auto; align-items: center; gap: 10px; font-size: 12px; }
+    .drive-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #b9cde0; }
+    .drive-track { height: 6px; background: rgba(87, 141, 178, .16); border-radius: 6px; overflow: hidden; }
+    .drive-fill { width: 0; height: 100%; background: linear-gradient(90deg, var(--blue), var(--cyan)); border-radius: inherit; transition: width .35s ease; }
+    .drive-value { color: var(--cyan); font-variant-numeric: tabular-nums; }
+    .drive-meta { color: var(--muted); font-size: 10px; margin-top: 2px; }
+
+    .network-rates { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+    .rate-block { min-width: 0; }
+    .rate-label { color: var(--muted); font-size: 12px; }
+    .rate-number { margin-top: 5px; color: var(--accent); font-size: clamp(18px, 4cqi, 27px); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .rate-number small { font-size: 11px; color: var(--muted); font-weight: 400; }
+    .network .chart-wrap { height: 100px; }
+    .storage .chart-wrap { height: 82px; }
+    .storage .card-header { margin-bottom: 10px; }
+
+    .system-content { display: grid; grid-template-columns: minmax(190px, 1fr) 110px; align-items: center; gap: 12px; }
+    .system-list { display: grid; gap: 13px; }
+    .system-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(99, 156, 196, .1); }
+    .system-label { color: var(--muted); font-size: 12px; }
+    .system-value { text-align: right; font-size: 16px; font-weight: 550; font-variant-numeric: tabular-nums; }
+    .pc-case { width: 108px; height: 152px; opacity: .85; }
+
+    .app-footer { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 16px; padding: 0 24px 20px; }
+    .diagnostics { min-width: 0; color: var(--muted); font-size: 11px; }
+    .diagnostics summary { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; user-select: none; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px rgba(70, 240, 176, .5); }
+    .status-dot.stale { background: var(--amber); box-shadow: none; }
+    .issue-list { display: grid; gap: 8px; max-width: 980px; margin-top: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: rgba(7, 21, 41, .9); }
+    .issue-item { line-height: 1.55; }
+    .issue-item strong { color: #b9cde0; font-weight: 550; }
+    .issue-source { color: #5f809d; word-break: break-all; }
+    .host-info { text-align: right; color: #54738f; font-size: 10px; white-space: nowrap; }
+
+    @container (max-width: 560px) {
+      .primary-body, .secondary-body { grid-template-columns: 138px minmax(120px, 1fr); }
+      .trend { grid-column: 1 / -1; }
+      .chart-wrap, .secondary .chart-wrap { height: 112px; }
+      .card.primary, .card.secondary { min-height: 0; }
+    }
+    @container (max-width: 480px) {
+      .primary-body, .secondary-body { grid-template-columns: 112px minmax(0, 1fr); gap: 10px; }
+      .gauge, .secondary .gauge { width: 108px; height: 108px; }
+      .gauge-number, .secondary .gauge-number { font-size: 28px; }
+      .metric-value { font-size: 17px; }
+      .system-content { grid-template-columns: 1fr; }
+      .pc-case { display: none; }
+      .drive-row { grid-template-columns: minmax(78px, auto) 1fr auto; gap: 7px; }
+    }
+
+    @media (max-width: 1180px), (max-aspect-ratio: 3/4) {
+      .card.primary { grid-column: span 12; }
+      .card.secondary { grid-column: span 6; }
+      .card.storage { grid-column: span 12; }
+      .card.network, .card.system { grid-column: span 6; }
+    }
+    @media (max-width: 720px) {
+      :root { --gap: 12px; }
+      .app-header { grid-template-columns: 1fr auto; padding: 14px 14px 8px; }
+      .clock { grid-column: 1 / -1; grid-row: 2; text-align: left; display: flex; align-items: baseline; gap: 12px; }
+      .clock-time { font-size: 22px; }
+      .clock-date { margin-top: 0; }
+      .window-actions { grid-column: 2; grid-row: 1; }
+      .dashboard { padding: 10px 14px 14px; }
+      .card.primary, .card.secondary, .card.storage, .card.network, .card.system { grid-column: span 12; }
+      .app-footer { grid-template-columns: 1fr; padding: 0 14px 16px; }
+      .host-info { text-align: left; white-space: normal; }
+    }
+    @media (max-width: 460px) {
+      .brand-name { font-size: 18px; }
+      .brand-subtitle { display: none; }
+      .language-button { min-width: 52px; padding: 0 6px; gap: 4px; }
+      .language-option { font-size: 10px; }
+      .card { padding: 15px; border-radius: 13px; }
+      .card-title { font-size: 19px; }
+      .header-value { font-size: 18px; }
+      .network-rates { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1700px) and (min-aspect-ratio: 16/9) {
+      :root { --gap: 18px; }
+      .card { padding: 20px; }
+      .card.primary { min-height: 310px; }
+      .primary-body { grid-template-columns: 170px minmax(140px, .8fr) minmax(280px, 1.6fr); }
+      .gauge { width: 158px; height: 158px; }
+    }
+    /* 16:9 窗口在任务栏占位后通常只有约 990-1050px 可用高度。
+       此规则只收紧纵向节奏，不缩小指标字号，确保全部卡片与状态区一屏可见。 */
+    @media (min-width: 1181px) and (max-height: 1120px) {
+      :root { --gap: 14px; }
+      .app-header { padding: 14px 20px 8px; gap: 16px; }
+      .dashboard { padding: 8px 20px 12px; }
+      .card { padding: 18px; }
+      .card.primary { min-height: clamp(272px, 29vh, 310px); }
+      .card.secondary { min-height: clamp(232px, 23.5vh, 260px); }
+      .card-header { margin-bottom: 12px; }
+      .gauge { width: 148px; height: 148px; }
+      .secondary .gauge { width: 116px; height: 116px; }
+      .gauge-number { font-size: 36px; }
+      .secondary .gauge-number { font-size: 30px; }
+      .gauge-label { margin-top: 6px; }
+      .metric-list { gap: 10px; }
+      .chart-wrap { height: 132px; }
+      .secondary .chart-wrap { height: 118px; }
+      .network .chart-wrap { height: 84px; }
+      .storage .chart-wrap { height: 72px; }
+      .trend-heading { margin-bottom: 4px; }
+      .network-rates { margin-bottom: 10px; }
+      .drive-list { gap: 5px; margin-bottom: 6px; }
+      .system-content { grid-template-columns: minmax(170px, 1fr) 100px; gap: 10px; }
+      .system-list { gap: 9px; }
+      .system-row { padding-bottom: 7px; }
+      .pc-case { width: 100px; height: 140px; }
+      .app-footer { padding: 0 20px 14px; }
+    }
+    /* 在 1707×898 / 1707×920 这类接近 16:9 的满屏工作区启用紧凑排布。 */
+    @media (min-width: 1181px) and (max-height: 1000px) {
+      :root { --gap: 10px; }
+      .app-header { padding: 10px 18px 6px; gap: 14px; }
+      .brand-mark { width: 38px; height: 38px; }
+      .brand-name { font-size: 20px; }
+      .brand-subtitle { font-size: 11px; }
+      .clock-time { font-size: 26px; }
+      .clock-date { margin-top: 4px; font-size: 11px; }
+      .icon-button { width: 34px; height: 34px; }
+      .language-button { height: 34px; }
+      .dashboard { padding: 6px 18px 8px; }
+      .card { padding: 16px; }
+      .card.primary { min-height: 252px; }
+      .card.secondary { min-height: 218px; }
+      .card-header { margin-bottom: 10px; }
+      .card-title, .header-value { font-size: 21px; }
+      .device-name { font-size: 12px; }
+      .primary-body { grid-template-columns: 148px minmax(150px, .8fr) minmax(240px, 1.5fr); gap: 12px; }
+      .secondary-body { grid-template-columns: 116px minmax(140px, .8fr) minmax(180px, 1.4fr); gap: 12px; }
+      .gauge { width: 132px; height: 132px; }
+      .secondary .gauge { width: 104px; height: 104px; }
+      .gauge-number { font-size: 34px; }
+      .secondary .gauge-number { font-size: 28px; }
+      .gauge-label { margin-top: 5px; font-size: 11px; }
+      .metric-list { gap: 4px; }
+      .metric-row { grid-template-columns: 17px minmax(0, 1fr); column-gap: 8px; }
+      .metric-row .icon { width: 15px; height: 15px; grid-row: span 2; }
+      .metric-name { font-size: 11px; }
+      .metric-value { margin-top: 1px; font-size: 18px; }
+      .chart-wrap { height: 118px; }
+      .secondary .chart-wrap { height: 108px; }
+      .network .chart-wrap { height: 76px; }
+      .storage .chart-wrap { height: 64px; }
+      .trend-heading { margin-bottom: 2px; font-size: 11px; }
+      .trend-heading strong { font-size: 14px; }
+      .network-rates { margin-bottom: 6px; }
+      .rate-label { font-size: 10px; }
+      .rate-number { font-size: 22px; }
+      .drive-list { gap: 3px; margin-bottom: 4px; }
+      .drive-row { font-size: 10px; }
+      .drive-meta { font-size: 9px; }
+      .system-content { grid-template-columns: minmax(150px, 1fr) 88px; gap: 8px; }
+      .system-list { gap: 6px; }
+      .system-row { padding-bottom: 5px; }
+      .system-label { font-size: 11px; }
+      .system-value { font-size: 14px; }
+      .pc-case { width: 88px; height: 124px; }
+      .app-footer { padding: 0 18px 10px; }
+    }
+    @media (max-width: 460px) {
+      .window-actions { gap: 4px; }
+      .icon-button { width: 30px; height: 30px; }
+      .icon-button svg { width: 16px; height: 16px; }
+      .language-button { min-width: 46px; height: 30px; padding: 0 5px; gap: 3px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+  <link rel="stylesheet" href="https://themes.theboostdeck/custom.css">
+</head>
+<body>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+    <defs>
+      <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4"/></symbol>
+      <symbol id="i-gpu" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="4"/><path d="M7 19v2m10-2v2M3 8H1m2 8H1"/></symbol>
+      <symbol id="i-memory" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10v4m4-4v4m4-4v4m4-4v4M5 18v2m14-2v2"/></symbol>
+      <symbol id="i-disk" viewBox="0 0 24 24"><path d="M4 13h16M5 13l2-7h10l2 7M4 13v6h16v-6"/><circle cx="16" cy="16" r="1"/></symbol>
+      <symbol id="i-network" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+      <symbol id="i-temp" viewBox="0 0 24 24"><path d="M9 14.8V5a3 3 0 0 1 6 0v9.8a5 5 0 1 1-6 0Z"/><path d="M12 8v9"/></symbol>
+      <symbol id="i-power" viewBox="0 0 24 24"><path d="m13 2-8 12h7l-1 8 8-12h-7z"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-fan" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 10c-1-5 1-7 4-6 3 2 1 6-2 8M14 12c5-1 7 1 6 4-2 3-6 1-8-2M12 14c1 5-1 7-4 6-3-2-1-6 2-8M10 12c-5 1-7-1-6-4 2-3 6-1 8 2"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="m8 3 8 8m-5-9 8 8-4 2-4 4-2-2-4 5-1-1 5-4-2-2 4-4z"/></symbol>
+      <symbol id="i-hide" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+      <symbol id="i-maximize" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="1"/></symbol>
+      <symbol id="i-restore" viewBox="0 0 24 24"><rect x="8" y="3" width="13" height="13" rx="1"/><path d="M16 16H3V8h5"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12m0-12L6 18"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8m-4-4v8"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v14m-5-5 5 5 5-5M5 21h14"/></symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 21V7m-5 5 5-5 5 5M5 3h14"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark"><img class="brand-logo" src="logo.png" alt="TheBoostDeck"></div>
+      <div><div class="brand-name">TheBoostDeck</div><div class="brand-subtitle" data-i18n="brand.subtitle">副屏性能监控</div></div>
+    </div>
+    <div class="clock"><div class="clock-time" id="clock-time">--:--:--</div><div class="clock-date" id="clock-date" data-i18n="clock.waiting">等待系统时间</div></div>
+    <div class="window-actions">
+      <button class="language-button" id="language-button" type="button" data-i18n-title="language.switch" data-i18n-aria-label="language.switch" title="切换语言" aria-label="切换语言">
+        <span class="language-option" data-language-option="zh-CN">中</span><span class="language-divider"></span><span class="language-option" data-language-option="en-US">EN</span>
+      </button>
+      <button class="icon-button" id="pin-button" type="button" data-i18n-title="pin.tooltip" data-i18n-aria-label="pin.tooltip" title="切换始终置顶" aria-label="切换始终置顶" aria-pressed="true"><svg class="icon"><use href="#i-pin" xlink:href="#i-pin"/></svg></button>
+      <button class="icon-button" id="hide-button" type="button" data-i18n-title="hide.tooltip" data-i18n-aria-label="hide.tooltip" title="隐藏到托盘" aria-label="隐藏到托盘"><svg class="icon"><use href="#i-hide" xlink:href="#i-hide"/></svg></button>
+      <button class="icon-button" id="maximize-button" type="button" data-i18n-title="maximize.tooltip" data-i18n-aria-label="maximize.tooltip" title="最大化" aria-label="最大化" aria-pressed="false"><svg class="icon"><use id="maximize-icon" href="#i-maximize" xlink:href="#i-maximize"/></svg></button>
+      <button class="icon-button close-button" id="close-button" type="button" data-i18n-title="close.tooltip" data-i18n-aria-label="close.tooltip" title="关闭并退出" aria-label="关闭并退出"><svg class="icon"><use href="#i-close" xlink:href="#i-close"/></svg></button>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <section class="card primary accent-cpu" aria-labelledby="cpu-title">
+      <div class="card-header">
+        <svg class="icon"><use href="#i-cpu" xlink:href="#i-cpu"/></svg><span class="card-title" id="cpu-title">CPU</span><span class="device-name" id="cpu-name" data-i18n="cpu.detecting">正在识别处理器</span><span class="header-value" id="cpu-header">--</span>
+      </div>
+      <div class="primary-body">
+        <div class="gauge" id="cpu-gauge" data-gauge>
+          <svg viewBox="0 0 120 120"><circle class="gauge-track" cx="60" cy="60" r="54"/><circle class="gauge-value" cx="60" cy="60" r="54"/></svg>
+          <div class="gauge-center"><div class="gauge-number" id="cpu-gauge-value">--</div><div class="gauge-label" data-i18n="gauge.usage">使用率</div></div>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><svg class="icon"><use href="#i-temp" xlink:href="#i-temp"/></svg><div class="metric-name" data-i18n="metric.temperature">温度</div><div class="metric-value" id="cpu-temperature">--</div></div>
+          <div class="metric-row"><svg class="icon"><use href="#i-power" xlink:href="#i-power"/></svg><div class="metric-name" data-i18n="metric.power">功耗</div><div class="metric-value" id="cpu-power">--</div></div>
+          <div class="metric-row"><svg class="icon"><use href="#i-clock" xlink:href="#i-clock"/></svg><div class="metric-name" data-i18n="metric.frequency">频率</div><div class="metric-value" id="cpu-frequency">--</div></div>
+        </div>
+        <div class="trend"><div class="trend-heading"><span data-i18n="trend.cpu">CPU 使用率 · 60 秒</span><strong id="cpu-trend-value">--</strong></div><div class="chart-wrap"><div class="chart-ylabels"><span>100%</span><span>50%</span><span>0%</span></div><canvas id="cpu-chart" data-i18n-aria-label="trend.cpu" aria-label="CPU 使用率趋势"></canvas></div></div>
+      </div>
+    </section>
+
+    <section class="card primary accent-gpu" aria-labelledby="gpu-title">
+      <div class="card-header">
+        <svg class="icon"><use href="#i-gpu" xlink:href="#i-gpu"/></svg><span class="card-title" id="gpu-title">GPU</span><span class="device-name" id="gpu-name" data-i18n="gpu.detecting">正在识别显卡</span><span class="header-value" id="gpu-header">--</span>
+      </div>
+      <div class="primary-body">
+        <div class="gauge" id="gpu-gauge" data-gauge>
+          <svg viewBox="0 0 120 120"><circle class="gauge-track" cx="60" cy="60" r="54"/><circle class="gauge-value" cx="60" cy="60" r="54"/></svg>
+          <div class="gauge-center"><div class="gauge-number" id="gpu-gauge-value">--</div><div class="gauge-label" data-i18n="gauge.usage">使用率</div></div>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><svg class="icon"><use href="#i-temp" xlink:href="#i-temp"/></svg><div class="metric-name" data-i18n="metric.temperature">温度</div><div class="metric-value" id="gpu-temperature">--</div></div>
+          <div class="metric-row"><svg class="icon"><use href="#i-power" xlink:href="#i-power"/></svg><div class="metric-name" data-i18n="metric.power">功耗</div><div class="metric-value" id="gpu-power">--</div></div>
+          <div class="metric-row"><svg class="icon"><use href="#i-clock" xlink:href="#i-clock"/></svg><div class="metric-name" data-i18n="metric.frequency">频率</div><div class="metric-value" id="gpu-frequency">--</div></div>
+          <div class="metric-row"><svg class="icon"><use href="#i-fan" xlink:href="#i-fan"/></svg><div class="metric-name" data-i18n="metric.fan">风扇</div><div class="metric-value" id="gpu-fan">--</div></div>
+        </div>
+        <div class="trend"><div class="trend-heading"><span data-i18n="trend.gpu">GPU 使用率 · 60 秒</span><strong id="gpu-trend-value">--</strong></div><div class="chart-wrap"><div class="chart-ylabels"><span>100%</span><span>50%</span><span>0%</span></div><canvas id="gpu-chart" data-i18n-aria-label="trend.gpu" aria-label="GPU 使用率趋势"></canvas></div></div>
+      </div>
+    </section>
+
+    <section class="card secondary accent-memory" aria-labelledby="memory-title">
+      <div class="card-header"><svg class="icon"><use href="#i-memory" xlink:href="#i-memory"/></svg><span class="card-title" id="memory-title" data-i18n="memory.title">内存</span><span class="header-value" id="memory-header">--</span></div>
+      <div class="secondary-body">
+        <div class="gauge" id="memory-gauge" data-gauge><svg viewBox="0 0 120 120"><circle class="gauge-track" cx="60" cy="60" r="54"/><circle class="gauge-value" cx="60" cy="60" r="54"/></svg><div class="gauge-center"><div class="gauge-number" id="memory-gauge-value">--</div><div class="gauge-label" data-i18n="metric.used">已用</div></div></div>
+        <div class="metric-list"><div><div class="metric-name" data-i18n="metric.used">已用</div><div class="metric-value" id="memory-used">--</div></div><div><div class="metric-name" data-i18n="metric.total">总计</div><div class="metric-value" id="memory-total">--</div></div></div>
+        <div class="trend"><div class="trend-heading"><span data-i18n="trend.memory">内存使用率</span><strong id="memory-trend-value">--</strong></div><div class="chart-wrap"><div class="chart-ylabels"><span>100%</span><span>50%</span><span>0%</span></div><canvas id="memory-chart" data-i18n-aria-label="trend.memory" aria-label="内存使用率趋势"></canvas></div></div>
+      </div>
+    </section>
+
+    <section class="card secondary accent-green" aria-labelledby="vram-title">
+      <div class="card-header"><svg class="icon"><use href="#i-gpu" xlink:href="#i-gpu"/></svg><span class="card-title" id="vram-title" data-i18n="vram.title">显存</span><span class="device-name" id="vram-name" data-i18n="vram.device">专用显存</span><span class="header-value" id="vram-header">--</span></div>
+      <div class="secondary-body">
+        <div class="gauge" id="vram-gauge" data-gauge><svg viewBox="0 0 120 120"><circle class="gauge-track" cx="60" cy="60" r="54"/><circle class="gauge-value" cx="60" cy="60" r="54"/></svg><div class="gauge-center"><div class="gauge-number" id="vram-gauge-value">--</div><div class="gauge-label" data-i18n="metric.used">已用</div></div></div>
+        <div class="metric-list"><div><div class="metric-name" data-i18n="metric.used">已用</div><div class="metric-value" id="vram-used">--</div></div><div><div class="metric-name" data-i18n="metric.total">总计</div><div class="metric-value" id="vram-total">--</div></div></div>
+        <div class="trend"><div class="trend-heading"><span data-i18n="trend.vram">显存使用率</span><strong id="vram-trend-value">--</strong></div><div class="chart-wrap"><div class="chart-ylabels"><span>100%</span><span>50%</span><span>0%</span></div><canvas id="vram-chart" data-i18n-aria-label="trend.vram" aria-label="显存使用率趋势"></canvas></div></div>
+      </div>
+    </section>
+
+    <section class="card storage accent-cpu" aria-labelledby="storage-title">
+      <div class="card-header"><svg class="icon"><use href="#i-disk" xlink:href="#i-disk"/></svg><span class="card-title" id="storage-title" data-i18n="storage.title">磁盘</span><span class="device-name" data-i18n="storage.device">固定磁盘</span></div>
+      <div class="drive-list" id="drive-list"><div class="metric-name" id="drive-empty" data-i18n="storage.loading">正在读取磁盘信息</div></div>
+      <div class="trend"><div class="trend-heading"><span data-i18n="trend.disk">磁盘读写</span><strong id="disk-current">--</strong></div><div class="chart-wrap"><canvas id="disk-chart" data-i18n-aria-label="trend.disk" aria-label="磁盘读写趋势"></canvas></div><div class="legend"><span style="--legend: var(--cyan)" data-i18n="legend.read">读取</span><span style="--legend: var(--amber)" data-i18n="legend.write">写入</span></div></div>
+    </section>
+
+    <section class="card network accent-cpu" aria-labelledby="network-title">
+      <div class="card-header"><svg class="icon"><use href="#i-network" xlink:href="#i-network"/></svg><span class="card-title" id="network-title" data-i18n="network.title">网络</span><span class="device-name" id="network-name" data-i18n="network.detecting">正在选择活动网卡</span></div>
+      <div class="network-rates"><div class="rate-block" style="--accent: var(--cyan)"><div class="rate-label" data-i18n="rate.download">下载</div><div class="rate-number" id="network-download">--</div></div><div class="rate-block" style="--accent: var(--amber)"><div class="rate-label" data-i18n="rate.upload">上传</div><div class="rate-number" id="network-upload">--</div></div></div>
+      <div class="trend"><div class="chart-wrap"><canvas id="network-chart" data-i18n-aria-label="trend.network" aria-label="网络速率趋势"></canvas></div><div class="legend"><span style="--legend: var(--cyan)" data-i18n="rate.download">下载</span><span style="--legend: var(--amber)" data-i18n="rate.upload">上传</span></div></div>
+    </section>
+
+    <section class="card system accent-green" aria-labelledby="system-title">
+      <div class="card-header"><svg class="icon"><use href="#i-info" xlink:href="#i-info"/></svg><span class="card-title" id="system-title" data-i18n="system.title">系统信息</span></div>
+      <div class="system-content">
+        <div class="system-list">
+          <div class="system-row"><span class="system-label" data-i18n="system.motherboardTemp">主板温度</span><span class="system-value" id="system-temperature">--</span></div>
+          <div class="system-row"><span class="system-label" data-i18n="system.fan">系统风扇</span><span class="system-value" id="system-fan">--</span></div>
+          <div class="system-row"><span class="system-label" data-i18n="system.power">系统功耗</span><span class="system-value" id="system-power">--</span></div>
+          <div class="system-row"><span class="system-label" data-i18n="system.powerSource">电源状态</span><span class="system-value" id="system-source" data-i18n="system.unknown">未知</span></div>
+        </div>
+        <svg class="pc-case" viewBox="0 0 120 168" aria-hidden="true">
+          <defs><linearGradient id="case-edge" x1="0" x2="1"><stop stop-color="#244f72"/><stop offset=".5" stop-color="#4bc9ff"/><stop offset="1" stop-color="#162b48"/></linearGradient></defs>
+          <path d="M18 12 99 3l11 12v137l-13 12-79-8z" fill="rgba(6,15,29,.85)" stroke="url(#case-edge)" stroke-width="2"/>
+          <path d="m99 3 11 12-12 7-80-10M98 22v142" fill="none" stroke="#315b7d"/>
+          <g fill="none" stroke-width="3"><circle cx="57" cy="48" r="19" stroke="#557cff"/><circle cx="57" cy="48" r="12" stroke="#a881ff" opacity=".7"/><circle cx="57" cy="91" r="19" stroke="#4bc9ff"/><circle cx="57" cy="91" r="12" stroke="#46f0b0" opacity=".65"/><circle cx="57" cy="134" r="19" stroke="#557cff"/><circle cx="57" cy="134" r="12" stroke="#a881ff" opacity=".7"/></g>
+          <g fill="#8ce7ff"><circle cx="57" cy="48" r="3"/><circle cx="57" cy="91" r="3"/><circle cx="57" cy="134" r="3"/></g>
+        </svg>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <details class="diagnostics">
+      <summary><span class="status-dot" id="status-dot"></span><span id="data-status" data-i18n="status.waiting">正在等待真实遥测数据</span><span id="issue-count"></span></summary>
+      <div class="issue-list" id="issue-list"><div class="issue-item" data-i18n="diagnostics.help">收到传感器数据后，此处会显示不可用指标及原因。TheBoostDeck 不会用 0 或演示数据代替缺失值。</div></div>
+    </details>
+    <div class="host-info" id="host-info" data-i18n="footer.host">本地进程内通信 · 无网络服务 · 1 秒采样</div>
+  </footer>
+
+  <script>
+    (() => {
+      "use strict";
+      const $ = id => document.getElementById(id);
+      const circumference = 339.292;
+      const maxPoints = 60;
+      let latestSnapshot = null;
+      let hostVisible = true;
+      let hostTopmost = true;
+      let hostMaximized = false;
+      let issueSignature = "";
+      const driveRows = new Map();
+      let currentLanguage = "zh-CN";
+
+      const messages = {
+        "zh-CN": {
+          "brand.subtitle": "副屏性能监控",
+          "clock.waiting": "等待系统时间",
+          "language.switch": "切换语言",
+          "pin.tooltip": "切换始终置顶",
+          "hide.tooltip": "隐藏到托盘",
+          "maximize.tooltip": "最大化",
+          "restore.tooltip": "还原",
+          "close.tooltip": "关闭并退出",
+          "cpu.detecting": "正在识别处理器",
+          "gpu.detecting": "正在识别显卡",
+          "network.detecting": "正在选择活动网卡",
+          "vram.device": "专用显存",
+          "storage.title": "磁盘",
+          "storage.device": "固定磁盘",
+          "storage.loading": "正在读取磁盘信息",
+          "storage.empty": "未检测到可用固定磁盘",
+          "gauge.usage": "使用率",
+          "metric.temperature": "温度",
+          "metric.power": "功耗",
+          "metric.frequency": "频率",
+          "metric.fan": "风扇",
+          "metric.used": "已用",
+          "metric.total": "总计",
+          "trend.cpu": "CPU 使用率 · 60 秒",
+          "trend.gpu": "GPU 使用率 · 60 秒",
+          "trend.memory": "内存使用率",
+          "trend.vram": "显存使用率",
+          "trend.disk": "磁盘读写",
+          "trend.network": "网络速率趋势",
+          "legend.read": "读取",
+          "legend.write": "写入",
+          "rate.download": "下载",
+          "rate.upload": "上传",
+          "memory.title": "内存",
+          "vram.title": "显存",
+          "network.title": "网络",
+          "system.title": "系统信息",
+          "system.motherboardTemp": "主板温度",
+          "system.fan": "系统风扇",
+          "system.power": "系统功耗",
+          "system.powerSource": "电源状态",
+          "system.unknown": "未知",
+          "system.acPower": "交流电源",
+          "system.battery": "电池",
+          "footer.host": "本地进程内通信 · 无网络服务 · 1 秒采样",
+          "footer.hostInfo": "{machine} · 本地进程内通信 · 无网络服务",
+          "diagnostics.help": "收到传感器数据后，此处会显示不可用指标及原因。TheBoostDeck 不会用 0 或演示数据代替缺失值。",
+          "status.waiting": "正在等待真实遥测数据",
+          "status.live": "真实数据 · {time}",
+          "status.stale": "数据已陈旧，采集可能中断",
+          "status.driverMissing": "{driver} 驱动未安装 · {time}",
+          "status.driverOutdated": "{driver} 驱动版本过旧 · {time}",
+          "status.collectionFailed": "本轮采集失败，请查看本地日志；页面不会用模拟数据替代。",
+          "status.webOnly": "请在 TheBoostDeck 桌面应用中运行；此页面不生成演示数据",
+          "diagnostics.degradedOne": " · 1 项已降级",
+          "diagnostics.degradedMany": " · {count} 项已降级",
+          "diagnostics.allAvailable": " · 所有展示项可用",
+          "diagnostics.noIssues": "当前没有降级指标。数值来自本地真实传感器。",
+          "diagnostics.sensorUnavailable": "传感器不可用",
+          "diagnostics.trueSensorData": "真实传感器数据",
+          "issue.driver": "传感器驱动",
+          "issue.cpuTemperature": "CPU 温度",
+          "issue.cpuPower": "CPU 功耗",
+          "issue.cpuFrequency": "CPU 频率",
+          "issue.gpuTemperature": "GPU 温度",
+          "issue.gpuPower": "GPU 功耗",
+          "issue.gpuFrequency": "GPU 频率",
+          "issue.gpuFan": "GPU 风扇",
+          "issue.gpuMemory": "专用显存",
+          "issue.motherboardTemperature": "主板温度",
+          "issue.systemFan": "系统风扇",
+          "issue.systemPower": "系统功耗",
+          "issue.diskRead": "磁盘读取",
+          "issue.diskWrite": "磁盘写入",
+          "issue.networkDownload": "网络下载",
+          "issue.networkUpload": "网络上传",
+          "disk.readRate": "读 {rate}",
+          "drive.localDisk": "本地磁盘"
+        },
+        "en-US": {
+          "brand.subtitle": "Secondary display HUD",
+          "clock.waiting": "Waiting for system time",
+          "language.switch": "Switch language",
+          "pin.tooltip": "Toggle always on top",
+          "hide.tooltip": "Hide to tray",
+          "maximize.tooltip": "Maximize",
+          "restore.tooltip": "Restore",
+          "close.tooltip": "Close TheBoostDeck",
+          "cpu.detecting": "Detecting processor",
+          "gpu.detecting": "Detecting GPU",
+          "network.detecting": "Selecting active adapter",
+          "vram.device": "Dedicated VRAM",
+          "storage.title": "Storage",
+          "storage.device": "Fixed drives",
+          "storage.loading": "Reading disk information",
+          "storage.empty": "No fixed disks detected",
+          "gauge.usage": "Usage",
+          "metric.temperature": "Temperature",
+          "metric.power": "Power",
+          "metric.frequency": "Clock",
+          "metric.fan": "Fan",
+          "metric.used": "Used",
+          "metric.total": "Total",
+          "trend.cpu": "CPU usage · 60 s",
+          "trend.gpu": "GPU usage · 60 s",
+          "trend.memory": "Memory usage",
+          "trend.vram": "VRAM usage",
+          "trend.disk": "Disk I/O",
+          "trend.network": "Network throughput",
+          "legend.read": "Read",
+          "legend.write": "Write",
+          "rate.download": "Download",
+          "rate.upload": "Upload",
+          "memory.title": "Memory",
+          "vram.title": "VRAM",
+          "network.title": "Network",
+          "system.title": "System",
+          "system.motherboardTemp": "Motherboard temp",
+          "system.fan": "System fan",
+          "system.power": "System power",
+          "system.powerSource": "Power source",
+          "system.unknown": "Unknown",
+          "system.acPower": "AC power",
+          "system.battery": "Battery",
+          "footer.host": "In-process · No network service · 1 s sampling",
+          "footer.hostInfo": "{machine} · In-process · No network service",
+          "diagnostics.help": "Unavailable metrics and reasons will appear here after sensor data arrives. TheBoostDeck never substitutes 0 or demo data for missing values.",
+          "status.waiting": "Waiting for live telemetry",
+          "status.live": "Live data · {time}",
+          "status.stale": "Data is stale; collection may be interrupted",
+          "status.driverMissing": "{driver} driver not installed · {time}",
+          "status.driverOutdated": "{driver} driver is outdated · {time}",
+          "status.collectionFailed": "Telemetry collection failed. Check the local log; the page will not substitute demo data.",
+          "status.webOnly": "Run this page inside TheBoostDeck; it never generates demo data",
+          "diagnostics.degradedOne": " · 1 degraded item",
+          "diagnostics.degradedMany": " · {count} degraded items",
+          "diagnostics.allAvailable": " · All displayed metrics available",
+          "diagnostics.noIssues": "No degraded metrics. All values come from local hardware sensors.",
+          "diagnostics.sensorUnavailable": "Sensor unavailable",
+          "diagnostics.trueSensorData": "Live sensor data",
+          "issue.driver": "Sensor driver",
+          "issue.cpuTemperature": "CPU temperature",
+          "issue.cpuPower": "CPU power",
+          "issue.cpuFrequency": "CPU clock",
+          "issue.gpuTemperature": "GPU temperature",
+          "issue.gpuPower": "GPU power",
+          "issue.gpuFrequency": "GPU clock",
+          "issue.gpuFan": "GPU fan",
+          "issue.gpuMemory": "Dedicated VRAM",
+          "issue.motherboardTemperature": "Motherboard temp",
+          "issue.systemFan": "System fan",
+          "issue.systemPower": "System power",
+          "issue.diskRead": "Disk read",
+          "issue.diskWrite": "Disk write",
+          "issue.networkDownload": "Network download",
+          "issue.networkUpload": "Network upload",
+          "disk.readRate": "R {rate}",
+          "drive.localDisk": "Local disk"
+        }
+      };
+
+      const reasonTranslations = {
+        "LibreHardwareMonitor 未枚举到 CPU": "LibreHardwareMonitor did not enumerate a CPU",
+        "未枚举到可用的物理 GPU": "No usable physical GPU was enumerated",
+        "未检测到物理内存传感器": "No physical memory sensor was detected",
+        "无法根据已用与可用内存计算总量": "Total memory could not be derived from used and available values",
+        "未检测到活动物理网卡": "No active physical network adapter was detected",
+        "未检测到可用的主板温度传感器；可检查 BIOS、驱动或传感器库支持": "No usable motherboard temperature sensor; check BIOS, drivers, or sensor-library support",
+        "未检测到可用的 CPU / 系统风扇传感器；GPU 风扇不计入此项": "No usable CPU / system fan sensor; GPU fans are not included",
+        "整机功耗通常需要受支持的电源或专用传感器，当前未检测到": "Whole-system power requires a supported PSU or dedicated sensor; none was detected",
+        "CPU 核心频率传感器未返回有效数据，可能受权限或平台支持限制": "The CPU core clock sensor returned no valid data; permissions or platform support may limit it",
+        "传感器已识别但未返回有效数据，可能受权限、驱动或平台支持限制": "The sensor was found but returned no valid data; permissions, drivers, or platform support may limit it",
+        "传感器返回的零值在当前平台上不可信，已按不可用处理": "A zero reading is not trusted on this platform and is treated as unavailable",
+        "未检测到 CPU 总占用传感器": "No CPU total load sensor was detected",
+        "未检测到 CPU 封装温度传感器": "No CPU package temperature sensor was detected",
+        "未检测到 CPU 封装功耗传感器": "No CPU package power sensor was detected",
+        "未检测到专用显存占用传感器": "No dedicated VRAM usage sensor was detected",
+        "未检测到专用显存总量传感器": "No dedicated VRAM total sensor was detected",
+        "未检测到 GPU 核心占用传感器": "No GPU core load sensor was detected",
+        "未检测到 GPU 核心温度传感器": "No GPU core temperature sensor was detected",
+        "未检测到 GPU 封装功耗传感器": "No GPU package power sensor was detected",
+        "未检测到 GPU 核心频率传感器": "No GPU core clock sensor was detected",
+        "未检测到 GPU 风扇转速传感器": "No GPU fan speed sensor was detected",
+        "未检测到物理内存占用传感器": "No physical memory usage sensor was detected",
+        "未检测到物理内存可用量传感器": "No physical memory available sensor was detected",
+        "未检测到磁盘读取速率传感器": "No disk read throughput sensor was detected",
+        "未检测到磁盘写入速率传感器": "No disk write throughput sensor was detected",
+        "活动网卡未返回下载速率": "The active adapter returned no download rate",
+        "活动网卡未返回上传速率": "The active adapter returned no upload rate",
+        "未检测到 PawnIO 2.2.0 或更高版本；CPU 温度、频率和功耗可能不可用。请安装 PawnIO 后重启 TheBoostDeck。": "PawnIO 2.2.0 or newer was not detected; CPU temperature, clock, and power may be unavailable. Install PawnIO and restart TheBoostDeck.",
+        "已检测到 PawnIO，但未能读取版本号。": "PawnIO was detected, but its version could not be read.",
+        "无法读取 PawnIO 安装状态；如果 CPU 温度、频率和功耗不可用，请检查驱动安装。": "PawnIO installation state could not be read; if CPU temperature, clock, and power are unavailable, check the driver installation.",
+        "PawnIO 驱动不可用": "The PawnIO driver is unavailable"
+      };
+
+      function normalizeLanguage(value) {
+        return String(value || "").toLowerCase().startsWith("en") ? "en-US" : "zh-CN";
+      }
+
+      function t(key, values = {}) {
+        const template = messages[currentLanguage]?.[key] ?? messages["zh-CN"][key] ?? key;
+        return template.replace(/\{(\w+)\}/g, (_, name) => values[name] ?? "");
+      }
+
+      function translateReason(reason) {
+        if (!reason) return "";
+        if (currentLanguage !== "en-US") return reason;
+        if (reasonTranslations[reason]) return reasonTranslations[reason];
+        if (reason.startsWith("PawnIO ") && reason.includes("低于要求的")) {
+          return reason.replace("低于要求的", "is older than the required").replace("；CPU 温度、频率和功耗可能不可用，请更新驱动后重启 TheBoostDeck。", "; CPU temperature, clock, and power may be unavailable. Update the driver and restart TheBoostDeck.");
+        }
+        const missing = reason.match(/^(.+)缺少有效的已用量或总量$/);
+        if (missing) {
+          const scope = missing[1]
+            .replace("物理内存占用", "Physical memory usage")
+            .replace("专用显存占用", "Dedicated VRAM usage")
+            .replace(/^磁盘 (.+) 占用$/, "Disk $1 usage");
+          return `${scope} has no valid used or total value`;
+        }
+        return reason;
+      }
+
+      // Only app-authored fallback/status text is localized.
+      // System/sensor-provided names (adapter names, volume labels, device models) are shown verbatim.
+      function localizePowerSource(source) {
+        if (source === "交流电源") return t("system.acPower");
+        if (source === "电池") return t("system.battery");
+        if (!source || source === "未知") return t("system.unknown");
+        return source;
+      }
+
+      function localizeDrive(drive) {
+        return currentLanguage === "en-US" && drive.label === "本地磁盘" ? t("drive.localDisk") : drive.label;
+      }
+
+      function applyLanguage(language) {
+        currentLanguage = normalizeLanguage(language);
+        document.documentElement.lang = currentLanguage;
+        document.querySelectorAll("[data-i18n]").forEach(element => {
+          element.textContent = t(element.dataset.i18n);
+        });
+        document.querySelectorAll("[data-i18n-title]").forEach(element => {
+          element.title = t(element.dataset.i18nTitle);
+        });
+        document.querySelectorAll("[data-i18n-aria-label]").forEach(element => {
+          element.setAttribute("aria-label", t(element.dataset.i18nAriaLabel));
+        });
+        document.querySelectorAll("[data-language-option]").forEach(element => {
+          element.classList.toggle("is-active", element.dataset.languageOption === currentLanguage);
+        });
+        issueSignature = "";
+        if (latestSnapshot) {
+          updateDashboard(latestSnapshot, false);
+        } else {
+          setText("host-info", t("footer.host"));
+          setText("data-status", t("status.waiting"));
+        }
+        updateClock();
+      }
+
+      function setMaximized(value) {
+        hostMaximized = Boolean(value);
+        const button = $("maximize-button");
+        if (!button) return;
+        const key = hostMaximized ? "restore.tooltip" : "maximize.tooltip";
+        button.dataset.i18nTitle = key;
+        button.dataset.i18nAriaLabel = key;
+        button.title = t(key);
+        button.setAttribute("aria-label", t(key));
+        button.setAttribute("aria-pressed", String(hostMaximized));
+        const icon = $("maximize-icon");
+        if (icon) {
+          const symbol = hostMaximized ? "#i-restore" : "#i-maximize";
+          icon.setAttribute("href", symbol);
+          icon.setAttribute("xlink:href", symbol);
+        }
+      }
+
+      function setText(id, value) {
+        const element = $(id);
+        const text = String(value);
+        if (element.textContent !== text) element.textContent = text;
+      }
+
+      function fixed(value, digits = 1) {
+        return Number(value).toLocaleString(currentLanguage, { minimumFractionDigits: digits, maximumFractionDigits: digits });
+      }
+
+      function metricText(metric, formatter) {
+        return metric && metric.status === "available" && Number.isFinite(metric.value) ? formatter(metric.value) : "--";
+      }
+
+      function setMetric(id, metric, formatter) {
+        const element = $(id);
+        const available = metric && metric.status === "available" && Number.isFinite(metric.value);
+        setText(id, available ? formatter(metric.value) : "--");
+        element.dataset.unavailable = available ? "false" : "true";
+        element.title = available ? (metric.source || t("diagnostics.trueSensorData")) : translateReason(metric?.reason) || t("diagnostics.sensorUnavailable");
+      }
+
+      const percent = value => `${Math.round(value)}%`;
+      const decimalPercent = value => `${fixed(value, 1)}%`;
+      const temperature = value => `${fixed(value, 1)} °C`;
+      const watts = value => `${fixed(value, 1)} W`;
+      const gigabytes = value => `${fixed(value, 1)} GB`;
+      const megahertz = value => `${Math.round(value).toLocaleString(currentLanguage)} MHz`;
+      const gigahertz = value => `${fixed(value, 2)} GHz`;
+      const rpm = value => `${Math.round(value).toLocaleString(currentLanguage)} RPM`;
+      function networkRate(bytes) {
+        const megabits = Math.max(0, bytes) * 8 / 1_000_000;
+        return megabits >= 100 ? `${fixed(megabits, 0)} Mbps` : `${fixed(megabits, megabits >= 10 ? 1 : 2)} Mbps`;
+      }
+      function diskRate(bytes) {
+        const megabytes = Math.max(0, bytes) / 1_048_576;
+        return megabytes >= 100 ? `${fixed(megabytes, 0)} MB/s` : `${fixed(megabytes, 1)} MB/s`;
+      }
+
+      function updateGauge(id, metric) {
+        const gauge = $(id);
+        const circle = gauge.querySelector(".gauge-value");
+        const valueElement = gauge.querySelector(".gauge-number");
+        const available = metric && metric.status === "available" && Number.isFinite(metric.value);
+        const value = available ? Math.max(0, Math.min(100, metric.value)) : 0;
+        circle.style.strokeDashoffset = String(circumference * (1 - value / 100));
+        valueElement.textContent = available ? `${Math.round(value)}%` : "--";
+        gauge.classList.toggle("is-unavailable", !available);
+        gauge.title = available ? (metric.source || t("diagnostics.trueSensorData")) : translateReason(metric?.reason) || t("diagnostics.sensorUnavailable");
+      }
+
+      class TrendChart {
+        constructor(id, series, options = {}) {
+          this.canvas = $(id);
+          this.context = this.canvas.getContext("2d", { alpha: true });
+          this.series = series.map(item => ({ ...item, values: [] }));
+          this.fixedMaximum = options.maximum || null;
+          this.observer = new ResizeObserver(() => this.scheduleDraw());
+          this.observer.observe(this.canvas.parentElement);
+          this.resizePending = false;
+        }
+
+        push(metrics) {
+          this.series.forEach((series, index) => {
+            const metric = metrics[index];
+            series.values.push(metric && metric.status === "available" && Number.isFinite(metric.value) ? metric.value : null);
+            if (series.values.length > maxPoints) series.values.shift();
+          });
+          this.draw();
+        }
+
+        scheduleDraw() {
+          if (this.resizePending) return;
+          this.resizePending = true;
+          requestAnimationFrame(() => { this.resizePending = false; this.draw(); });
+        }
+
+        maximum() {
+          if (this.fixedMaximum) return this.fixedMaximum;
+          let maximum = 1;
+          this.series.forEach(series => series.values.forEach(value => { if (Number.isFinite(value)) maximum = Math.max(maximum, value); }));
+          const magnitude = 10 ** Math.floor(Math.log10(maximum));
+          return Math.ceil(maximum / magnitude) * magnitude;
+        }
+
+        draw() {
+          if (!hostVisible || document.hidden) return;
+          const rect = this.canvas.getBoundingClientRect();
+          if (rect.width < 2 || rect.height < 2) return;
+          const ratio = Math.min(window.devicePixelRatio || 1, 2);
+          const width = Math.round(rect.width * ratio);
+          const height = Math.round(rect.height * ratio);
+          if (this.canvas.width !== width || this.canvas.height !== height) {
+            this.canvas.width = width;
+            this.canvas.height = height;
+          }
+          const ctx = this.context;
+          ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+          const w = rect.width;
+          const h = rect.height;
+          ctx.clearRect(0, 0, w, h);
+          ctx.strokeStyle = "rgba(102,155,190,.12)";
+          ctx.lineWidth = 1;
+          for (let row = 0; row <= 4; row++) {
+            const y = Math.round(row * h / 4) + .5;
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+          }
+          const maximum = this.maximum();
+          this.series.forEach(series => {
+            const points = series.values;
+            if (!points.some(Number.isFinite)) return;
+            const leftPad = this.fixedMaximum ? 27 : 0;
+            const usableWidth = Math.max(1, w - leftPad);
+            const point = (value, index) => ({
+              x: leftPad + (maxPoints <= 1 ? 0 : (maxPoints - points.length + index) * usableWidth / (maxPoints - 1)),
+              y: h - Math.max(0, Math.min(1, value / maximum)) * (h - 4) - 2
+            });
+            const gradient = ctx.createLinearGradient(0, 0, 0, h);
+            gradient.addColorStop(0, series.fill);
+            gradient.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.beginPath();
+            let areaStarted = false;
+            points.forEach((value, index) => {
+              if (!Number.isFinite(value)) { areaStarted = false; return; }
+              const p = point(value, index);
+              if (!areaStarted) { ctx.moveTo(p.x, h); ctx.lineTo(p.x, p.y); areaStarted = true; }
+              else ctx.lineTo(p.x, p.y);
+            });
+            if (areaStarted) { ctx.lineTo(w, h); ctx.closePath(); ctx.fillStyle = gradient; ctx.fill(); }
+            ctx.beginPath();
+            let lineStarted = false;
+            points.forEach((value, index) => {
+              if (!Number.isFinite(value)) { lineStarted = false; return; }
+              const p = point(value, index);
+              if (!lineStarted) { ctx.moveTo(p.x, p.y); lineStarted = true; }
+              else ctx.lineTo(p.x, p.y);
+            });
+            ctx.strokeStyle = series.color;
+            ctx.lineWidth = 1.7;
+            ctx.lineJoin = "round";
+            ctx.lineCap = "round";
+            ctx.stroke();
+          });
+        }
+
+        redraw() { this.draw(); }
+      }
+
+      const charts = {
+        cpu: new TrendChart("cpu-chart", [{ color: "#4bc9ff", fill: "rgba(75,201,255,.22)" }], { maximum: 100 }),
+        gpu: new TrendChart("gpu-chart", [{ color: "#46f0b0", fill: "rgba(70,240,176,.2)" }], { maximum: 100 }),
+        memory: new TrendChart("memory-chart", [{ color: "#a881ff", fill: "rgba(168,129,255,.2)" }], { maximum: 100 }),
+        vram: new TrendChart("vram-chart", [{ color: "#46f0b0", fill: "rgba(70,240,176,.18)" }], { maximum: 100 }),
+        disk: new TrendChart("disk-chart", [{ color: "#4bc9ff", fill: "rgba(75,201,255,.16)" }, { color: "#ffbf69", fill: "rgba(255,191,105,.08)" }]),
+        network: new TrendChart("network-chart", [{ color: "#4bc9ff", fill: "rgba(75,201,255,.14)" }, { color: "#ffbf69", fill: "rgba(255,191,105,.06)" }])
+      };
+
+      function syncDrives(drives) {
+        const names = new Set((drives || []).map(drive => drive.name));
+        driveRows.forEach((row, name) => { if (!names.has(name)) { row.root.remove(); driveRows.delete(name); } });
+        $("drive-empty").style.display = drives?.length ? "none" : "block";
+        setText("drive-empty", drives?.length ? "" : t("storage.empty"));
+        (drives || []).forEach(drive => {
+          let row = driveRows.get(drive.name);
+          if (!row) {
+            const root = document.createElement("div");
+            const rowElement = document.createElement("div");
+            const name = document.createElement("div");
+            const track = document.createElement("div");
+            const fill = document.createElement("div");
+            const value = document.createElement("div");
+            const meta = document.createElement("div");
+            root.className = "drive-item";
+            rowElement.className = "drive-row";
+            name.className = "drive-name";
+            track.className = "drive-track";
+            fill.className = "drive-fill";
+            value.className = "drive-value";
+            meta.className = "drive-meta";
+            track.append(fill);
+            rowElement.append(name, track, value);
+            root.append(rowElement, meta);
+            $("drive-list").append(root);
+            row = { root, name, fill, value, meta };
+            driveRows.set(drive.name, row);
+          }
+          row.name.textContent = `${drive.name} · ${localizeDrive(drive)}`;
+          row.name.title = row.name.textContent;
+          const available = drive.usage?.status === "available" && Number.isFinite(drive.usage.value);
+          row.fill.style.width = available ? `${Math.max(0, Math.min(100, drive.usage.value))}%` : "0";
+          row.value.textContent = available ? percent(drive.usage.value) : "--";
+          row.value.dataset.unavailable = available ? "false" : "true";
+          row.meta.textContent = `${metricText(drive.used, gigabytes)} / ${metricText(drive.total, gigabytes)}`;
+          row.meta.title = translateReason(drive.usage?.reason) || drive.usage?.source || "";
+        });
+      }
+
+      const issueDefinitions = snapshot => {
+        const driver = snapshot.sensorDriver;
+        const driverNeedsAttention = driver && (driver.status === "missing" || driver.status === "outdated");
+        const driverIssue = driverNeedsAttention
+          ? [["issue.driver", { status: "unavailable", reason: driver.reason || "PawnIO 驱动不可用", source: driver.version ? `${driver.name} ${driver.version}` : driver.name }]]
+          : [];
+        return [
+          ...driverIssue,
+          ["issue.cpuTemperature", snapshot.cpu.temperature], ["issue.cpuPower", snapshot.cpu.power], ["issue.cpuFrequency", snapshot.cpu.frequency],
+          ["issue.gpuTemperature", snapshot.gpu.temperature], ["issue.gpuPower", snapshot.gpu.power], ["issue.gpuFrequency", snapshot.gpu.frequency], ["issue.gpuFan", snapshot.gpu.fanSpeed],
+          ["issue.gpuMemory", snapshot.gpu.memoryUsage], ["issue.motherboardTemperature", snapshot.system.motherboardTemperature], ["issue.systemFan", snapshot.system.fanSpeed], ["issue.systemPower", snapshot.system.power],
+          ["issue.diskRead", snapshot.storage.readRate], ["issue.diskWrite", snapshot.storage.writeRate], ["issue.networkDownload", snapshot.network.download], ["issue.networkUpload", snapshot.network.upload]
+        ];
+      };
+
+      function updateDiagnostics(snapshot) {
+        const issues = issueDefinitions(snapshot).filter(([, metric]) => metric?.status !== "available");
+        if (!issues.length) {
+          setText("issue-count", t("diagnostics.allAvailable"));
+        } else if (issues.length === 1) {
+          setText("issue-count", t("diagnostics.degradedOne"));
+        } else {
+          setText("issue-count", t("diagnostics.degradedMany", { count: issues.length }));
+        }
+        const signature = JSON.stringify([currentLanguage, issues.map(([name, metric]) => [name, metric?.reason, metric?.source])]);
+        if (signature === issueSignature) return;
+        issueSignature = signature;
+        const fragment = document.createDocumentFragment();
+        if (!issues.length) {
+          const item = document.createElement("div"); item.className = "issue-item"; item.textContent = t("diagnostics.noIssues"); fragment.append(item);
+        } else {
+          issues.forEach(([name, metric]) => {
+            const item = document.createElement("div"); item.className = "issue-item";
+            const title = document.createElement("strong"); title.textContent = `${t(name)}${currentLanguage === "zh-CN" ? "：" : ": "}`;
+            const reason = document.createTextNode(translateReason(metric?.reason) || t("diagnostics.sensorUnavailable"));
+            item.append(title, reason);
+            if (metric?.source) { const source = document.createElement("div"); source.className = "issue-source"; source.textContent = metric.source; item.append(source); }
+            fragment.append(item);
+          });
+        }
+        $("issue-list").replaceChildren(fragment);
+      }
+
+      function updateStatus() {
+        if (!latestSnapshot) return;
+        const age = Date.now() - new Date(latestSnapshot.timestamp).getTime();
+        const stale = age > 3500;
+        const driver = latestSnapshot.sensorDriver;
+        const driverNeedsAttention = driver && (driver.status === "missing" || driver.status === "outdated");
+        $("status-dot").classList.toggle("stale", stale || driverNeedsAttention);
+        const time = new Date(latestSnapshot.timestamp).toLocaleTimeString(currentLanguage, { hour12: false });
+        if (driverNeedsAttention) {
+          setText("data-status", driver.status === "missing"
+            ? t("status.driverMissing", { driver: driver.name, time })
+            : t("status.driverOutdated", { driver: driver.name, time }));
+        } else {
+          setText("data-status", stale ? t("status.stale") : t("status.live", { time }));
+        }
+      }
+
+      function updateDashboard(snapshot, pushTrends = true) {
+        latestSnapshot = snapshot;
+        setText("cpu-name", snapshot.cpu.name);
+        setText("gpu-name", snapshot.gpu.name);
+        setText("vram-name", snapshot.gpu.name);
+        // Adapter names and other system/sensor-provided text stay verbatim.
+        setText("network-name", snapshot.network.name);
+        setText("host-info", t("footer.hostInfo", { machine: snapshot.machineName }));
+
+        setMetric("cpu-header", snapshot.cpu.usage, percent);
+        setMetric("cpu-trend-value", snapshot.cpu.usage, decimalPercent);
+        setMetric("cpu-temperature", snapshot.cpu.temperature, temperature);
+        setMetric("cpu-power", snapshot.cpu.power, watts);
+        setMetric("cpu-frequency", snapshot.cpu.frequency, gigahertz);
+        updateGauge("cpu-gauge", snapshot.cpu.usage);
+
+        setMetric("gpu-header", snapshot.gpu.usage, percent);
+        setMetric("gpu-trend-value", snapshot.gpu.usage, decimalPercent);
+        setMetric("gpu-temperature", snapshot.gpu.temperature, temperature);
+        setMetric("gpu-power", snapshot.gpu.power, watts);
+        setMetric("gpu-frequency", snapshot.gpu.frequency, megahertz);
+        setMetric("gpu-fan", snapshot.gpu.fanSpeed, rpm);
+        updateGauge("gpu-gauge", snapshot.gpu.usage);
+
+        setMetric("memory-header", snapshot.memory.usage, percent);
+        setMetric("memory-trend-value", snapshot.memory.usage, decimalPercent);
+        setMetric("memory-used", snapshot.memory.used, gigabytes);
+        setMetric("memory-total", snapshot.memory.total, gigabytes);
+        updateGauge("memory-gauge", snapshot.memory.usage);
+
+        setMetric("vram-header", snapshot.gpu.memoryUsage, percent);
+        setMetric("vram-trend-value", snapshot.gpu.memoryUsage, decimalPercent);
+        setMetric("vram-used", snapshot.gpu.memoryUsed, gigabytes);
+        setMetric("vram-total", snapshot.gpu.memoryTotal, gigabytes);
+        updateGauge("vram-gauge", snapshot.gpu.memoryUsage);
+
+        syncDrives(snapshot.storage.drives);
+        setMetric("disk-current", snapshot.storage.readRate, value => t("disk.readRate", { rate: diskRate(value) }));
+        setMetric("network-download", snapshot.network.download, networkRate);
+        setMetric("network-upload", snapshot.network.upload, networkRate);
+        setMetric("system-temperature", snapshot.system.motherboardTemperature, temperature);
+        setMetric("system-fan", snapshot.system.fanSpeed, rpm);
+        setMetric("system-power", snapshot.system.power, watts);
+        setText("system-source", localizePowerSource(snapshot.system.powerSource));
+
+        if (pushTrends) {
+          charts.cpu.push([snapshot.cpu.usage]);
+          charts.gpu.push([snapshot.gpu.usage]);
+          charts.memory.push([snapshot.memory.usage]);
+          charts.vram.push([snapshot.gpu.memoryUsage]);
+          charts.disk.push([snapshot.storage.readRate, snapshot.storage.writeRate]);
+          charts.network.push([snapshot.network.download, snapshot.network.upload]);
+        }
+        updateDiagnostics(snapshot);
+        updateStatus();
+      }
+
+      function updateClock() {
+        const now = new Date();
+        setText("clock-time", now.toLocaleTimeString(currentLanguage, { hour12: false }));
+        setText("clock-date", now.toLocaleDateString(currentLanguage, { year: "numeric", month: "2-digit", day: "2-digit", weekday: "short" }));
+        updateStatus();
+      }
+
+      function postToHost(message) {
+        if (window.chrome?.webview) window.chrome.webview.postMessage(message);
+      }
+      const header = document.querySelector(".app-header");
+      if (header) {
+        header.addEventListener("pointerdown", event => {
+          if (event.button !== 0 || event.isPrimary === false) return;
+          if (event.target instanceof Element && event.target.closest("button, a, input, select, summary")) return;
+          postToHost({ type: "begin-drag" });
+        });
+      }
+      $("language-button").addEventListener("click", () => {
+        const next = currentLanguage === "zh-CN" ? "en-US" : "zh-CN";
+        applyLanguage(next);
+        try { localStorage.setItem("theboostdeck.language", next); } catch {}
+        postToHost({ type: "set-language", language: next });
+      });
+      $("pin-button").addEventListener("click", () => postToHost({ type: "toggle-topmost" }));
+      $("hide-button").addEventListener("click", () => postToHost({ type: "hide-window" }));
+      $("maximize-button").addEventListener("click", () => postToHost({ type: "toggle-maximize" }));
+      $("close-button").addEventListener("click", () => postToHost({ type: "close-window" }));
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) Object.values(charts).forEach(chart => chart.redraw()); });
+
+      if (window.chrome?.webview) {
+        window.chrome.webview.addEventListener("message", event => {
+          const message = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+          if (!message || typeof message !== "object") return;
+          if (message.type === "snapshot" && message.data) updateDashboard(message.data);
+          if (message.type === "settings") {
+            hostTopmost = Boolean(message.topmost);
+            hostVisible = message.visible !== false;
+            document.body.dataset.topmost = String(hostTopmost);
+            document.body.dataset.hostVisible = String(hostVisible);
+            $("pin-button").setAttribute("aria-pressed", String(hostTopmost));
+            setMaximized(message.maximized);
+            if (message.language && normalizeLanguage(message.language) !== currentLanguage) applyLanguage(message.language);
+            if (hostVisible) Object.values(charts).forEach(chart => chart.redraw());
+          }
+          if (message.type === "collection-error") {
+            setText("data-status", message.messageKey === "collectionFailed" ? t("status.collectionFailed") : (message.message || t("status.collectionFailed")));
+          }
+        });
+      } else {
+        applyLanguage((() => { try { return localStorage.getItem("theboostdeck.language") || "zh-CN"; } catch { return "zh-CN"; } })());
+        $("status-dot").classList.add("stale");
+      }
+
+      applyLanguage(currentLanguage);
+      updateClock();
+      if (!window.chrome?.webview) setText("data-status", t("status.webOnly"));
+      setInterval(updateClock, 1000);
+    })();
+  </script>
+</body>
+</html>

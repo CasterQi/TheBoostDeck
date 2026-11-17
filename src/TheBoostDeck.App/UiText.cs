@@ -1,0 +1,38 @@
+namespace TheBoostDeck.App;
+
+internal static class UiText
+{
+    internal const string Chinese = "zh-CN";
+    internal const string English = "en-US";
+
+    internal static string Normalize(string? language)
+    {
+        return language?.Trim().ToLowerInvariant() switch
+        {
+            "en" or "en-us" or "en-gb" => English,
+            "zh" or "zh-cn" or "zh-hans" => Chinese,
+            _ => Chinese
+        };
+    }
+
+    internal static string Get(string? language, string key)
+    {
+        var isEnglish = Normalize(language) == English;
+        return key switch
+        {
+            "ShowHide" => isEnglish ? "Show / Hide" : "显示 / 隐藏",
+            "MoveToDisplay" => isEnglish ? "Move to display" : "移动到屏幕",
+            "AlwaysOnTop" => isEnglish ? "Always on top" : "始终置顶",
+            "Exit" => isEnglish ? "Exit" : "退出",
+            "PrimaryDisplay" => isEnglish ? "Primary" : "主屏",
+            "TrayTooltip" => isEnglish ? "TheBoostDeck performance monitor" : "TheBoostDeck 性能监控",
+            "WebViewInitError" => isEnglish
+                ? "TheBoostDeck could not initialize WebView2.\n\nMake sure Microsoft Edge WebView2 Runtime is available and check %LocalAppData%\\TheBoostDeck\\logs."
+                : "TheBoostDeck 无法初始化 WebView2。\n\n请确认 Microsoft Edge WebView2 Runtime 可用，并查看 %LocalAppData%\\TheBoostDeck\\logs。",
+            "HardwareCollectorFailed" => isEnglish
+                ? "The hardware collector could not start. Check LibreHardwareMonitor, driver, and security software logs."
+                : "硬件采集器初始化失败，请检查 LibreHardwareMonitor、驱动与安全软件日志",
+            _ => key
+        };
+    }
+}

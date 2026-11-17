@@ -1,0 +1,26 @@
+﻿<Window x:Class="TheBoostDeck.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="TheBoostDeck"
+        Width="1440"
+        Height="900"
+        MinWidth="420"
+        MinHeight="560"
+        Topmost="True"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Background="#040A15">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      ResizeBorderThickness="6"
+                      GlassFrameThickness="0"
+                      CornerRadius="0"
+                      UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+    <Grid>
+        <wv2:WebView2 x:Name="WebView" xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf" />
+    </Grid>
+</Window>
