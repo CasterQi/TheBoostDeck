@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Win32;
 using TheBoostDeck.Core;
+using TheBoostDeck.Skins;
 using WinForms = System.Windows.Forms;
 
 namespace TheBoostDeck.App;
@@ -31,9 +32,13 @@ public partial class MainWindow : Window
     private bool _webReady;
     private bool _placementRestored;
     private bool _closed;
+    private bool _skinHostConfigured;
+    private bool _fallbackAttempted;
+    private readonly System.Windows.Media.Brush? _defaultBackground;
 
     private const int WmGetMinMaxInfo = 0x0024;
     private const uint MonitorDefaultToNearest = 2;
+    private const string SkinHost = "skin.theboostdeck";
 
     [DllImport("user32.dll")]
     private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint flags);
@@ -47,12 +52,9 @@ public partial class MainWindow : Window
         _logger = app.Logger;
         _lastSettings = settings;
         InitializeComponent();
+        _defaultBackground = Background;
 
-        var logoPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "TheBoostDeck",
-            "Web",
-            "logo.png");
+        var logoPath = Path.Combine(_app.WebDirectory, "logo.png");
         if (File.Exists(logoPath))
         {
             var image = new BitmapImage();
@@ -97,7 +99,6 @@ public partial class MainWindow : Window
     {
         try
         {
-            var webDirectory = WebAssetExtractor.ExtractDashboard();
             var userDataFolder = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "TheBoostDeck",
@@ -120,16 +121,15 @@ public partial class MainWindow : Window
             WebView.CoreWebView2.Settings.AreDevToolsEnabled = false;
 #endif
             WebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
-                "app.theboostdeck",
-                webDirectory,
-                CoreWebView2HostResourceAccessKind.Allow);
-            WebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
                 "themes.theboostdeck",
-                Path.Combine(Path.GetDirectoryName(webDirectory)!, "themes"),
+                _app.ThemesDirectory,
                 CoreWebView2HostResourceAccessKind.Allow);
             WebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
             WebView.CoreWebView2.NavigationCompleted += OnNavigationCompleted;
-            WebView.CoreWebView2.Navigate("https://app.theboostdeck/dashboard.html");
+            WebView.CoreWebView2.NavigationStarting += OnNavigationStarting;
+            WebView.CoreWebView2.NewWindowRequested += OnNewWindowRequested;
+
+            NavigateToSkin(_app.ActiveSkin);
         }
         catch (Exception exception)
         {
@@ -138,14 +138,107 @@ public partial class MainWindow : Window
         }
     }
 
+    internal void LoadSkin(SkinRuntime skin)
+    {
+        if (WebView.CoreWebView2 is null)
+        {
+            _logger.Info($"Skin '{skin.Id}' will load when WebView2 is ready.");
+            return;
+        }
+
+        NavigateToSkin(skin);
+    }
+
+    private void NavigateToSkin(SkinRuntime skin)
+    {
+        if (WebView.CoreWebView2 is null)
+            return;
+
+        if (_skinHostConfigured)
+        {
+            try
+            {
+                WebView.CoreWebView2.ClearVirtualHostNameToFolderMapping(SkinHost);
+            }
+            catch (Exception exception) when (exception is System.Runtime.InteropServices.COMException or InvalidOperationException or ArgumentException)
+            {
+                _logger.Error("Could not clear the previous skin host mapping.", exception);
+            }
+        }
+
+        WebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
+            SkinHost,
+            skin.RootDirectory,
+            CoreWebView2HostResourceAccessKind.Allow);
+        _skinHostConfigured = true;
+        if (!skin.IsBuiltIn)
+            _fallbackAttempted = false;
+
+        ApplySkinBackground(skin);
+        _webReady = false;
+        var entry = skin.EntryRelativePath.Replace('\\', '/');
+        WebView.CoreWebView2.Navigate($"https://{SkinHost}/{entry}");
+        _logger.Info($"Loading skin '{skin.Id}' from {skin.RootDirectory}.");
+    }
+
+    private void ApplySkinBackground(SkinRuntime skin)
+    {
+        var value = skin.Descriptor.Manifest.Window?.Background;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            Background = _defaultBackground;
+            return;
+        }
+
+        try
+        {
+            if (System.Windows.Media.ColorConverter.ConvertFromString(value) is System.Windows.Media.Color color)
+            {
+                Background = new SolidColorBrush(color);
+                return;
+            }
+        }
+        catch (FormatException)
+        {
+            _logger.Error($"Skin '{skin.Id}' has an invalid window background: {value}");
+        }
+
+        Background = _defaultBackground;
+    }
+
+    private void OnNavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
+    {
+        if (e.Uri.StartsWith($"https://{SkinHost}/", StringComparison.OrdinalIgnoreCase) ||
+            e.Uri.Equals("about:blank", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        e.Cancel = true;
+        _logger.Error($"Blocked navigation outside the skin host: {e.Uri}");
+    }
+
+    private void OnNewWindowRequested(object? sender, CoreWebView2NewWindowRequestedEventArgs e)
+    {
+        e.Handled = true;
+        _logger.Error($"Blocked a skin request to open a new window: {e.Uri}");
+    }
+
     private void OnNavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
     {
         if (!e.IsSuccess)
         {
-            _logger.Error($"Dashboard navigation failed: {e.WebErrorStatus}.");
+            _logger.Error($"Skin navigation failed: {e.WebErrorStatus}.");
+            if (!_fallbackAttempted && !_app.ActiveSkin.IsBuiltIn)
+            {
+                _fallbackAttempted = true;
+                if (_app.TrySetSkin(SkinManager.BuiltInId))
+                    _logger.Info("The selected skin could not be displayed; the built-in skin was restored.");
+                else
+                    _logger.Error("The built-in skin could not be restored after a skin navigation failure.");
+            }
             return;
         }
 
+        _fallbackAttempted = false;
         _webReady = true;
         SendHostSettings();
         SendLatestSnapshot();
@@ -380,7 +473,7 @@ public partial class MainWindow : Window
     internal WindowSettings CaptureSettings()
     {
         if (WindowState != WindowState.Normal)
-            return _lastSettings with { Topmost = Topmost, Language = _app.Language };
+            return _lastSettings with { Topmost = Topmost, Language = _app.Language, SkinId = _app.ActiveSkin.Id };
 
         return new WindowSettings
         {
@@ -389,7 +482,8 @@ public partial class MainWindow : Window
             Width = Width,
             Height = Height,
             Topmost = Topmost,
-            Language = _app.Language
+            Language = _app.Language,
+            SkinId = _app.ActiveSkin.Id
         };
     }
 

@@ -12,6 +12,7 @@ public sealed record WindowSettings
     public double Height { get; init; } = 900;
     public bool Topmost { get; init; } = true;
     public string Language { get; init; } = UiText.Chinese;
+    public string SkinId { get; init; } = "classic";
 }
 
 public sealed class WindowSettingsStore
@@ -43,7 +44,8 @@ public sealed class WindowSettingsStore
             {
                 Width = Math.Clamp(settings.Width, 420, 7680),
                 Height = Math.Clamp(settings.Height, 560, 4320),
-                Language = UiText.Normalize(settings.Language)
+                Language = UiText.Normalize(settings.Language),
+                SkinId = string.IsNullOrWhiteSpace(settings.SkinId) ? "classic" : settings.SkinId.Trim()
             };
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException)

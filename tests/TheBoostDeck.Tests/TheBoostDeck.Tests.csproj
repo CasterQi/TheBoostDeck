@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\TheBoostDeck.Core\TheBoostDeck.Core.csproj" />
     <ProjectReference Include="..\..\src\TheBoostDeck.Infrastructure\TheBoostDeck.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\TheBoostDeck.Skins\TheBoostDeck.Skins.csproj" />
   </ItemGroup>
 
 </Project>

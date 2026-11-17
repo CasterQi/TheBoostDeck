@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TheBoostDeck.Core\TheBoostDeck.Core.csproj" />
     <ProjectReference Include="..\TheBoostDeck.Infrastructure\TheBoostDeck.Infrastructure.csproj" />
+    <ProjectReference Include="..\TheBoostDeck.Skins\TheBoostDeck.Skins.csproj" />
   </ItemGroup>
 
   <ItemGroup>

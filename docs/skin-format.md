@@ -1,0 +1,104 @@
+# TheBoostDeck 皮肤包格式
+
+皮肤包是扩展名为 `.boostskin` 的 ZIP 压缩包。它只包含 UI 显示层需要的文件，主程序负责发现、校验、安装、加载皮肤，并继续提供遥测快照和窗口控制通道。
+
+## 最小结构
+
+```text
+my-skin.boostskin
+├── skin.json
+├── index.html
+├── assets/
+│   ├── logo.png
+│   └── font.woff2
+└── styles/
+    └── skin.css
+```
+
+`skin.json` 示例：
+
+```json
+{
+  "schemaVersion": 1,
+  "id": "my-skin",
+  "name": "My Skin",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "description": "A custom HUD for TheBoostDeck.",
+  "entry": "index.html",
+  "preview": "preview.png",
+  "window": {
+    "width": 1440,
+    "height": 900,
+    "minWidth": 800,
+    "minHeight": 450,
+    "background": "#040A15"
+  }
+}
+```
+
+## 字段
+
+| 字段 | 必填 | 说明 |
+| --- | --- | --- |
+| `schemaVersion` | 否 | 当前只支持 `1`，默认 `1`。 |
+| `id` | 否 | 皮肤唯一标识；缺省时从包文件名生成安全 id。只允许字母、数字、点、横线和下划线，长度 1–80；`classic` 保留给内置皮肤。 |
+| `name` | 否 | 托盘菜单显示的名称；缺省时使用 id。 |
+| `version` | 否 | 皮肤版本，默认 `1.0.0`。 |
+| `author` | 否 | 作者信息，仅作元数据。 |
+| `description` | 否 | 皮肤说明，仅作元数据。 |
+| `entry` | 否 | 入口 HTML，默认 `index.html`；必须存在于包内，且入口资源应使用相对路径。 |
+| `preview` | 否 | 预览图路径；资源不存在时会被忽略。 |
+| `window.background` | 否 | 宿主窗口底色，使用 WPF 可解析的颜色字符串；用于皮肤加载前的过渡底色。 |
+| `window.width` / `height` / `minWidth` / `minHeight` | 否 | 预留给未来窗口适配，当前宿主不据此强制改变窗口尺寸；皮肤应自行处理响应式布局。 |
+
+## 资源与 URL
+
+加载外部皮肤时，宿主把皮肤解压目录映射为：
+
+```text
+https://skin.theboostdeck/<entry>
+```
+
+皮肤内的图片、字体、CSS、JS 应使用相对路径，例如：
+
+```html
+<link rel="stylesheet" href="styles/skin.css">
+<img src="assets/logo.png">
+```
+
+旧的兼容主题仍映射在 `https://themes.theboostdeck/custom.css`，内置经典 HUD 继续使用 `classic` 运行时。外部皮肤不能把主页面导航到 `skin.theboostdeck` 之外；新窗口请求也会被阻止。
+
+## 宿主消息协议
+
+宿主向皮肤页面发送的消息：
+
+```json
+{ "type": "snapshot", "data": { } }
+{ "type": "settings", "topmost": true, "visible": true, "maximized": false, "language": "zh-CN" }
+{ "type": "collection-error", "messageKey": "collectionFailed" }
+```
+
+皮肤向宿主发送：
+
+```json
+{ "type": "toggle-topmost" }
+{ "type": "hide-window" }
+{ "type": "toggle-maximize" }
+{ "type": "close-window" }
+{ "type": "begin-drag" }
+{ "type": "set-language", "language": "en-US" }
+```
+
+## 安装与回退
+
+- 安装目录：`%LocalAppData%\TheBoostDeck\Skins`。
+- 导入包复制为 `<id>-<SHA256前8位>.boostskin`；同一 id 的多个包按修改时间取最新。
+- 解压缓存位于 `Skins\.cache`，按包 SHA256 复用。
+- 包大小上限 256 MB，最多 2000 个条目，单条目解压上限 64 MB，总解压上限 512 MB。
+- 拒绝绝对路径、`..` 路径、盘符和查询串；入口必须存在。
+- 皮肤损坏、缺失或版本不兼容时回到 `classic`，不影响主程序启动；导航失败会尝试恢复内置皮肤。
+
+## 设计边界
+
+皮肤负责横屏 16:9、竖屏 9:16 以及窗口缩放下的布局。宿主只提供 WebView2 画布、遥测消息和窗口控制，不嵌入皮肤的 HTML/CSS/JS 到主程序代码中。未来 Skill 只需生成符合上述格式的 ZIP 包即可。

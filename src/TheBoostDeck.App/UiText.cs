@@ -22,6 +22,16 @@ internal static class UiText
         {
             "ShowHide" => isEnglish ? "Show / Hide" : "显示 / 隐藏",
             "MoveToDisplay" => isEnglish ? "Move to display" : "移动到屏幕",
+            "Skins" => isEnglish ? "Skins" : "皮肤",
+            "ClassicSkin" => isEnglish ? "Classic HUD" : "经典 HUD",
+            "ImportSkin" => isEnglish ? "Import skin…" : "导入皮肤…",
+            "SkinFileFilter" => isEnglish
+                ? "TheBoostDeck skins (*.boostskin)|*.boostskin|All files (*.*)|*.*"
+                : "TheBoostDeck 皮肤 (*.boostskin)|*.boostskin|所有文件 (*.*)|*.*",
+            "SkinLoadFailed" => isEnglish
+                ? "The selected skin could not be loaded. The current skin has been kept.\n\nCheck that it is a valid .boostskin package and that its entry HTML exists."
+                : "所选皮肤无法加载，当前皮肤保持不变。\n\n请确认它是有效的 .boostskin 包，且入口 HTML 存在。",
+            "SkinErrorTitle" => isEnglish ? "Skin could not be loaded" : "皮肤加载失败",
             "AlwaysOnTop" => isEnglish ? "Always on top" : "始终置顶",
             "Exit" => isEnglish ? "Exit" : "退出",
             "PrimaryDisplay" => isEnglish ? "Primary" : "主屏",

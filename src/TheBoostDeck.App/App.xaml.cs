@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using TheBoostDeck.Core;
 using TheBoostDeck.Infrastructure;
+using TheBoostDeck.Skins;
 using WinForms = System.Windows.Forms;
 using Drawing = System.Drawing;
 
@@ -18,11 +19,15 @@ public partial class App : System.Windows.Application
     private MainWindow? _window;
     private WindowSettingsStore? _settingsStore;
     private WindowSettings _settings = new();
+    private SkinManager? _skinManager;
+    private SkinRuntime? _activeSkin;
+    private string? _webDirectory;
     private WinForms.NotifyIcon? _trayIcon;
     private Drawing.Icon? _trayIconImage;
     private string? _logoPath;
     private WinForms.ToolStripMenuItem? _toggleWindowMenuItem;
     private WinForms.ToolStripMenuItem? _screensMenuItem;
+    private WinForms.ToolStripMenuItem? _skinMenuItem;
     private WinForms.ToolStripMenuItem? _topmostMenuItem;
     private WinForms.ToolStripMenuItem? _exitMenuItem;
 
@@ -31,6 +36,10 @@ public partial class App : System.Windows.Application
     internal IAppLogger Logger => _logger ?? throw new InvalidOperationException("The application logger is not initialized.");
     internal TelemetryService Telemetry => _telemetry ?? throw new InvalidOperationException("The telemetry service is not initialized.");
     internal WindowSettingsStore SettingsStore => _settingsStore ?? throw new InvalidOperationException("The settings store is not initialized.");
+    internal SkinManager Skins => _skinManager ?? throw new InvalidOperationException("The skin manager is not initialized.");
+    internal SkinRuntime ActiveSkin => _activeSkin ?? throw new InvalidOperationException("The active skin is not initialized.");
+    internal string WebDirectory => _webDirectory ?? throw new InvalidOperationException("The web asset directory is not initialized.");
+    internal string ThemesDirectory => Path.Combine(Path.GetDirectoryName(WebDirectory)!, "themes");
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -46,7 +55,25 @@ public partial class App : System.Windows.Application
         _logger = new FileLogger();
         _settingsStore = new WindowSettingsStore(_logger);
         _settings = _settingsStore.Load();
-        _logoPath = WebAssetExtractor.ExtractLogo();
+
+        _webDirectory = WebAssetExtractor.ExtractDashboard();
+        _logoPath = Path.Combine(_webDirectory, "logo.png");
+        _skinManager = new SkinManager(
+            Path.Combine(Path.GetDirectoryName(_webDirectory)!, "Skins"),
+            _webDirectory,
+            "dashboard.html");
+
+        if (!_skinManager.TryResolve(_settings.SkinId, out var activeSkin, out var skinError) || activeSkin is null)
+        {
+            _logger.Error($"Skin '{_settings.SkinId}' could not be loaded; falling back to the built-in skin. {skinError}");
+            _activeSkin = _skinManager.BuiltIn;
+            _settings = _settings with { SkinId = SkinManager.BuiltInId };
+            _settingsStore.Save(_settings);
+        }
+        else
+        {
+            _activeSkin = activeSkin;
+        }
 
         try
         {
@@ -77,6 +104,10 @@ public partial class App : System.Windows.Application
         _screensMenuItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "MoveToDisplay"));
         _screensMenuItem.DropDownOpening += (_, _) => PopulateScreens(_screensMenuItem);
         menu.Items.Add(_screensMenuItem);
+
+        _skinMenuItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "Skins"));
+        _skinMenuItem.DropDownOpening += (_, _) => PopulateSkins();
+        menu.Items.Add(_skinMenuItem);
 
         _topmostMenuItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "AlwaysOnTop"))
         {
@@ -143,6 +174,114 @@ public partial class App : System.Windows.Application
         }
     }
 
+    private void PopulateSkins()
+    {
+        if (_skinMenuItem is null || _skinManager is null)
+            return;
+
+        _skinMenuItem.DropDownItems.Clear();
+        AddSkinMenuItem(SkinManager.BuiltInId, UiText.Get(Language, "ClassicSkin"));
+
+        try
+        {
+            foreach (var skin in _skinManager.GetInstalledSkins())
+                AddSkinMenuItem(skin.Id, skin.Name);
+        }
+        catch (Exception exception)
+        {
+            _logger?.Error("Could not enumerate installed skins.", exception);
+        }
+
+        _skinMenuItem.DropDownItems.Add(new WinForms.ToolStripSeparator());
+        var importItem = new WinForms.ToolStripMenuItem(UiText.Get(Language, "ImportSkin"));
+        importItem.Click += (_, _) => ImportSkinFromDialog();
+        _skinMenuItem.DropDownItems.Add(importItem);
+    }
+
+    private void AddSkinMenuItem(string skinId, string label)
+    {
+        if (_skinMenuItem is null)
+            return;
+
+        var item = new WinForms.ToolStripMenuItem(label)
+        {
+            Checked = string.Equals(ActiveSkin.Id, skinId, StringComparison.OrdinalIgnoreCase)
+        };
+        item.Click += (_, _) =>
+        {
+            if (!TrySetSkin(skinId))
+                ShowSkinError();
+        };
+        _skinMenuItem.DropDownItems.Add(item);
+    }
+
+    internal bool TrySetSkin(string skinId)
+    {
+        if (_skinManager is null || _window is null)
+            return false;
+
+        if (!_skinManager.TryResolve(skinId, out var runtime, out var error) || runtime is null)
+        {
+            _logger?.Error($"Skin '{skinId}' could not be loaded: {error}");
+            return false;
+        }
+
+        var previousSkin = _activeSkin;
+        var previousSettings = _settings;
+        try
+        {
+            _activeSkin = runtime;
+            _settings = _settings with { SkinId = runtime.Id };
+            _window.LoadSkin(runtime);
+            _settingsStore?.Save(_window.CaptureSettings());
+            _logger?.Info($"Active skin set to '{runtime.Id}'.");
+            return true;
+        }
+        catch (Exception exception)
+        {
+            _activeSkin = previousSkin;
+            _settings = previousSettings;
+            _settingsStore?.Save(_window.CaptureSettings());
+            _logger?.Error($"Skin '{skinId}' could not be activated.", exception);
+            return false;
+        }
+    }
+
+    private void ImportSkinFromDialog()
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = UiText.Get(Language, "ImportSkin"),
+            Filter = UiText.Get(Language, "SkinFileFilter"),
+            CheckFileExists = true,
+            Multiselect = false
+        };
+
+        if (dialog.ShowDialog() != true || _skinManager is null)
+            return;
+
+        try
+        {
+            var runtime = _skinManager.Import(dialog.FileName);
+            if (!TrySetSkin(runtime.Id))
+                ShowSkinError();
+        }
+        catch (Exception exception)
+        {
+            _logger?.Error("Skin import failed.", exception);
+            ShowSkinError();
+        }
+    }
+
+    private void ShowSkinError()
+    {
+        var message = UiText.Get(Language, "SkinLoadFailed");
+        if (_window is not null)
+            System.Windows.MessageBox.Show(_window, message, UiText.Get(Language, "SkinErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+        else
+            System.Windows.MessageBox.Show(message, UiText.Get(Language, "SkinErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+    }
+
     internal void SetLanguage(string? language)
     {
         var normalized = UiText.Normalize(language);
@@ -165,6 +304,8 @@ public partial class App : System.Windows.Application
             _toggleWindowMenuItem.Text = UiText.Get(Language, "ShowHide");
         if (_screensMenuItem is not null)
             _screensMenuItem.Text = UiText.Get(Language, "MoveToDisplay");
+        if (_skinMenuItem is not null)
+            _skinMenuItem.Text = UiText.Get(Language, "Skins");
         if (_topmostMenuItem is not null)
             _topmostMenuItem.Text = UiText.Get(Language, "AlwaysOnTop");
         if (_exitMenuItem is not null)
