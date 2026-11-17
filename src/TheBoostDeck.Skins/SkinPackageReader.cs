@@ -116,6 +116,35 @@ public static class SkinPackageReader
         return Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
     }
 
+    public static byte[]? ReadPreviewBytes(string packagePath, string? previewPath, int maxBytes = 2 * 1024 * 1024)
+    {
+        if (string.IsNullOrWhiteSpace(previewPath) || maxBytes <= 0)
+            return null;
+
+        if (!IsSafeRelativePath(previewPath))
+            return null;
+
+        try
+        {
+            using var archive = ZipFile.OpenRead(packagePath);
+            var normalizedPreview = NormalizeEntryName(previewPath);
+            var entry = archive.Entries.FirstOrDefault(item =>
+                !string.IsNullOrEmpty(item.Name) &&
+                NormalizeEntryName(item.FullName).Equals(normalizedPreview, StringComparison.OrdinalIgnoreCase));
+            if (entry is null || entry.Length > maxBytes)
+                return null;
+
+            using var stream = entry.Open();
+            using var buffer = new MemoryStream((int)entry.Length);
+            stream.CopyTo(buffer);
+            return buffer.ToArray();
+        }
+        catch (Exception exception) when (exception is IOException or InvalidDataException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
     private static SkinManifest ReadManifest(ZipArchive archive, string fallbackId)
     {
         ValidateArchiveLimits(archive);

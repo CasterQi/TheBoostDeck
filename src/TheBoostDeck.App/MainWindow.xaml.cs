@@ -281,6 +281,90 @@ public partial class MainWindow : Window
         });
     }
 
+    private void SendSkinCatalog()
+    {
+        try
+        {
+            PostJson(_app.BuildSkinCatalog());
+        }
+        catch (Exception exception)
+        {
+            _logger.Error("Could not send the skin catalog.", exception);
+        }
+    }
+
+    private void SelectSkinFromUi(string? skinId)
+    {
+        if (string.IsNullOrWhiteSpace(skinId))
+            return;
+
+        if (skinId.Equals(_app.ActiveSkin.Id, StringComparison.OrdinalIgnoreCase))
+        {
+            SendSkinCatalog();
+            return;
+        }
+
+        if (!_app.TrySetSkin(skinId))
+        {
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "select",
+                ok = false,
+                message = UiText.Get(_app.Language, "SkinLoadFailed")
+            });
+        }
+    }
+
+    private void ImportSkinFromUi()
+    {
+        if (_app.TryImportSkinForUi(out var cancelled, out var error))
+        {
+            SendSkinCatalog();
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "import",
+                ok = true,
+                message = UiText.Get(_app.Language, "SkinImported")
+            });
+        }
+        else if (!cancelled)
+        {
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "import",
+                ok = false,
+                message = error ?? UiText.Get(_app.Language, "SkinImportFailed")
+            });
+        }
+    }
+
+    private void ExportSkinFromUi(string? skinId)
+    {
+        if (_app.TryExportSkinForUi(skinId, out var cancelled, out var error))
+        {
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "export",
+                ok = true,
+                message = UiText.Get(_app.Language, "SkinExported")
+            });
+        }
+        else if (!cancelled)
+        {
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "export",
+                ok = false,
+                message = error ?? UiText.Get(_app.Language, "SkinExportFailed")
+            });
+        }
+    }
+
     private void PostJson<T>(T message)
     {
         if (!_webReady || WebView.CoreWebView2 is null)
@@ -322,6 +406,18 @@ public partial class MainWindow : Window
                     break;
                 case "set-language":
                     _app.SetLanguage(message.RootElement.TryGetProperty("language", out var language) ? language.GetString() : null);
+                    break;
+                case "request-skins":
+                    SendSkinCatalog();
+                    break;
+                case "set-skin":
+                    SelectSkinFromUi(message.RootElement.TryGetProperty("id", out var skinId) ? skinId.GetString() : null);
+                    break;
+                case "import-skin":
+                    ImportSkinFromUi();
+                    break;
+                case "export-skin":
+                    ExportSkinFromUi(message.RootElement.TryGetProperty("id", out var exportId) ? exportId.GetString() : null);
                     break;
             }
         }

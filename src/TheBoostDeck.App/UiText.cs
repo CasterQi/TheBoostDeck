@@ -24,10 +24,28 @@ internal static class UiText
             "MoveToDisplay" => isEnglish ? "Move to display" : "移动到屏幕",
             "Skins" => isEnglish ? "Skins" : "皮肤",
             "ClassicSkin" => isEnglish ? "Classic HUD" : "经典 HUD",
+            "ClassicSkinDescription" => isEnglish
+                ? "The built-in responsive performance HUD."
+                : "内置的自适应性能 HUD。",
             "ImportSkin" => isEnglish ? "Import skin…" : "导入皮肤…",
             "SkinFileFilter" => isEnglish
                 ? "TheBoostDeck skins (*.boostskin)|*.boostskin|All files (*.*)|*.*"
                 : "TheBoostDeck 皮肤 (*.boostskin)|*.boostskin|所有文件 (*.*)|*.*",
+            "SkinExportTitle" => isEnglish ? "Export skin" : "导出皮肤",
+            "SkinExportFilter" => isEnglish
+                ? "TheBoostDeck skins (*.boostskin)|*.boostskin|All files (*.*)|*.*"
+                : "TheBoostDeck 皮肤 (*.boostskin)|*.boostskin|所有文件 (*.*)|*.*",
+            "SkinImported" => isEnglish ? "Skin imported." : "皮肤已导入。",
+            "SkinExported" => isEnglish ? "Skin exported." : "皮肤已导出。",
+            "SkinImportFailed" => isEnglish
+                ? "The skin could not be imported. Check that it is a valid .boostskin package."
+                : "皮肤导入失败，请确认它是有效的 .boostskin 包。",
+            "SkinExportFailed" => isEnglish
+                ? "The skin could not be exported."
+                : "皮肤导出失败。",
+            "SkinBuiltInNoExport" => isEnglish
+                ? "The built-in skin cannot be exported."
+                : "内置皮肤不支持导出。",
             "SkinLoadFailed" => isEnglish
                 ? "The selected skin could not be loaded. The current skin has been kept.\n\nCheck that it is a valid .boostskin package and that its entry HTML exists."
                 : "所选皮肤无法加载，当前皮肤保持不变。\n\n请确认它是有效的 .boostskin 包，且入口 HTML 存在。",

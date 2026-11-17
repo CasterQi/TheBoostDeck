@@ -108,7 +108,132 @@
     .language-button:hover { color: var(--text); border-color: var(--line-strong); background: rgba(20, 55, 84, .85); }
     .language-option { font-size: 11px; font-weight: 600; line-height: 1; opacity: .48; transition: color .15s, opacity .15s; }
     .language-option.is-active { color: var(--cyan); opacity: 1; }
+    .language-option { font-size: 11px; font-weight: 600; line-height: 1; opacity: .48; transition: color .15s, opacity .15s; }
+    .language-option.is-active { color: var(--cyan); opacity: 1; }
     .language-divider { width: 1px; height: 12px; background: var(--line); }
+
+    .skin-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(2, 8, 17, .72);
+      backdrop-filter: blur(9px);
+    }
+    .skin-modal[hidden] { display: none; }
+    .skin-dialog {
+      display: flex;
+      flex-direction: column;
+      width: min(860px, calc(100vw - 28px));
+      max-height: min(760px, calc(100vh - 28px));
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(10, 30, 54, .99), rgba(4, 12, 26, .99));
+      box-shadow: 0 24px 90px rgba(0, 0, 0, .55), inset 0 1px rgba(255, 255, 255, .04);
+    }
+    .skin-dialog-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid rgba(75, 201, 255, .18);
+    }
+    .skin-dialog-kicker { color: var(--cyan); font-size: 10px; font-weight: 650; letter-spacing: .16em; text-transform: uppercase; }
+    .skin-dialog-title { margin-top: 5px; font-size: 23px; font-weight: 650; }
+    .skin-dialog-subtitle { margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .skin-dialog-close { flex: 0 0 auto; }
+    .skin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
+      gap: 12px;
+      min-height: 0;
+      padding: 16px 22px;
+      overflow: auto;
+    }
+    .skin-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(8, 22, 42, .82);
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color .15s, background .15s, transform .15s;
+    }
+    .skin-card:hover { border-color: var(--line-strong); background: rgba(13, 38, 66, .9); transform: translateY(-1px); }
+    .skin-card.is-active { border-color: var(--cyan); box-shadow: 0 0 0 1px rgba(75, 201, 255, .18), 0 0 22px rgba(75, 201, 255, .1); }
+    .skin-thumb {
+      position: relative;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid rgba(75, 201, 255, .2);
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 70% 20%, rgba(75, 201, 255, .16), transparent 46%),
+        linear-gradient(135deg, #0c233d, #040d1c);
+    }
+    .skin-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .skin-thumb-placeholder { color: rgba(150, 207, 240, .62); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .skin-thumb-placeholder svg { display: block; width: 34px; height: 34px; margin: 0 auto 7px; opacity: .8; }
+    .skin-active-badge {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      padding: 3px 6px;
+      border: 1px solid rgba(75, 201, 255, .45);
+      border-radius: 4px;
+      background: rgba(3, 21, 38, .86);
+      color: var(--cyan);
+      font-size: 9px;
+      font-weight: 650;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .skin-card-copy { min-width: 0; padding: 9px 2px 1px; }
+    .skin-card-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 650; }
+    .skin-card-meta { margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 10px; }
+    .skin-card-description { display: -webkit-box; margin-top: 7px; overflow: hidden; color: #8ca9bf; font-size: 11px; line-height: 1.4; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .skin-empty { grid-column: 1 / -1; padding: 30px 10px; color: var(--muted); font-size: 13px; text-align: center; }
+    .skin-dialog-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 14px 22px 18px;
+      border-top: 1px solid rgba(75, 201, 255, .18);
+    }
+    .skin-status { flex: 1 1 220px; min-width: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .skin-status[data-tone="error"] { color: var(--danger); }
+    .skin-action-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(10, 30, 52, .8);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .skin-action-button:hover:not(:disabled) { border-color: var(--line-strong); background: rgba(20, 55, 84, .9); }
+    .skin-action-button.primary { border-color: rgba(75, 201, 255, .44); color: var(--cyan); }
+    .skin-action-button:disabled { opacity: .38; cursor: not-allowed; }
+    .skin-action-button svg { width: 16px; height: 16px; }
+    .skin-spinner { width: 14px; height: 14px; border: 1px solid var(--line-strong); border-top-color: var(--cyan); border-radius: 50%; animation: skin-spin .8s linear infinite; }
+    @keyframes skin-spin { to { transform: rotate(360deg); } }
 
     .dashboard {
       display: grid;
@@ -384,6 +509,17 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
     }
+    @media (max-width: 720px) {
+      .skin-modal { padding: 10px; }
+      .skin-dialog { width: min(620px, calc(100vw - 20px)); max-height: calc(100vh - 20px); }
+      .skin-dialog-header { padding: 16px 16px 13px; }
+      .skin-dialog-title { font-size: 20px; }
+      .skin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 12px 16px; }
+      .skin-card { padding: 6px; }
+      .skin-card-name { font-size: 13px; }
+      .skin-dialog-footer { padding: 12px 16px 15px; }
+      .skin-status { flex-basis: 100%; order: 2; }
+    }
   </style>
   <link rel="stylesheet" href="https://themes.theboostdeck/custom.css">
 </head>
@@ -400,6 +536,7 @@
       <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
       <symbol id="i-fan" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 10c-1-5 1-7 4-6 3 2 1 6-2 8M14 12c5-1 7 1 6 4-2 3-6 1-8-2M12 14c1 5-1 7-4 6-3-2-1-6 2-8M10 12c-5 1-7-1-6-4 2-3 6-1 8 2"/></symbol>
       <symbol id="i-pin" viewBox="0 0 24 24"><path d="m8 3 8 8m-5-9 8 8-4 2-4 4-2-2-4 5-1-1 5-4-2-2 4-4z"/></symbol>
+      <symbol id="i-skin" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 4v5m8-5v5"/><circle cx="8" cy="15" r="1.5"/><path d="m10 19 3-3 2 2 3-4 3 5"/></symbol>
       <symbol id="i-hide" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
       <symbol id="i-maximize" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="1"/></symbol>
       <symbol id="i-restore" viewBox="0 0 24 24"><rect x="8" y="3" width="13" height="13" rx="1"/><path d="M16 16H3V8h5"/></symbol>
@@ -417,6 +554,7 @@
     </div>
     <div class="clock"><div class="clock-time" id="clock-time">--:--:--</div><div class="clock-date" id="clock-date" data-i18n="clock.waiting">等待系统时间</div></div>
     <div class="window-actions">
+      <button class="icon-button" id="skin-button" type="button" data-i18n-title="skin.tooltip" data-i18n-aria-label="skin.tooltip" title="皮肤管理" aria-label="皮肤管理" aria-haspopup="dialog" aria-controls="skin-modal"><svg class="icon"><use href="#i-skin" xlink:href="#i-skin"/></svg></button>
       <button class="language-button" id="language-button" type="button" data-i18n-title="language.switch" data-i18n-aria-label="language.switch" title="切换语言" aria-label="切换语言">
         <span class="language-option" data-language-option="zh-CN">中</span><span class="language-divider"></span><span class="language-option" data-language-option="en-US">EN</span>
       </button>
@@ -426,6 +564,27 @@
       <button class="icon-button close-button" id="close-button" type="button" data-i18n-title="close.tooltip" data-i18n-aria-label="close.tooltip" title="关闭并退出" aria-label="关闭并退出"><svg class="icon"><use href="#i-close" xlink:href="#i-close"/></svg></button>
     </div>
   </header>
+
+  <div class="skin-modal" id="skin-modal" hidden>
+    <section class="skin-dialog" role="dialog" aria-modal="true" aria-labelledby="skin-dialog-title">
+      <header class="skin-dialog-header">
+        <div>
+          <div class="skin-dialog-kicker" data-i18n="skin.kicker">UI LAYER</div>
+          <div class="skin-dialog-title" id="skin-dialog-title" data-i18n="skin.title">皮肤管理</div>
+          <div class="skin-dialog-subtitle" data-i18n="skin.subtitle">选择皮肤，或导入/导出 .boostskin 文件。</div>
+        </div>
+        <button class="icon-button skin-dialog-close" id="skin-modal-close" type="button" data-i18n-title="skin.close" data-i18n-aria-label="skin.close" title="关闭皮肤管理" aria-label="关闭皮肤管理"><svg class="icon"><use href="#i-close" xlink:href="#i-close"/></svg></button>
+      </header>
+      <div class="skin-grid" id="skin-grid" aria-live="polite">
+        <div class="skin-empty" data-i18n="skin.loading">正在读取皮肤列表…</div>
+      </div>
+      <footer class="skin-dialog-footer">
+        <div class="skin-status" id="skin-status" aria-live="polite"></div>
+        <button class="skin-action-button" id="skin-export-button" type="button" disabled><svg class="icon"><use href="#i-download" xlink:href="#i-download"/></svg><span data-i18n="skin.exportCurrent">导出当前皮肤</span></button>
+        <button class="skin-action-button primary" id="skin-import-button" type="button"><svg class="icon"><use href="#i-upload" xlink:href="#i-upload"/></svg><span data-i18n="skin.import">导入皮肤</span></button>
+      </footer>
+    </section>
+  </div>
 
   <main class="dashboard">
     <section class="card primary accent-cpu" aria-labelledby="cpu-title">
@@ -536,12 +695,32 @@
       let issueSignature = "";
       const driveRows = new Map();
       let currentLanguage = "zh-CN";
+      let skinCatalog = null;
+      let skinDialogFocus = null;
 
       const messages = {
         "zh-CN": {
           "brand.subtitle": "副屏性能监控",
           "clock.waiting": "等待系统时间",
           "language.switch": "切换语言",
+          "skin.tooltip": "皮肤管理",
+          "skin.kicker": "UI 皮肤",
+          "skin.title": "皮肤管理",
+          "skin.subtitle": "选择皮肤，或导入/导出 .boostskin 文件。",
+          "skin.close": "关闭皮肤管理",
+          "skin.loading": "正在读取皮肤列表…",
+          "skin.count": "共 {count} 个皮肤",
+          "skin.countOne": "共 1 个皮肤",
+          "skin.empty": "还没有可用的皮肤。",
+          "skin.active": "使用中",
+          "skin.builtIn": "内置",
+          "skin.noPreview": "无预览图",
+          "skin.import": "导入皮肤",
+          "skin.exportCurrent": "导出当前皮肤",
+          "skin.exportDisabled": "内置皮肤不可导出",
+          "skin.requestFailed": "无法读取皮肤列表。",
+          "skin.selecting": "正在切换皮肤…",
+          "skin.actionFailed": "操作失败。",
           "pin.tooltip": "切换始终置顶",
           "hide.tooltip": "隐藏到托盘",
           "maximize.tooltip": "最大化",
@@ -622,6 +801,24 @@
           "brand.subtitle": "Secondary display HUD",
           "clock.waiting": "Waiting for system time",
           "language.switch": "Switch language",
+          "skin.tooltip": "Skin manager",
+          "skin.kicker": "UI skins",
+          "skin.title": "Skin manager",
+          "skin.subtitle": "Choose a skin, or import/export a .boostskin file.",
+          "skin.close": "Close skin manager",
+          "skin.loading": "Reading skin list…",
+          "skin.count": "{count} skins available",
+          "skin.countOne": "1 skin available",
+          "skin.empty": "No skins are available yet.",
+          "skin.active": "Active",
+          "skin.builtIn": "Built in",
+          "skin.noPreview": "No preview",
+          "skin.import": "Import skin",
+          "skin.exportCurrent": "Export active skin",
+          "skin.exportDisabled": "Built-in skins cannot be exported",
+          "skin.requestFailed": "Could not load the skin list.",
+          "skin.selecting": "Switching skin…",
+          "skin.actionFailed": "The action failed.",
           "pin.tooltip": "Toggle always on top",
           "hide.tooltip": "Hide to tray",
           "maximize.tooltip": "Maximize",
@@ -796,6 +993,12 @@
           setText("host-info", t("footer.host"));
           setText("data-status", t("status.waiting"));
         }
+        if (skinCatalog && !$("skin-modal").hidden) {
+          setSkinStatus("");
+          renderSkinCatalog(skinCatalog);
+          if (window.chrome?.webview) postToHost({ type: "request-skins" });
+        }
+        updateSkinExportButton();
         updateClock();
       }
 
@@ -821,6 +1024,143 @@
         const element = $(id);
         const text = String(value);
         if (element.textContent !== text) element.textContent = text;
+      }
+
+      function makeSkinPlaceholder() {
+        const placeholder = document.createElement("div");
+        placeholder.className = "skin-thumb-placeholder";
+        placeholder.textContent = t("skin.noPreview");
+        return placeholder;
+      }
+
+      function setSkinStatus(message, isError = false) {
+        const status = $("skin-status");
+        status.textContent = message || "";
+        status.dataset.tone = isError ? "error" : "info";
+      }
+
+      function updateSkinExportButton() {
+        const button = $("skin-export-button");
+        const active = skinCatalog?.skins?.find(skin => skin.id === skinCatalog.activeId);
+        const canExport = Boolean(active && !active.isBuiltIn && active.canExport !== false);
+        button.disabled = !canExport;
+        button.title = canExport ? "" : (active?.isBuiltIn ? t("skin.exportDisabled") : "");
+      }
+
+      function renderSkinCatalog(catalog) {
+        skinCatalog = catalog && typeof catalog === "object" ? catalog : { skins: [], activeId: "" };
+        const grid = $("skin-grid");
+        grid.replaceChildren();
+        const skins = Array.isArray(skinCatalog.skins) ? skinCatalog.skins : [];
+        if (!skins.length) {
+          const empty = document.createElement("div");
+          empty.className = "skin-empty";
+          empty.textContent = t("skin.empty");
+          grid.append(empty);
+          updateSkinExportButton();
+          return;
+        }
+
+        skins.forEach(skin => {
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = "skin-card";
+          card.dataset.skinId = String(skin.id || "");
+          const isActive = String(skin.id) === String(skinCatalog.activeId);
+          if (isActive) card.classList.add("is-active");
+          card.setAttribute("aria-pressed", String(isActive));
+          card.title = skin.name || skin.id || "";
+
+          const thumb = document.createElement("div");
+          thumb.className = "skin-thumb";
+          if (skin.previewUrl) {
+            const image = document.createElement("img");
+            image.src = skin.previewUrl;
+            image.alt = skin.name || "";
+            image.loading = "lazy";
+            image.addEventListener("error", () => {
+              image.remove();
+              thumb.append(makeSkinPlaceholder());
+            }, { once: true });
+            thumb.append(image);
+          } else {
+            thumb.append(makeSkinPlaceholder());
+          }
+          if (isActive) {
+            const badge = document.createElement("span");
+            badge.className = "skin-active-badge";
+            badge.textContent = t("skin.active");
+            thumb.append(badge);
+          }
+
+          const copy = document.createElement("div");
+          copy.className = "skin-card-copy";
+          const name = document.createElement("div");
+          name.className = "skin-card-name";
+          name.textContent = skin.name || skin.id || "";
+          const meta = document.createElement("div");
+          meta.className = "skin-card-meta";
+          const metaParts = [];
+          if (skin.isBuiltIn) {
+            metaParts.push(t("skin.builtIn"));
+          } else {
+            if (skin.version) metaParts.push(String(skin.version));
+            if (skin.author) metaParts.push(String(skin.author));
+          }
+          meta.textContent = metaParts.join(" · ");
+          const description = document.createElement("div");
+          description.className = "skin-card-description";
+          description.textContent = skin.description || "";
+          copy.append(name);
+          if (meta.textContent) copy.append(meta);
+          if (description.textContent) copy.append(description);
+          card.append(thumb, copy);
+
+          card.addEventListener("click", () => {
+            if (isActive) {
+              setSkinStatus(t("skin.active"));
+              return;
+            }
+            setSkinStatus(t("skin.selecting"));
+            postToHost({ type: "set-skin", id: skin.id });
+          });
+          grid.append(card);
+        });
+        updateSkinExportButton();
+        const status = $("skin-status");
+        if (! $("skin-modal").hidden && (!status.textContent || status.textContent === t("skin.loading"))) {
+          const countText = skins.length === 1 ? t("skin.countOne") : t("skin.count", { count: skins.length });
+          setSkinStatus(countText);
+        }
+      }
+
+      function openSkinModal() {
+        skinDialogFocus = document.activeElement;
+        $("skin-modal").hidden = false;
+        setSkinStatus("");
+        if (skinCatalog) {
+          renderSkinCatalog(skinCatalog);
+        } else {
+          const grid = $("skin-grid");
+          grid.replaceChildren();
+          const loading = document.createElement("div");
+          loading.className = "skin-empty";
+          loading.textContent = t("skin.loading");
+          grid.append(loading);
+          setSkinStatus(t("skin.loading"));
+        }
+        $("skin-modal-close").focus();
+        if (window.chrome?.webview) {
+          postToHost({ type: "request-skins" });
+        } else {
+          setSkinStatus(t("status.webOnly"), true);
+        }
+      }
+
+      function closeSkinModal() {
+        if ($("skin-modal").hidden) return;
+        $("skin-modal").hidden = true;
+        if (skinDialogFocus instanceof HTMLElement) skinDialogFocus.focus();
       }
 
       function fixed(value, digits = 1) {
@@ -1159,6 +1499,22 @@
       $("hide-button").addEventListener("click", () => postToHost({ type: "hide-window" }));
       $("maximize-button").addEventListener("click", () => postToHost({ type: "toggle-maximize" }));
       $("close-button").addEventListener("click", () => postToHost({ type: "close-window" }));
+      $("skin-button").addEventListener("click", openSkinModal);
+      $("skin-modal-close").addEventListener("click", closeSkinModal);
+      $("skin-modal").addEventListener("click", event => {
+        if (event.target === $("skin-modal")) closeSkinModal();
+      });
+      $("skin-import-button").addEventListener("click", () => {
+        setSkinStatus("");
+        postToHost({ type: "import-skin" });
+      });
+      $("skin-export-button").addEventListener("click", () => {
+        if (!skinCatalog?.activeId) return;
+        postToHost({ type: "export-skin", id: skinCatalog.activeId });
+      });
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && !$("skin-modal").hidden) closeSkinModal();
+      });
       document.addEventListener("visibilitychange", () => { if (!document.hidden) Object.values(charts).forEach(chart => chart.redraw()); });
 
       if (window.chrome?.webview) {
@@ -1178,6 +1534,13 @@
           }
           if (message.type === "collection-error") {
             setText("data-status", message.messageKey === "collectionFailed" ? t("status.collectionFailed") : (message.message || t("status.collectionFailed")));
+          }
+          if (message.type === "skin-catalog") {
+            renderSkinCatalog(message);
+          }
+          if (message.type === "skin-action") {
+            const ok = message.ok !== false;
+            setSkinStatus(message.message || (ok ? "" : t("skin.actionFailed")), !ok);
           }
         });
       } else {

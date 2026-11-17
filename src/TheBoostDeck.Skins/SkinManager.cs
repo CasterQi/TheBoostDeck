@@ -89,6 +89,17 @@ public sealed class SkinManager
         return SkinPackageReader.Extract(descriptor.PackagePath, _cacheDirectory);
     }
 
+    public string? GetPackagePath(string? id)
+    {
+        var requested = string.IsNullOrWhiteSpace(id) ? BuiltInId : id.Trim();
+        if (requested.Equals(BuiltInId, StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        return GetInstalledSkins()
+            .FirstOrDefault(item => item.Id.Equals(requested, StringComparison.OrdinalIgnoreCase))
+            ?.PackagePath;
+    }
+
     public bool TryResolve(string? id, out SkinRuntime? runtime, out string? error)
     {
         try

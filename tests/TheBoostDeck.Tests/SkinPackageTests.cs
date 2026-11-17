@@ -184,6 +184,37 @@ public sealed class SkinPackageTests
         Assert.True(builtIn!.IsBuiltIn);
     }
 
+    [Fact]
+    public void ReadPreviewBytes_ReturnsEmbeddedPreviewAndPackagePathIsDiscoverable()
+    {
+        using var directory = new TemporaryDirectory();
+        var builtInRoot = Path.Combine(directory.Path, "Web");
+        Directory.CreateDirectory(builtInRoot);
+        File.WriteAllText(Path.Combine(builtInRoot, "dashboard.html"), "<html>classic</html>");
+
+        var manager = new SkinManager(Path.Combine(directory.Path, "Skins"), builtInRoot, "dashboard.html");
+        var package = CreatePackage(
+            directory.Path,
+            """
+            { "schemaVersion": 1, "id": "preview-skin", "name": "Preview Skin", "preview": "preview.png" }
+            """,
+            new Dictionary<string, string>
+            {
+                ["index.html"] = "<html>preview</html>",
+                ["preview.png"] = "preview-bytes"
+            });
+
+        var runtime = manager.Import(package);
+        var bytes = SkinPackageReader.ReadPreviewBytes(
+            runtime.Descriptor.PackagePath!,
+            runtime.Descriptor.Manifest.Preview);
+
+        Assert.NotNull(bytes);
+        Assert.Equal("preview-bytes", Encoding.UTF8.GetString(bytes!));
+        Assert.Equal(runtime.Descriptor.PackagePath, manager.GetPackagePath("preview-skin"));
+        Assert.Null(manager.GetPackagePath(SkinManager.BuiltInId));
+    }
+
     private static string CreatePackage(
         string directory,
         string manifestJson,

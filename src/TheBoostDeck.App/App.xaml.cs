@@ -247,6 +247,177 @@ public partial class App : System.Windows.Application
         }
     }
 
+    internal object BuildSkinCatalog()
+    {
+        if (_skinManager is null)
+            throw new InvalidOperationException("The skin manager is not initialized.");
+
+        var skins = new List<object>
+        {
+            new
+            {
+                id = SkinManager.BuiltInId,
+                name = UiText.Get(Language, "ClassicSkin"),
+                version = "built-in",
+                author = "TheBoostDeck",
+                description = UiText.Get(Language, "ClassicSkinDescription"),
+                isBuiltIn = true,
+                canExport = false,
+                previewUrl = FileToDataUrl(Path.Combine(WebDirectory, "logo.png"), "image/png")
+            }
+        };
+
+        try
+        {
+            foreach (var skin in _skinManager.GetInstalledSkins())
+            {
+                var previewBytes = SkinPackageReader.ReadPreviewBytes(
+                    skin.PackagePath!,
+                    skin.Manifest.Preview);
+                skins.Add(new
+                {
+                    id = skin.Id,
+                    name = skin.Name,
+                    version = skin.Version,
+                    author = skin.Manifest.Author,
+                    description = skin.Manifest.Description,
+                    isBuiltIn = false,
+                    canExport = true,
+                    previewUrl = ImageDataUrl(previewBytes, skin.Manifest.Preview)
+                });
+            }
+        }
+        catch (Exception exception)
+        {
+            _logger?.Error("Could not build the skin catalog.", exception);
+        }
+
+        return new
+        {
+            type = "skin-catalog",
+            activeId = ActiveSkin.Id,
+            skins
+        };
+    }
+
+    internal bool TryImportSkinForUi(out bool cancelled, out string? error)
+    {
+        cancelled = false;
+        error = null;
+        if (_skinManager is null)
+        {
+            error = UiText.Get(Language, "SkinImportFailed");
+            return false;
+        }
+
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = UiText.Get(Language, "ImportSkin"),
+            Filter = UiText.Get(Language, "SkinFileFilter"),
+            CheckFileExists = true,
+            Multiselect = false
+        };
+
+        if (dialog.ShowDialog() != true)
+        {
+            cancelled = true;
+            return false;
+        }
+
+        try
+        {
+            _skinManager.Import(dialog.FileName);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            _logger?.Error("Skin import from the skin manager failed.", exception);
+            error = UiText.Get(Language, "SkinImportFailed");
+            return false;
+        }
+    }
+
+    internal bool TryExportSkinForUi(string? skinId, out bool cancelled, out string? error)
+    {
+        cancelled = false;
+        error = null;
+        if (_skinManager is null)
+        {
+            error = UiText.Get(Language, "SkinExportFailed");
+            return false;
+        }
+
+        var packagePath = _skinManager.GetPackagePath(skinId);
+        if (packagePath is null || !File.Exists(packagePath))
+        {
+            error = UiText.Get(Language, "SkinBuiltInNoExport");
+            return false;
+        }
+
+        var safeId = string.IsNullOrWhiteSpace(skinId) ? "skin" : skinId.Trim();
+        var dialog = new Microsoft.Win32.SaveFileDialog
+        {
+            Title = UiText.Get(Language, "SkinExportTitle"),
+            Filter = UiText.Get(Language, "SkinExportFilter"),
+            FileName = $"{safeId}.boostskin",
+            DefaultExt = SkinPackageReader.PackageExtension,
+            AddExtension = true,
+            OverwritePrompt = true
+        };
+
+        if (dialog.ShowDialog() != true)
+        {
+            cancelled = true;
+            return false;
+        }
+
+        try
+        {
+            File.Copy(packagePath, dialog.FileName, overwrite: true);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            _logger?.Error("Skin export failed.", exception);
+            error = UiText.Get(Language, "SkinExportFailed");
+            return false;
+        }
+    }
+
+    private static string? FileToDataUrl(string path, string mimeType)
+    {
+        if (!File.Exists(path))
+            return null;
+
+        try
+        {
+            var info = new FileInfo(path);
+            if (info.Length <= 0 || info.Length > 2 * 1024 * 1024)
+                return null;
+            return $"data:{mimeType};base64,{Convert.ToBase64String(File.ReadAllBytes(path))}";
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    private static string? ImageDataUrl(byte[]? bytes, string? path)
+    {
+        if (bytes is null || bytes.Length == 0 || string.IsNullOrWhiteSpace(path))
+            return null;
+
+        var mimeType = Path.GetExtension(path).ToLowerInvariant() switch
+        {
+            ".png" => "image/png",
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".webp" => "image/webp",
+            ".gif" => "image/gif",
+            _ => null
+        };
+        return mimeType is null ? null : $"data:{mimeType};base64,{Convert.ToBase64String(bytes)}";
+    }
+
     private void ImportSkinFromDialog()
     {
         var dialog = new Microsoft.Win32.OpenFileDialog

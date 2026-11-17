@@ -90,6 +90,57 @@ https://skin.theboostdeck/<entry>
 { "type": "set-language", "language": "en-US" }
 ```
 
+## 皮肤管理界面协议
+
+内置 HUD 的皮肤管理弹窗通过以下消息读取、切换、导入和导出皮肤；外部皮肤也可以复用同一组消息。
+
+宿主向皮肤页面发送：
+
+```json
+{
+  "type": "skin-catalog",
+  "activeId": "classic",
+  "skins": [
+    {
+      "id": "classic",
+      "name": "经典 HUD",
+      "version": "built-in",
+      "author": "TheBoostDeck",
+      "description": "内置的自适应性能 HUD。",
+      "isBuiltIn": true,
+      "canExport": false,
+      "previewUrl": "data:image/png;base64,..."
+    }
+  ]
+}
+```
+
+- `previewUrl` 从 `skin.json` 的 `preview` 字段读取，转换为 `data:` URL 后下发；没有预览图或图片无法读取时为 `null`，页面应显示占位图。
+- 内置 `classic` 的预览使用内置 `logo.png`；内置皮肤不可导出。
+- 安装目录中的外部皮肤按包路径读取预览图；预览图只用于管理界面缩略图，不会改变皮肤入口页面。
+
+皮肤向宿主发送：
+
+```json
+{ "type": "request-skins" }
+{ "type": "set-skin", "id": "my-skin" }
+{ "type": "import-skin" }
+{ "type": "export-skin", "id": "my-skin" }
+```
+
+- `request-skins`：请求宿主重新扫描安装目录并返回 `skin-catalog`。
+- `set-skin`：切换皮肤；宿主会写入设置并重新加载页面。失败时通过 `skin-action` 返回错误。
+- `import-skin`：由宿主打开 Windows 原生文件选择框，导入 `.boostskin`；弹窗导入只导入，不自动切换，刷新目录后由用户点击缩略图切换。托盘菜单导入仍会自动切换。
+- `export-skin`：由宿主打开保存对话框，复制当前已安装的外部包；内置皮肤返回失败。
+
+宿主处理完操作后发送：
+
+```json
+{ "type": "skin-action", "action": "import", "ok": true, "message": "皮肤已导入。" }
+```
+
+`action` 为 `select`、`import` 或 `export`；`ok` 为 `false` 时，页面展示本地化的失败提示。
+
 ## 安装与回退
 
 - 安装目录：`%LocalAppData%\TheBoostDeck\Skins`。
