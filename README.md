@@ -40,6 +40,12 @@ TheBoostDeck 是面向游戏玩家副屏的 Windows 桌面性能监控工具。�
 
 ![Neon Core HUD 皮肤](docs/screenshots/TheBoostDeck-neon-core-hud.png)
 
+![Liquid Glass 皮肤](docs/screenshots/TheBoostDeck-liquid-glass.png)
+
+![洛天依 Drift Phonk 皮肤](docs/screenshots/TheBoostDeck-luotianyi-drift-phonk.png)
+
+![Neon Pedals 皮肤](docs/screenshots/TheBoostDeck-neon-pedals.png)
+
 ## 环境要求
 
 - 64 位 Windows 10 版本 1809 或更高，或 Windows 11。

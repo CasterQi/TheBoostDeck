@@ -24,6 +24,12 @@ The dashboard is fully skin-driven. A skin is a portable `.boostskin` package th
 
 ![Neon Core HUD skin](docs/screenshots/TheBoostDeck-neon-core-hud.png)
 
+![Liquid Glass skin](docs/screenshots/TheBoostDeck-liquid-glass.png)
+
+![Luotianyi Drift Phonk skin](docs/screenshots/TheBoostDeck-luotianyi-drift-phonk.png)
+
+![Neon Pedals skin](docs/screenshots/TheBoostDeck-neon-pedals.png)
+
 ## Requirements
 
 - 64-bit Windows 10 version 1809 or later, or Windows 11.
