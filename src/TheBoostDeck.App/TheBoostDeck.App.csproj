@@ -63,4 +63,13 @@
           SkipUnchangedFiles="true" />
   </Target>
 
+  <Target Name="CopyBundledSkinsToPublish" AfterTargets="Publish">
+    <ItemGroup>
+      <BundledSkinFiles Include="$(MSBuildProjectDirectory)\BundledSkins\*.boostskin" />
+    </ItemGroup>
+    <Copy SourceFiles="@(BundledSkinFiles)"
+          DestinationFolder="$(PublishDir)\BundledSkins"
+          SkipUnchangedFiles="true" />
+  </Target>
+
 </Project>
