@@ -24,12 +24,12 @@ public sealed class SkinSkillExporterTests
         Assert.Contains("theboostdeck-skin-author/references/protocol.md", names);
         Assert.Contains("theboostdeck-skin-author/references/design-guide.md", names);
         Assert.Contains("theboostdeck-skin-author/references/derived-metrics.md", names);
-        Assert.Contains("theboostdeck-skin-author/assets/skin-manager/skin-manager.html", names);
-        Assert.Contains("theboostdeck-skin-author/assets/skin-manager/skin-manager.css", names);
-        Assert.Contains("theboostdeck-skin-author/assets/skin-manager/skin-manager.js", names);
+        Assert.Contains("theboostdeck-skin-author/references/styles.md", names);
+        Assert.Contains("theboostdeck-skin-author/references/from-reference.md", names);
         Assert.Contains("theboostdeck-skin-author/references/platform.json", names);
         Assert.Contains("theboostdeck-skin-author/references/platform-summary.md", names);
         Assert.Contains("theboostdeck-skin-author/scripts/validate_boostskin.py", names);
+        Assert.Contains("theboostdeck-skin-author/scripts/render_preview.py", names);
 
         using var platformJson = JsonDocument.Parse(ReadEntry(archive, "theboostdeck-skin-author/references/platform.json"));
         var root = platformJson.RootElement;
@@ -60,6 +60,23 @@ public sealed class SkinSkillExporterTests
         Assert.False(totalFree.GetProperty("available").GetBoolean());
         Assert.False(totalFree.TryGetProperty("value", out _));
 
+        var totalCapacity = derived.Single(metric => metric.GetProperty("id").GetString() == "storage.totalCapacity");
+        Assert.False(totalCapacity.GetProperty("available").GetBoolean());
+        Assert.Equal("sum(storage.drives[i].total)", totalCapacity.GetProperty("formula").GetString());
+
+        var totalUsed = derived.Single(metric => metric.GetProperty("id").GetString() == "storage.usedTotal");
+        Assert.False(totalUsed.GetProperty("available").GetBoolean());
+        Assert.Equal("GB", totalUsed.GetProperty("unit").GetString());
+
+        var fromReference = ReadEntry(archive, "theboostdeck-skin-author/references/from-reference.md");
+        Assert.Contains("Step 2 — Map modules to metrics", fromReference);
+        Assert.Contains("total compute power", fromReference);
+
+        var styles = ReadEntry(archive, "theboostdeck-skin-author/references/styles.md");
+        Assert.Contains("## cyberpunk", styles);
+        Assert.Contains("## anime-cel", styles);
+        Assert.Contains("## kawaii-pastel", styles);
+
         var summary = ReadEntry(archive, "theboostdeck-skin-author/references/platform-summary.md");
         Assert.Contains("CPU Package", summary);
         Assert.Contains("Fan #1", summary);
@@ -67,20 +84,15 @@ public sealed class SkinSkillExporterTests
         Assert.Contains("Metrics marked `unavailable` are absent on this machine", summary);
         Assert.Contains("do not reserve placeholder cards", summary);
         Assert.Contains("Required controls", summary);
-        Assert.Contains("skin manager/switch entry", summary);
+        Assert.Contains("host control-center entry", summary);
+        Assert.Contains("General landing page", summary);
         Assert.Contains("visible drag region", summary);
-        Assert.Contains("assets/skin-manager/", summary);
+        Assert.Contains("entire title/header strip", summary);
+        Assert.Contains("suggestion, not a fixed layout rule", summary);
+        Assert.Contains("open-settings", summary);
+        Assert.Contains("open-skin-manager", summary);
         Assert.Contains("Candidate derived metrics", summary);
         Assert.Contains("memory.free", summary);
-
-        var managerScript = ReadEntry(archive, "theboostdeck-skin-author/assets/skin-manager/skin-manager.js");
-        Assert.Contains("TheBoostDeckSkinManager", managerScript);
-        Assert.Contains("skin-catalog", managerScript);
-        var managerCss = ReadEntry(archive, "theboostdeck-skin-author/assets/skin-manager/skin-manager.css");
-        Assert.Contains(".tbd-sm-overlay", managerCss);
-        var managerHtml = ReadEntry(archive, "theboostdeck-skin-author/assets/skin-manager/skin-manager.html");
-        Assert.Contains("data-tbd-skin-manager", managerHtml);
-        Assert.Contains("data-tbd-export-skill", managerHtml);
     }
 
     [Fact]

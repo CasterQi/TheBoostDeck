@@ -1,0 +1,26 @@
+PawnIO
+Copyright (C) 2026 namazso <admin@namazso.eu>
+
+TheBoostDeck bundles the unmodified, officially signed PawnIO 2.2.0 installer
+(PawnIO_setup.exe, SHA-256
+1f519a22e47187f70a1379a48ca604981c4fcf694f4e65b734aaa74a9fba3032).
+The application verifies the installer hash before launching it and does not
+modify, wrap, or bypass PawnIO's installer or its Windows UAC elevation.
+
+PawnIO is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 2 of the License, or (at your option) any later
+version. The full GPL-2.0 text is included at PawnIO-GPL-2.0.txt.
+
+PawnIO is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Linking exception: the copyright holders give permission to combine PawnIO
+with free software programs or libraries released under the GNU LGPL and with
+independent modules that communicate with PawnIO solely through the device IO
+control interface, subject to the terms in PawnIO's README.
+
+Project source: https://github.com/namazso/PawnIO
+Installer source: https://github.com/namazso/PawnIO.Setup
+Distribution: https://pawnio.eu/

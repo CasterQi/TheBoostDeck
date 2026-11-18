@@ -21,6 +21,12 @@ internal static class UiText
         return key switch
         {
             "ShowHide" => isEnglish ? "Show / Hide" : "显示 / 隐藏",
+            "Starting" => isEnglish ? "TheBoostDeck is starting…" : "TheBoostDeck 正在启动…",
+            "PreparingSensors" => isEnglish ? "Preparing sensors and interface" : "正在准备传感器与界面",
+            "CheckingDriver" => isEnglish ? "Checking the sensor driver…" : "正在检查传感器驱动…",
+            "InstallingDriver" => isEnglish ? "Installing the sensor driver…" : "正在安装传感器驱动…",
+            "StartingCollector" => isEnglish ? "Initializing hardware monitoring…" : "正在初始化硬件监控…",
+            "StartingInterface" => isEnglish ? "Preparing the dashboard…" : "正在准备仪表盘…",
             "MoveToDisplay" => isEnglish ? "Move to display" : "移动到屏幕",
             "Skins" => isEnglish ? "Skins" : "皮肤",
             "ClassicSkin" => isEnglish ? "Classic HUD" : "经典 HUD",
@@ -43,6 +49,29 @@ internal static class UiText
             "SkinExportFailed" => isEnglish
                 ? "The skin could not be exported."
                 : "皮肤导出失败。",
+            "SkinDeleted" => isEnglish ? "Skin deleted." : "皮肤已删除。",
+            "SkinDeleteFailed" => isEnglish
+                ? "The skin could not be deleted. Close the files that are in use and try again."
+                : "皮肤删除失败，请关闭正在占用相关文件的程序后重试。",
+            "SkinDeleteBuiltIn" => isEnglish
+                ? "The built-in skin cannot be deleted."
+                : "内置皮肤不支持删除。",
+            "SkinDeleteLast" => isEnglish
+                ? "Keep at least one skin installed before removing the built-in skin."
+                : "请至少保留一个已安装的皮肤，再移除内置皮肤。",
+            "SkinBuiltInRemoved" => isEnglish
+                ? "The built-in skin was removed from the list."
+                : "内置皮肤已从列表移除。",
+            "SkinBuiltInRestored" => isEnglish
+                ? "The built-in skin was restored."
+                : "内置皮肤已恢复。",
+            "RestoreBuiltInSkin" => isEnglish ? "Restore built-in skin" : "恢复内置皮肤",
+            "SkinBundledRestored" => isEnglish
+                ? "Bundled skins were restored."
+                : "自带皮肤已恢复。",
+            "SkinBundledRestoreFailed" => isEnglish
+                ? "The bundled skins could not be restored."
+                : "自带皮肤恢复失败。",
             "SkinBuiltInNoExport" => isEnglish
                 ? "The built-in skin cannot be exported."
                 : "内置皮肤不支持导出。",
@@ -65,6 +94,12 @@ internal static class UiText
             "SkinErrorTitle" => isEnglish ? "Skin could not be loaded" : "皮肤加载失败",
             "AlwaysOnTop" => isEnglish ? "Always on top" : "始终置顶",
             "RefreshRate" => isEnglish ? "Refresh rate" : "更新频率",
+            "Zoom" => isEnglish ? "Zoom" : "缩放",
+            "StartWithWindows" => isEnglish ? "Start with Windows" : "开机自启",
+            "StartupFailedTitle" => isEnglish ? "Startup setting failed" : "开机自启设置失败",
+            "StartupFailed" => isEnglish
+                ? "The startup setting could not be updated."
+                : "无法更新开机自启设置。",
             "Language" => isEnglish ? "Language" : "语言",
             "Chinese" => isEnglish ? "Chinese" : "中文",
             "English" => "English",
@@ -77,6 +112,9 @@ internal static class UiText
             "HardwareCollectorFailed" => isEnglish
                 ? "The hardware collector could not start. Check LibreHardwareMonitor, driver, and security software logs."
                 : "硬件采集器初始化失败，请检查 LibreHardwareMonitor、驱动与安全软件日志",
+            "ApplicationStartupFailed" => isEnglish
+                ? "TheBoostDeck could not start. Check %LocalAppData%\\TheBoostDeck\\logs."
+                : "TheBoostDeck 启动失败，请查看 %LocalAppData%\\TheBoostDeck\\logs。",
             _ => key
         };
     }

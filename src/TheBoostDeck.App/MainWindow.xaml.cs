@@ -34,11 +34,78 @@ public partial class MainWindow : Window
     private bool _closed;
     private bool _skinHostConfigured;
     private bool _fallbackAttempted;
+    private bool _reopenSkinManager;
     private readonly System.Windows.Media.Brush? _defaultBackground;
+    private HwndSource? _windowSource;
 
     private const int WmGetMinMaxInfo = 0x0024;
+    private const int WmNcHitTest = 0x0084;
+    private const int HtClient = 1;
+    private const int HtLeft = 10;
+    private const int HtRight = 11;
+    private const int HtTop = 12;
+    private const int HtTopLeft = 13;
+    private const int HtTopRight = 14;
+    private const int HtBottom = 15;
+    private const int HtBottomLeft = 16;
+    private const int HtBottomRight = 17;
     private const uint MonitorDefaultToNearest = 2;
     private const string SkinHost = "skin.theboostdeck";
+
+    /// <summary>
+    /// WebView2 renders in its own child HWND, so WM_NCHITTEST for the window
+    /// edge never reaches the WPF window. This transparent overlay lives in the
+    /// page instead: it shows the resize cursors and asks the host to start the
+    /// native resize loop, keeping the visual area free of any painted border.
+    /// </summary>
+    private const string ResizeBandScript = """
+(function () {
+  var CONTAINER_ID = "tbd-resize-bands";
+  var previous = document.getElementById(CONTAINER_ID);
+  if (previous && previous.parentNode) previous.parentNode.removeChild(previous);
+
+  var container = document.createElement("div");
+  container.id = CONTAINER_ID;
+  container.style.cssText = "position:fixed;inset:0;z-index:2147483000;pointer-events:none;";
+
+  var zones = [
+    ["top", "top:0;left:0;right:0;height:6px;", "ns-resize"],
+    ["bottom", "bottom:0;left:0;right:0;height:6px;", "ns-resize"],
+    ["left", "top:0;bottom:0;left:0;width:6px;", "ew-resize"],
+    ["right", "top:0;bottom:0;right:0;width:6px;", "ew-resize"],
+    ["top-left", "top:0;left:0;width:12px;height:12px;", "nwse-resize"],
+    ["top-right", "top:0;right:0;width:12px;height:12px;", "nesw-resize"],
+    ["bottom-left", "bottom:0;left:0;width:12px;height:12px;", "nesw-resize"],
+    ["bottom-right", "bottom:0;right:0;width:12px;height:12px;", "nwse-resize"]
+  ];
+
+  zones.forEach(function (zone) {
+    var band = document.createElement("div");
+    band.style.cssText = "position:fixed;" + zone[1] +
+      "cursor:" + zone[2] + ";pointer-events:auto;background:transparent;";
+    band.addEventListener("pointerdown", function (event) {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.postMessage({ type: "begin-resize", edge: zone[0] });
+      }
+    });
+    container.appendChild(band);
+  });
+
+  if (window.chrome && window.chrome.webview) {
+    window.chrome.webview.addEventListener("message", function (event) {
+      var data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+      if (data && data.type === "settings") {
+        container.style.display = data.maximized ? "none" : "block";
+      }
+    });
+  }
+
+  (document.body || document.documentElement).appendChild(container);
+})();
+""";
 
     [DllImport("user32.dll")]
     private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint flags);
@@ -55,7 +122,8 @@ public partial class MainWindow : Window
         _defaultBackground = Background;
 
         var logoPath = Path.Combine(_app.WebDirectory, "logo.png");
-        if (File.Exists(logoPath))
+        Icon = LoadWindowIcon();
+        if (Icon is null && File.Exists(logoPath))
         {
             var image = new BitmapImage();
             image.BeginInit();
@@ -124,6 +192,10 @@ public partial class MainWindow : Window
                 "themes.theboostdeck",
                 _app.ThemesDirectory,
                 CoreWebView2HostResourceAccessKind.Allow);
+            WebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
+                HostSkinManager.VirtualHost,
+                _app.WebDirectory,
+                CoreWebView2HostResourceAccessKind.Allow);
             WebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
             WebView.CoreWebView2.NavigationCompleted += OnNavigationCompleted;
             WebView.CoreWebView2.NavigationStarting += OnNavigationStarting;
@@ -134,6 +206,7 @@ public partial class MainWindow : Window
         catch (Exception exception)
         {
             _logger.Error("WebView2 initialization failed.", exception);
+            _app.CompleteStartup();
             ShowInitializationError(exception);
         }
     }
@@ -209,6 +282,7 @@ public partial class MainWindow : Window
     private void OnNavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
     {
         if (e.Uri.StartsWith($"https://{SkinHost}/", StringComparison.OrdinalIgnoreCase) ||
+            e.Uri.StartsWith($"https://{HostSkinManager.VirtualHost}/", StringComparison.OrdinalIgnoreCase) ||
             e.Uri.Equals("about:blank", StringComparison.OrdinalIgnoreCase))
             return;
 
@@ -234,14 +308,64 @@ public partial class MainWindow : Window
                     _logger.Info("The selected skin could not be displayed; the built-in skin was restored.");
                 else
                     _logger.Error("The built-in skin could not be restored after a skin navigation failure.");
+                _app.CompleteStartup();
             }
             return;
         }
 
         _fallbackAttempted = false;
         _webReady = true;
+        ApplyZoom(_app.ZoomPercent);
+        InstallResizeBands();
         SendHostSettings();
         SendLatestSnapshot();
+        _app.CompleteStartup();
+
+        if (_reopenSkinManager)
+        {
+            _reopenSkinManager = false;
+            ShowHostSkinManager();
+        }
+    }
+
+    internal void ApplyZoom(int percent)
+    {
+        var factor = Math.Clamp(percent, 50, 200) / 100.0;
+        try
+        {
+            WebView.ZoomFactor = factor;
+        }
+        catch (InvalidOperationException exception)
+        {
+            _logger.Error("The WebView zoom factor could not be applied yet.", exception);
+        }
+        catch (ArgumentException exception)
+        {
+            _logger.Error($"The WebView zoom factor {factor} was rejected.", exception);
+        }
+    }
+
+    private static ImageSource? LoadWindowIcon()
+    {
+        try
+        {
+            using var stream = typeof(App).Assembly.GetManifestResourceStream("TheBoostDeck.Assets.app.ico");
+            if (stream is null)
+                return null;
+
+            var decoder = new IconBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+            if (decoder.Frames.Count == 0)
+                return null;
+
+            // Prefer the frame closest to a 32 px taskbar icon; Windows scales from there.
+            var frame = decoder.Frames.OrderBy(item => Math.Abs(item.PixelWidth - 32)).First();
+            frame.Freeze();
+            return frame;
+        }
+        catch (Exception exception) when (exception is IOException or NotSupportedException or ArgumentException)
+        {
+            return null;
+        }
     }
 
     private void OnSnapshotAvailable(object? sender, TelemetrySnapshot snapshot)
@@ -278,7 +402,11 @@ public partial class MainWindow : Window
             visible = IsVisible,
             maximized = WindowState == WindowState.Maximized,
             language = _app.Language,
-            refreshIntervalMs = _app.RefreshIntervalMs
+            refreshIntervalMs = _app.RefreshIntervalMs,
+            zoomPercent = _app.ZoomPercent,
+            startup = StartupRegistration.IsEnabled,
+            version = BuildInfo.Version,
+            buildDate = BuildInfo.BuildDateCode
         });
     }
 
@@ -291,6 +419,64 @@ public partial class MainWindow : Window
         catch (Exception exception)
         {
             _logger.Error("Could not send the skin catalog.", exception);
+        }
+    }
+
+    private void ShowHostSettings() => ShowHostPanel("general");
+
+    private void ShowHostSkinManager() => ShowHostPanel("skins");
+
+    private async void ShowHostPanel(string tab)
+    {
+        if (!_webReady || WebView.CoreWebView2 is null)
+            return;
+
+        var pageUrl = $"https://{HostSkinManager.VirtualHost}/{HostSkinManager.PageName}" +
+                      $"?tab={Uri.EscapeDataString(tab)}&lang={Uri.EscapeDataString(_app.Language)}";
+        try
+        {
+            await WebView.CoreWebView2.ExecuteScriptAsync(HostSkinManager.BuildOpenScript(pageUrl, tab));
+        }
+        catch (Exception exception)
+        {
+            _logger.Error("Could not show the host settings panel.", exception);
+        }
+    }
+
+    private void SetStartupFromUi(bool enabled)
+    {
+        if (_app.TrySetStartup(enabled, out var error))
+            return;
+
+        PostJson(new
+        {
+            type = "settings-error",
+            message = error ?? UiText.Get(_app.Language, "StartupFailed")
+        });
+        SendHostSettings();
+    }
+
+    private void OpenExternalFromUi(string? rawUrl)
+    {
+        if (string.IsNullOrWhiteSpace(rawUrl))
+            return;
+
+        if (!Uri.TryCreate(rawUrl, UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttps && uri.Scheme != Uri.UriSchemeHttp))
+        {
+            return;
+        }
+
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(uri.AbsoluteUri)
+            {
+                UseShellExecute = true
+            });
+        }
+        catch (Exception exception)
+        {
+            _logger.Error("Could not open an external link.", exception);
         }
     }
 
@@ -319,32 +505,43 @@ public partial class MainWindow : Window
 
     private void ImportSkinFromUi()
     {
-        if (_app.TryImportSkinForUi(out var cancelled, out var error))
+        var runtime = _app.TryImportSkinForUi(out var cancelled, out var error);
+        if (runtime is null)
         {
-            SendSkinCatalog();
-            PostJson(new
+            if (!cancelled)
             {
-                type = "skin-action",
-                action = "import",
-                ok = true,
-                message = UiText.Get(_app.Language, "SkinImported")
-            });
+                PostJson(new
+                {
+                    type = "skin-action",
+                    action = "import",
+                    ok = false,
+                    message = error ?? UiText.Get(_app.Language, "SkinImportFailed")
+                });
+            }
+            return;
         }
-        else if (!cancelled)
+
+        if (_app.ActiveSkin.Id.Equals(runtime.Id, StringComparison.OrdinalIgnoreCase))
         {
-            PostJson(new
-            {
-                type = "skin-action",
-                action = "import",
-                ok = false,
-                message = error ?? UiText.Get(_app.Language, "SkinImportFailed")
-            });
+            // The package replaced the skin that is currently on screen. The new
+            // page is already navigating, so reopen the manager on the Skins tab
+            // once it finishes loading and shows the refreshed preview.
+            _reopenSkinManager = true;
+            return;
         }
+
+        SendSkinCatalog();
+        PostJson(new
+        {
+            type = "skin-action",
+            action = "import",
+            ok = true,
+            message = UiText.Get(_app.Language, "SkinImported")
+        });
     }
 
     private void ExportSkinFromUi(string? skinId)
-    {
-        if (_app.TryExportSkinForUi(skinId, out var cancelled, out var error))
+    {        if (_app.TryExportSkinForUi(skinId, out var cancelled, out var error))
         {
             PostJson(new
             {
@@ -390,6 +587,91 @@ public partial class MainWindow : Window
         }
     }
 
+    private void DeleteSkinFromUi(string? skinId)
+    {
+        var requested = skinId?.Trim() ?? string.Empty;
+        var deletingBuiltIn = requested.Equals(SkinManager.BuiltInId, StringComparison.OrdinalIgnoreCase);
+        var wasActive = requested.Length > 0 && _app.ActiveSkin.Id.Equals(requested, StringComparison.OrdinalIgnoreCase);
+
+        if (!_app.TryDeleteSkinForUi(skinId, out var error))
+        {
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "delete",
+                ok = false,
+                message = error ?? UiText.Get(_app.Language, "SkinDeleteFailed")
+            });
+            return;
+        }
+
+        // Removing the active skin forces a navigation to the fallback skin, which
+        // tears down the control center iframe. Reopen it once the new page is up.
+        _reopenSkinManager = wasActive;
+        if (!wasActive)
+        {
+            SendSkinCatalog();
+        }
+
+        PostJson(new
+        {
+            type = "skin-action",
+            action = "delete",
+            ok = true,
+            message = UiText.Get(_app.Language, deletingBuiltIn ? "SkinBuiltInRemoved" : "SkinDeleted")
+        });
+    }
+
+    private void RestoreBuiltInSkinFromUi()
+    {
+        if (_app.TryRestoreBuiltInSkin(out var error))
+        {
+            SendSkinCatalog();
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "restore",
+                ok = true,
+                message = UiText.Get(_app.Language, "SkinBuiltInRestored")
+            });
+        }
+        else
+        {
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "restore",
+                ok = false,
+                message = error ?? UiText.Get(_app.Language, "SkinDeleteFailed")
+            });
+        }
+    }
+
+    private void RestoreBundledSkinsFromUi()
+    {
+        if (_app.TryRestoreBundledSkins(out var error))
+        {
+            SendSkinCatalog();
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "restore",
+                ok = true,
+                message = UiText.Get(_app.Language, "SkinBundledRestored")
+            });
+        }
+        else
+        {
+            PostJson(new
+            {
+                type = "skin-action",
+                action = "restore",
+                ok = false,
+                message = error ?? UiText.Get(_app.Language, "SkinBundledRestoreFailed")
+            });
+        }
+    }
+
     private void PostJson<T>(T message)
     {
         if (!_webReady || WebView.CoreWebView2 is null)
@@ -427,10 +709,42 @@ public partial class MainWindow : Window
                     _app.RequestExit();
                     break;
                 case "begin-drag":
-                    BeginWindowDrag();
+                    // Leave the WebMessageReceived handler before starting the modal drag
+                    // loop, otherwise the WebView2 renderer cannot finish its callback and
+                    // the matching mouse-up is swallowed, breaking later clicks.
+                    Dispatcher.BeginInvoke(new Action(BeginWindowDrag), DispatcherPriority.Input);
+                    break;
+                case "begin-resize":
+                    BeginWindowResize(message.RootElement.TryGetProperty("edge", out var edgeValue) ? edgeValue.GetString() : null);
                     break;
                 case "set-language":
                     _app.SetLanguage(message.RootElement.TryGetProperty("language", out var language) ? language.GetString() : null);
+                    break;
+                case "open-settings":
+                    ShowHostSettings();
+                    break;
+                case "open-skin-manager":
+                    ShowHostSkinManager();
+                    break;
+                case "request-settings":
+                    SendHostSettings();
+                    break;
+                case "set-refresh-interval":
+                    if (message.RootElement.TryGetProperty("value", out var refreshValue) && refreshValue.TryGetInt32(out var interval))
+                        _app.SetRefreshInterval(interval);
+                    break;
+                case "set-zoom":
+                    if (message.RootElement.TryGetProperty("value", out var zoomValue) && zoomValue.TryGetInt32(out var zoomPercent))
+                        _app.SetZoomFromUi(zoomPercent);
+                    break;
+                case "set-topmost":
+                    _app.SetTopmostFromUi(message.RootElement.TryGetProperty("value", out var topmostValue) && topmostValue.ValueKind == JsonValueKind.True);
+                    break;
+                case "set-startup":
+                    SetStartupFromUi(message.RootElement.TryGetProperty("enabled", out var startupValue) && startupValue.ValueKind == JsonValueKind.True);
+                    break;
+                case "open-external":
+                    OpenExternalFromUi(message.RootElement.TryGetProperty("url", out var externalUrl) ? externalUrl.GetString() : null);
                     break;
                 case "request-skins":
                     SendSkinCatalog();
@@ -443,6 +757,15 @@ public partial class MainWindow : Window
                     break;
                 case "export-skin":
                     ExportSkinFromUi(message.RootElement.TryGetProperty("id", out var exportId) ? exportId.GetString() : null);
+                    break;
+                case "delete-skin":
+                    DeleteSkinFromUi(message.RootElement.TryGetProperty("id", out var deleteId) ? deleteId.GetString() : null);
+                    break;
+                case "restore-built-in-skin":
+                    RestoreBuiltInSkinFromUi();
+                    break;
+                case "restore-bundled-skins":
+                    RestoreBundledSkinsFromUi();
                     break;
                 case "export-skill":
                     ExportSkinSkillFromUi();
@@ -491,8 +814,8 @@ public partial class MainWindow : Window
     protected override void OnSourceInitialized(EventArgs e)
     {
         base.OnSourceInitialized(e);
-        if (PresentationSource.FromVisual(this) is HwndSource source)
-            source.AddHook(WindowProc);
+        _windowSource = PresentationSource.FromVisual(this) as HwndSource;
+        _windowSource?.AddHook(WindowProc);
     }
 
     private IntPtr WindowProc(IntPtr hwnd, int message, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -512,6 +835,38 @@ public partial class MainWindow : Window
                 Marshal.StructureToPtr(info, lParam, true);
             }
         }
+        else if (message == WmNcHitTest && WindowState != WindowState.Maximized && _windowSource is not null)
+        {
+            var point = new NativePoint
+            {
+                X = unchecked((short)(long)lParam),
+                Y = unchecked((short)((long)lParam >> 16))
+            };
+            if (ScreenToClient(_windowSource.Handle, ref point) && GetClientRect(_windowSource.Handle, out var rect))
+            {
+                var dpi = VisualTreeHelper.GetDpi(this);
+                var border = Math.Max(1, (int)Math.Round(6 * Math.Max(dpi.DpiScaleX, dpi.DpiScaleY)));
+                var left = point.X < border;
+                var right = rect.Right - point.X <= border;
+                var top = point.Y < border;
+                var bottom = rect.Bottom - point.Y <= border;
+
+                var hit = top && left ? HtTopLeft
+                    : top && right ? HtTopRight
+                    : bottom && left ? HtBottomLeft
+                    : bottom && right ? HtBottomRight
+                    : left ? HtLeft
+                    : right ? HtRight
+                    : top ? HtTop
+                    : bottom ? HtBottom
+                    : HtClient;
+                if (hit != HtClient)
+                {
+                    handled = true;
+                    return new IntPtr(hit);
+                }
+            }
+        }
 
         return IntPtr.Zero;
     }
@@ -522,10 +877,9 @@ public partial class MainWindow : Window
         if (chrome is not null)
             chrome.ResizeBorderThickness = new Thickness(thickness);
 
-        // WebView2 is a child HWND and otherwise captures the mouse over the
-        // whole client area, leaving no parent hit-test surface for WindowChrome
-        // to turn into HTLEFT/HTRIGHT/HTTOP/HTBOTTOM resize edges.
-        WebView.Margin = new Thickness(thickness);
+        // Keep the HTML flush with the visual window edge. The resize band is
+        // invisible and handled by WM_NCHITTEST, not by a painted WPF margin.
+        WebView.Margin = new Thickness(0);
     }
 
     private void RestorePlacement()
@@ -561,6 +915,55 @@ public partial class MainWindow : Window
         var handle = new System.Windows.Interop.WindowInteropHelper(this).Handle;
         if (handle != IntPtr.Zero)
             SetWindowPos(handle, IntPtr.Zero, x, y, 0, 0, SwpNoSize | SwpNoZOrder | SwpNoActivate);
+    }
+
+    private async void InstallResizeBands()
+    {
+        try
+        {
+            if (WebView.CoreWebView2 is null)
+                return;
+            await WebView.CoreWebView2.ExecuteScriptAsync(ResizeBandScript);
+        }
+        catch (Exception exception)
+        {
+            _logger.Error("Could not install the window resize bands.", exception);
+        }
+    }
+
+    private void BeginWindowResize(string? edge)
+    {
+        var hitTest = edge switch
+        {
+            "left" => HtLeft,
+            "right" => HtRight,
+            "top" => HtTop,
+            "bottom" => HtBottom,
+            "top-left" => HtTopLeft,
+            "top-right" => HtTopRight,
+            "bottom-left" => HtBottomLeft,
+            "bottom-right" => HtBottomRight,
+            _ => HtClient
+        };
+        if (hitTest == HtClient)
+            return;
+
+        if (WindowState == WindowState.Maximized)
+            return;
+
+        // Leave the WebMessageReceived handler before starting the modal resize
+        // loop, otherwise the WebView2 renderer cannot finish its callback.
+        Dispatcher.BeginInvoke(new Action(() => BeginNativeResize(hitTest)), DispatcherPriority.Input);
+    }
+
+    private void BeginNativeResize(int hitTest)
+    {
+        var handle = new WindowInteropHelper(this).Handle;
+        if (handle == IntPtr.Zero || WindowState == WindowState.Maximized)
+            return;
+
+        ReleaseCapture();
+        SendMessage(handle, WmNcLeftButtonDown, (IntPtr)hitTest, IntPtr.Zero);
     }
 
     private void BeginWindowDrag()
@@ -601,20 +1004,46 @@ public partial class MainWindow : Window
 
     internal WindowSettings CaptureSettings()
     {
-        if (WindowState != WindowState.Normal)
-            return _lastSettings with { Topmost = Topmost, Language = _app.Language, RefreshIntervalMs = _app.RefreshIntervalMs, SkinId = _app.ActiveSkin.Id };
-
-        return new WindowSettings
+        var current = _lastSettings with
         {
-            Left = Left,
-            Top = Top,
-            Width = Width,
-            Height = Height,
             Topmost = Topmost,
             Language = _app.Language,
             RefreshIntervalMs = _app.RefreshIntervalMs,
-            SkinId = _app.ActiveSkin.Id
+            ZoomPercent = _app.ZoomPercent,
+            SkinId = _app.ActiveSkin.Id,
+            HideBuiltInSkin = _app.BuiltInSkinHidden
         };
+
+        if (WindowState == WindowState.Normal)
+            current = current with { Left = Left, Top = Top, Width = Width, Height = Height };
+
+        // Remember this skin's own placement, size, and zoom, so switching back to it
+        // restores the layout it was last shown with.
+        current = current.WithSkinState(_app.ActiveSkin.Id, new SkinViewState
+        {
+            Left = current.Left,
+            Top = current.Top,
+            Width = current.Width,
+            Height = current.Height,
+            ZoomPercent = current.ZoomPercent
+        });
+
+        _lastSettings = current;
+        return current;
+    }
+
+    internal void ApplySkinPlacement(SkinViewState state)
+    {
+        if (state.Width is > 0)
+            Width = Math.Clamp(state.Width.Value, 420, 7680);
+        if (state.Height is > 0)
+            Height = Math.Clamp(state.Height.Value, 560, 4320);
+        if (state.Left is not null)
+            Left = state.Left.Value;
+        if (state.Top is not null)
+            Top = state.Top.Value;
+
+        EnsureVisible();
     }
 
     private void SavePlacement()
@@ -682,6 +1111,14 @@ public partial class MainWindow : Window
     private const uint SwpNoActivate = 0x0010;
     private const int WmNcLeftButtonDown = 0x00A1;
     private const int HitTestCaption = 0x0002;
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool ScreenToClient(IntPtr hWnd, ref NativePoint point);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetClientRect(IntPtr hWnd, out NativeRect rect);
 
     [StructLayout(LayoutKind.Sequential)]
     private struct NativePoint

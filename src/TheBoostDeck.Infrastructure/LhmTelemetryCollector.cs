@@ -13,7 +13,25 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, ITelemetryInven
         "idd", "todesk", "oray", "gameviewer", "parsec", "hyper-v", "default switch"
     ];
 
-    private static readonly string[] CpuFanKeywords = ["cpu", "processor", "aio", "pump"];
+    private static readonly string[] CpuFanKeywords = ["cpu", "processor"];
+
+    // Some all-in-one coolers expose the pump as the only "fan" sensor. It is a
+    // useful fallback, but it must never win over a sensor actually named after
+    // the CPU fan.
+    private static readonly string[] CpuPumpKeywords = ["pump", "aio"];
+
+    // Intel reports "CPU Package"; Ryzen boards usually expose "Core (Tctl/Tdie)"
+    // or a CCD temperature instead. Reading only "CPU Package" left every AMD
+    // machine without a CPU temperature, so fall back across the common names.
+    private static readonly string[] CpuTemperatureSensors =
+    [
+        "CPU Package", "Core (Tctl/Tdie)", "Core (Tdie)", "CCD1 (Tdie)", "CPU Cores", "Core Max"
+    ];
+
+    private static readonly string[] CpuPowerSensors =
+    [
+        "CPU Package", "Package Power", "CPU Cores"
+    ];
 
     private readonly object _sync = new();
     private readonly Computer _computer;
@@ -156,8 +174,10 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, ITelemetryInven
         {
             Name = cpu.Name,
             Usage = ReadSensor(cpu, SensorType.Load, "CPU Total", "%", "未检测到 CPU 总占用传感器"),
-            Temperature = ReadSensor(cpu, SensorType.Temperature, "CPU Package", "°C", "未检测到 CPU 封装温度传感器"),
-            Power = ReadSensor(cpu, SensorType.Power, "CPU Package", "W", "未检测到 CPU 封装功耗传感器", zeroIsInvalid: true),
+            Temperature = ReadSensorAny(cpu, SensorType.Temperature, CpuTemperatureSensors, "°C",
+                "未检测到 CPU 封装温度传感器（Intel 通常为 CPU Package，AMD 通常为 Core (Tctl/Tdie)）"),
+            Power = ReadSensorAny(cpu, SensorType.Power, CpuPowerSensors, "W",
+                "未检测到 CPU 封装功耗传感器", zeroIsInvalid: true),
             Frequency = ReadAverageCpuFrequency(cpu),
             FanSpeed = ReadCpuFan(hardware)
         };
@@ -177,16 +197,27 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, ITelemetryInven
             return new GpuMetrics
             {
                 Name = "未检测到物理 GPU",
+                Kind = "none",
                 Usage = MetricValue.Unavailable("%", "未枚举到可用的物理 GPU")
             };
         }
 
         var used = ReadSensor(gpu, SensorType.SmallData, "GPU Memory Used", "GB", "未检测到专用显存占用传感器", 1d / 1024d);
         var total = ReadSensor(gpu, SensorType.SmallData, "GPU Memory Total", "GB", "未检测到专用显存总量传感器", 1d / 1024d, zeroIsInvalid: true);
+        var dedicatedMemory = FindSensor(gpu, SensorType.SmallData, "GPU Memory Total")?.Value;
+
+        var kind = gpu.HardwareType switch
+        {
+            HardwareType.GpuNvidia => "discrete",
+            HardwareType.GpuAmd when dedicatedMemory > 0 => "discrete",
+            HardwareType.GpuAmd or HardwareType.GpuIntel => "integrated",
+            _ => "unknown"
+        };
 
         return new GpuMetrics
         {
             Name = gpu.Name,
+            Kind = kind,
             Usage = ReadSensor(gpu, SensorType.Load, "GPU Core", "%", "未检测到 GPU 核心占用传感器"),
             Temperature = ReadSensor(gpu, SensorType.Temperature, "GPU Core", "°C", "未检测到 GPU 核心温度传感器"),
             Power = ReadSensor(gpu, SensorType.Power, "GPU Package", "W", "未检测到 GPU 封装功耗传感器"),
@@ -260,9 +291,19 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, ITelemetryInven
         }
 
         var storage = hardware.Where(item => item.HardwareType == HardwareType.Storage).ToArray();
+        var totalCapacity = drives.Count == 0
+            ? MetricValue.Unavailable("GB", "未检测到固定磁盘")
+            : MetricValue.Available(drives.Sum(drive => drive.Total.Value ?? 0d), "GB", "DriveInfo / fixed drives");
+        var usedTotal = drives.Count == 0
+            ? MetricValue.Unavailable("GB", "未检测到固定磁盘")
+            : MetricValue.Available(drives.Sum(drive => drive.Used.Value ?? 0d), "GB", "DriveInfo / fixed drives");
+
         return new StorageMetrics
         {
             Drives = drives,
+            DriveCount = drives.Count,
+            TotalCapacity = totalCapacity,
+            UsedTotal = usedTotal,
             ReadRate = SumSensors(storage, SensorType.Throughput, "Read Rate", "B/s", "未检测到磁盘读取速率传感器"),
             WriteRate = SumSensors(storage, SensorType.Throughput, "Write Rate", "B/s", "未检测到磁盘写入速率传感器")
         };
@@ -339,11 +380,53 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, ITelemetryInven
             Power = power is null
                 ? MetricValue.Unavailable("W", "整机功耗通常需要受支持的电源或专用传感器，当前未检测到")
                 : MetricFromSensor(power, "W"),
-            PowerSource = ReadPowerSource()
+            PowerSource = ReadPowerSource(),
+            Fans = CaptureFans(hardware)
         };
     }
 
+    /// <summary>
+    /// Lists every readable non-GPU fan so a machine with several case fans is
+    /// not reduced to the single value used by the CPU widget. The list is
+    /// ordered CPU-first and capped to keep the snapshot small.
+    /// </summary>
+    private static IReadOnlyList<FanReading> CaptureFans(IReadOnlyList<IHardware> hardware)
+    {
+        const int MaxFans = 16;
+        var cpuFan = FindCpuFanSensor(hardware);
+        var fans = hardware
+            .Where(item => item.HardwareType is not HardwareType.GpuAmd and not HardwareType.GpuIntel and not HardwareType.GpuNvidia)
+            .SelectMany(item => item.Sensors)
+            .Where(sensor => sensor.SensorType == SensorType.Fan)
+            .Where(sensor => IsValid(sensor.Value) && sensor.Value >= 0)
+            .DistinctBy(sensor => sensor.Identifier.ToString())
+            .Select(sensor => new FanReading
+            {
+                Name = sensor.Name,
+                Hardware = sensor.Hardware.Name,
+                Role = cpuFan is not null && sensor.Identifier.ToString() == cpuFan.Identifier.ToString()
+                    ? "cpu"
+                    : "system",
+                Speed = MetricFromSensor(sensor, "RPM")
+            })
+            .OrderBy(reading => reading.Role == "cpu" ? 0 : 1)
+            .ThenBy(reading => reading.Hardware, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(reading => reading.Name, StringComparer.CurrentCultureIgnoreCase)
+            .Take(MaxFans)
+            .ToArray();
+
+        return fans;
+    }
+
     private static MetricValue ReadCpuFan(IReadOnlyList<IHardware> hardware)
+    {
+        var fan = FindCpuFanSensor(hardware);
+        return fan is null
+            ? MetricValue.Unavailable("RPM", "未检测到 CPU 风扇转速传感器；部分 3-pin 风扇或无测速线风扇不会返回转速")
+            : MetricFromSensor(fan, "RPM");
+    }
+
+    private static ISensor? FindCpuFanSensor(IReadOnlyList<IHardware> hardware)
     {
         var fanSensors = hardware
             .Where(item => item.HardwareType is not HardwareType.GpuAmd and not HardwareType.GpuIntel and not HardwareType.GpuNvidia)
@@ -355,16 +438,18 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, ITelemetryInven
             CpuFanKeywords.Any(keyword => sensor.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)));
 
         if (namedCpuFan is not null)
-            return MetricFromSensor(namedCpuFan, "RPM");
+            return namedCpuFan;
 
-        var fallbackFan = hardware
+        var pumpFan = fanSensors.FirstOrDefault(sensor =>
+            CpuPumpKeywords.Any(keyword => sensor.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)));
+
+        if (pumpFan is not null)
+            return pumpFan;
+
+        return hardware
             .Where(item => item.HardwareType == HardwareType.SuperIO)
             .SelectMany(item => item.Sensors)
             .FirstOrDefault(sensor => sensor.SensorType == SensorType.Fan && IsValid(sensor.Value));
-
-        return fallbackFan is null
-            ? MetricValue.Unavailable("RPM", "未检测到 CPU 风扇转速传感器；部分 3-pin 风扇或无测速线风扇不会返回转速")
-            : MetricFromSensor(fallbackFan, "RPM");
     }
 
     private static MetricValue ReadAverageCpuFrequency(IHardware cpu)
@@ -400,6 +485,34 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, ITelemetryInven
             return MetricValue.Unavailable(unit, "传感器返回的零值在当前平台上不可信，已按不可用处理");
 
         return MetricValue.Available(sensor.Value!.Value * scale, unit, $"{hardware.Name} / {sensor.Name}");
+    }
+
+    /// <summary>
+    /// Reads the first sensor from a name list that is both present and valid.
+    /// Sensor names differ per platform (Intel vs Ryzen, board vendor, driver
+    /// revision), so a single hard-coded name is not enough on customer machines.
+    /// </summary>
+    private static MetricValue ReadSensorAny(
+        IHardware hardware,
+        SensorType type,
+        IReadOnlyList<string> sensorNames,
+        string unit,
+        string missingReason,
+        double scale = 1d,
+        bool zeroIsInvalid = false)
+    {
+        foreach (var sensorName in sensorNames)
+        {
+            var sensor = FindSensor(hardware, type, sensorName);
+            if (sensor is null || !IsValid(sensor.Value))
+                continue;
+            if (zeroIsInvalid && sensor.Value <= 0)
+                continue;
+
+            return MetricValue.Available(sensor.Value!.Value * scale, unit, $"{hardware.Name} / {sensor.Name}");
+        }
+
+        return MetricValue.Unavailable(unit, missingReason);
     }
 
     private static MetricValue MetricFromSensor(ISensor sensor, string unit, double scale = 1d) =>

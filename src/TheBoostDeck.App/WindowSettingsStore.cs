@@ -4,6 +4,15 @@ using TheBoostDeck.Core;
 
 namespace TheBoostDeck.App;
 
+public sealed record SkinViewState
+{
+    public double? Left { get; init; }
+    public double? Top { get; init; }
+    public double? Width { get; init; }
+    public double? Height { get; init; }
+    public int? ZoomPercent { get; init; }
+}
+
 public sealed record WindowSettings
 {
     public double? Left { get; init; }
@@ -14,6 +23,35 @@ public sealed record WindowSettings
     public string Language { get; init; } = UiText.Chinese;
     public int RefreshIntervalMs { get; init; } = 1000;
     public string SkinId { get; init; } = "classic";
+
+    /// <summary>WebView zoom level in percent (50–200), equivalent to Ctrl + wheel.</summary>
+    public int ZoomPercent { get; init; } = 100;
+
+    /// <summary>
+    /// Window placement, size, and zoom remembered per skin id, so switching skins
+    /// restores the layout that skin was last shown with.
+    /// </summary>
+    public Dictionary<string, SkinViewState> SkinStates { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The built-in skin stays available as the internal fallback, but it can be
+    /// removed from the skin list by the user. This flag records that choice.
+    /// </summary>
+    public bool HideBuiltInSkin { get; init; }
+
+    public SkinViewState? FindSkinState(string skinId) =>
+        SkinStates.TryGetValue(NormalizeSkinKey(skinId), out var state) ? state : null;
+
+    public WindowSettings WithSkinState(string skinId, SkinViewState state)
+    {
+        var states = new Dictionary<string, SkinViewState>(StringComparer.OrdinalIgnoreCase);
+        foreach (var pair in SkinStates)
+            states[pair.Key] = pair.Value;
+        states[NormalizeSkinKey(skinId)] = state;
+        return this with { SkinStates = states };
+    }
+
+    internal static string NormalizeSkinKey(string skinId) => skinId.Trim().ToLowerInvariant();
 }
 
 public sealed class WindowSettingsStore
@@ -41,13 +79,23 @@ public sealed class WindowSettingsStore
             if (settings is null)
                 return new WindowSettings();
 
+            var skinStates = new Dictionary<string, SkinViewState>(StringComparer.OrdinalIgnoreCase);
+            foreach (var pair in settings.SkinStates ?? new Dictionary<string, SkinViewState>())
+            {
+                if (string.IsNullOrWhiteSpace(pair.Key) || pair.Value is null)
+                    continue;
+                skinStates[WindowSettings.NormalizeSkinKey(pair.Key)] = pair.Value;
+            }
+
             return settings with
             {
                 Width = Math.Clamp(settings.Width, 420, 7680),
                 Height = Math.Clamp(settings.Height, 560, 4320),
                 Language = UiText.Normalize(settings.Language),
                 RefreshIntervalMs = Math.Clamp(settings.RefreshIntervalMs, 100, 5000),
-                SkinId = string.IsNullOrWhiteSpace(settings.SkinId) ? "classic" : settings.SkinId.Trim()
+                ZoomPercent = Math.Clamp(settings.ZoomPercent <= 0 ? 100 : settings.ZoomPercent, 50, 200),
+                SkinId = string.IsNullOrWhiteSpace(settings.SkinId) ? "classic" : settings.SkinId.Trim(),
+                SkinStates = skinStates
             };
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException)

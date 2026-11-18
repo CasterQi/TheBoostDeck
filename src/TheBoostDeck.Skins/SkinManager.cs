@@ -128,9 +128,97 @@ public sealed class SkinManager
         var hash = SkinPackageReader.ComputeSha256(source);
         var fileName = string.Format(CultureInfo.InvariantCulture, "{0}-{1}{2}", manifest.Id, hash[..8], SkinPackageReader.PackageExtension);
         var destination = Path.Combine(_skinsDirectory, fileName);
-        if (!File.Exists(destination) && !source.Equals(destination, StringComparison.OrdinalIgnoreCase))
-            File.Copy(source, destination, overwrite: false);
+        if (!source.Equals(destination, StringComparison.OrdinalIgnoreCase))
+        {
+            if (!File.Exists(destination))
+                File.Copy(source, destination, overwrite: false);
 
-        return Resolve(manifest.Id);
+            // File.Copy preserves the source timestamp, and the installed list ranks
+            // packages by last write time. Touch the import so the freshly added
+            // build is the one the id resolves to.
+            try
+            {
+                File.SetLastWriteTimeUtc(destination, DateTime.UtcNow);
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                // Ranking is cosmetic; the package itself was copied successfully.
+            }
+        }
+
+        return SkinPackageReader.Extract(destination, _cacheDirectory);
+    }
+
+    /// <summary>
+    /// Removes every installed package that carries the requested id, plus the
+    /// extracted caches produced from those packages. The caller is responsible
+    /// for switching away from the skin before deleting it.
+    /// </summary>
+    public void Delete(string? id)
+    {
+        var requested = (id ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(requested))
+            throw new SkinPackageException("A skin id is required to delete a skin.");
+        if (requested.Equals(BuiltInId, StringComparison.OrdinalIgnoreCase))
+            throw new SkinPackageException("The built-in skin cannot be deleted.");
+
+        var installed = GetInstalledSkins()
+            .FirstOrDefault(item => item.Id.Equals(requested, StringComparison.OrdinalIgnoreCase));
+        if (installed?.PackagePath is null)
+            throw new SkinPackageException($"Skin '{requested}' is not installed.");
+
+        var deletedAny = false;
+        foreach (var path in Directory.EnumerateFiles(_skinsDirectory, $"*{SkinPackageReader.PackageExtension}", SearchOption.TopDirectoryOnly))
+        {
+            var matches = false;
+            try
+            {
+                matches = SkinPackageReader.ReadManifest(path).Id.Equals(requested, StringComparison.OrdinalIgnoreCase);
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or SkinPackageException)
+            {
+                // A broken sibling package must not block deleting the requested skin.
+            }
+
+            if (!matches)
+                continue;
+
+            File.Delete(path);
+            deletedAny = true;
+        }
+
+        if (!deletedAny)
+            throw new SkinPackageException($"Skin '{requested}' could not be deleted.");
+
+        DeleteCachedCopies(requested);
+    }
+
+    private void DeleteCachedCopies(string id)
+    {
+        if (!Directory.Exists(_cacheDirectory))
+            return;
+
+        // Cache folders are named <id>-<12 hex chars of the package hash>. The
+        // suffix check keeps ids that are prefixes of other ids apart.
+        var prefix = id + "-";
+        foreach (var directory in Directory.EnumerateDirectories(_cacheDirectory))
+        {
+            var name = Path.GetFileName(directory);
+            if (!name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var suffix = name[prefix.Length..];
+            if (suffix.Length != 12 || !suffix.All(Uri.IsHexDigit))
+                continue;
+
+            try
+            {
+                Directory.Delete(directory, recursive: true);
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                // The cache is rebuilt on the next load, so a locked folder is not fatal.
+            }
+        }
     }
 }

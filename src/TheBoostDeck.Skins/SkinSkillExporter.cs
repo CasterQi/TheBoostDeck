@@ -32,10 +32,10 @@ public static class SkinSkillExporter
         ("references/protocol.md", "TheBoostDeck.Skins.SkinSkill.references.protocol.md"),
         ("references/design-guide.md", "TheBoostDeck.Skins.SkinSkill.references.design-guide.md"),
         ("references/derived-metrics.md", "TheBoostDeck.Skins.SkinSkill.references.derived-metrics.md"),
-        ("assets/skin-manager/skin-manager.html", "TheBoostDeck.Skins.SkinSkill.assets.skin-manager.skin-manager.html"),
-        ("assets/skin-manager/skin-manager.css", "TheBoostDeck.Skins.SkinSkill.assets.skin-manager.skin-manager.css"),
-        ("assets/skin-manager/skin-manager.js", "TheBoostDeck.Skins.SkinSkill.assets.skin-manager.skin-manager.js"),
-        ("scripts/validate_boostskin.py", "TheBoostDeck.Skins.SkinSkill.scripts.validate_boostskin.py")
+        ("references/styles.md", "TheBoostDeck.Skins.SkinSkill.references.styles.md"),
+        ("references/from-reference.md", "TheBoostDeck.Skins.SkinSkill.references.from-reference.md"),
+        ("scripts/validate_boostskin.py", "TheBoostDeck.Skins.SkinSkill.scripts.validate_boostskin.py"),
+        ("scripts/render_preview.py", "TheBoostDeck.Skins.SkinSkill.scripts.render_preview.py")
     ];
 
     public static void Export(
@@ -151,7 +151,7 @@ public static class SkinSkillExporter
 
         builder.AppendLine("## Required controls");
         builder.AppendLine();
-        builder.AppendLine("Every skin must expose a visible skin manager/switch entry, a visible hide/exit entry, and a visible drag region. One control hub may combine the first two. Copy `assets/skin-manager/` for the shared manager panel; do not redesign it per skin. Position is free, but the controls must remain visible and reachable in both 16:9 and 9:16. Do not ask the user whether to include these controls.");
+        builder.AppendLine("Every skin must expose a visible host control-center entry, a visible hide/exit entry, and a visible drag region. Recommended: use the entire title/header strip as the drag surface, excluding buttons, links, inputs, and other interactive controls from the drag hit area; this is a suggestion, not a fixed layout rule. One control hub may combine the first two. The control-center entry sends `open-settings`; the host opens the General landing page, with Skins and About tabs, and skin switching in the Skins tab. A direct `open-skin-manager` shortcut is optional. Do not embed or copy any settings/manager UI in the skin. Position is free, but the controls must remain visible and reachable in both 16:9 and 9:16. Do not ask the user whether to include these controls.");
         builder.AppendLine();
 
         builder.AppendLine("## Candidate derived metrics");
@@ -197,11 +197,11 @@ public static class SkinSkillExporter
         builder.AppendLine("1. Use only `snapshot` fields for live values; do not build a live widget from an unsupported raw sensor.");
         builder.AppendLine("2. Preserve hardware and sensor names exactly as reported; do not translate them.");
         builder.AppendLine("3. Omit metrics and hardware groups marked `unavailable` in this inventory; do not reserve empty cards, rows, or N/A slots. For a metric that was available at export but drops out at runtime, show a compact no-data state; never substitute zero.");
-        builder.AppendLine("4. Design 16:9 landscape and 9:16 portrait as first-class layouts, using only the metrics available on this machine.");
+        builder.AppendLine("4. Design 16:9 landscape and 9:16 portrait as first-class layouts, using only the metrics available on this machine. Both orientations should aim to show the complete HUD in one screen within the monitor work area, with taskbar height excluded; use vertical scrolling only as a fallback for unusually small windows.");
         builder.AppendLine("5. FPS is intentionally out of scope.");
         builder.AppendLine("6. Derived values are allowed only from available `snapshot` inputs; label them as derived and recompute them every snapshot. Omit a derived metric whose inputs are unavailable on this machine.");
         builder.AppendLine("7. Validate the finished `.boostskin` with `scripts/validate_boostskin.py`.");
-        builder.AppendLine("8. Include the mandatory controls: skin manager/switch, hide/exit, and a drag region. A single control hub may combine the first two. Copy the shared `assets/skin-manager/` panel instead of reimplementing it.");
+        builder.AppendLine("8. Include the mandatory controls: a host control-center entry (`open-settings`), hide/exit, and a drag region. Recommended: use the entire title/header strip as the drag surface, excluding interactive controls from the drag hit area; this is a suggestion, not a fixed layout rule. A single control hub may combine the first two; a direct `open-skin-manager` shortcut is optional. Never embed or copy a settings/manager UI into the package.");
         return builder.ToString();
     }
 
@@ -273,7 +273,11 @@ public static class SkinSkillExporter
             "Use host gpu.memoryUsage when it is available.");
 
         var driveFreeValues = new List<double>();
+        var driveTotalValues = new List<double>();
+        var driveUsedValues = new List<double>();
         var allDrivesAvailable = true;
+        var allDriveTotalsAvailable = true;
+        var allDriveUsedAvailable = true;
         for (var index = 0; index < snapshot.Storage.Drives.Count; index++)
         {
             var drive = snapshot.Storage.Drives[index];
@@ -284,6 +288,14 @@ public static class SkinSkillExporter
                 driveFreeValues.Add(driveFree.Value);
             if (!IsAvailable(drive.Total) || !IsAvailable(drive.Used))
                 allDrivesAvailable = false;
+            if (drive.Total.Value is double totalValue)
+                driveTotalValues.Add(totalValue);
+            else
+                allDriveTotalsAvailable = false;
+            if (drive.Used.Value is double usedValue)
+                driveUsedValues.Add(usedValue);
+            else
+                allDriveUsedAvailable = false;
 
             AddDerived(derived, "Storage", $"storage.drive{index}.free", $"Free space ({driveLabel})",
                 "storage.drives[i].total - storage.drives[i].used", "GB",
@@ -295,8 +307,9 @@ public static class SkinSkillExporter
                 "Use the host drive usage when it is available.");
         }
 
-        double? totalFree = allDrivesAvailable && snapshot.Storage.Drives.Count > 0
-                            && driveFreeValues.Count == snapshot.Storage.Drives.Count
+        var driveCount = snapshot.Storage.Drives.Count;
+        double? totalFree = allDrivesAvailable && driveCount > 0
+                            && driveFreeValues.Count == driveCount
             ? driveFreeValues.Sum()
             : null;
         AddDerived(derived, "Storage", "storage.freeTotal", "Total free space",
@@ -304,6 +317,26 @@ public static class SkinSkillExporter
             [.. snapshot.Storage.Drives.Select((_, index) => $"storage.drives[{index}].total"), .. snapshot.Storage.Drives.Select((_, index) => $"storage.drives[{index}].used")],
             totalFree,
             "Only available when every drive reports both total and used capacity.");
+
+        double? totalCapacity = allDriveTotalsAvailable && driveCount > 0
+                            && driveTotalValues.Count == driveCount
+            ? driveTotalValues.Sum()
+            : null;
+        AddDerived(derived, "Storage", "storage.totalCapacity", "Total storage capacity",
+            "sum(storage.drives[i].total)", "GB",
+            [.. snapshot.Storage.Drives.Select((_, index) => $"storage.drives[{index}].total")],
+            totalCapacity,
+            "Combined capacity of every drive; only available when every drive reports a total.");
+
+        double? totalUsed = allDriveUsedAvailable && driveCount > 0
+                        && driveUsedValues.Count == driveCount
+            ? driveUsedValues.Sum()
+            : null;
+        AddDerived(derived, "Storage", "storage.usedTotal", "Total used space",
+            "sum(storage.drives[i].used)", "GB",
+            [.. snapshot.Storage.Drives.Select((_, index) => $"storage.drives[{index}].used")],
+            totalUsed,
+            "Combined used space across drives; only available when every drive reports a used value.");
 
         var networkTotal = Sum(snapshot.Network.Download, snapshot.Network.Upload);
         AddDerived(derived, "Network", "network.total", "Combined throughput",

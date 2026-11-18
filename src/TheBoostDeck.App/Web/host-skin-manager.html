@@ -1,0 +1,1124 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TheBoostDeck skin manager</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+    .tbd-sm-overlay {
+      --tbd-sm-accent: #4bc9ff;
+      --tbd-sm-accent-soft: rgba(75, 201, 255, .18);
+      --tbd-sm-text: #e8f4ff;
+      --tbd-sm-muted: #8ca9bf;
+      --tbd-sm-danger: #ff7d7d;
+      --tbd-sm-line: rgba(75, 201, 255, .18);
+      --tbd-sm-line-strong: rgba(75, 201, 255, .38);
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(2, 8, 17, .72);
+      backdrop-filter: blur(9px);
+      color: var(--tbd-sm-text);
+      font-family: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .tbd-sm-overlay[hidden] { display: none; }
+    .tbd-sm-overlay * { box-sizing: border-box; }
+    .tbd-sm-dialog {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: min(860px, calc(100vw - 28px));
+      max-height: min(760px, calc(100vh - 28px));
+      overflow: hidden;
+      border: 1px solid var(--tbd-sm-line-strong);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(10, 30, 54, .99), rgba(4, 12, 26, .99));
+      box-shadow: 0 24px 90px rgba(0, 0, 0, .55), inset 0 1px rgba(255, 255, 255, .04);
+    }
+    .tbd-sm-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid var(--tbd-sm-line);
+    }
+    .tbd-sm-heading { min-width: 0; }
+    .tbd-sm-kicker {
+      color: var(--tbd-sm-accent);
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .tbd-sm-title { margin: 5px 0 0; font-size: 23px; font-weight: 650; line-height: 1.2; }
+    .tbd-sm-subtitle { margin: 5px 0 0; color: var(--tbd-sm-muted); font-size: 12px; line-height: 1.5; }
+    .tbd-sm-icon-button {
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 1px solid var(--tbd-sm-line);
+      border-radius: 9px;
+      background: rgba(10, 30, 52, .72);
+      color: var(--tbd-sm-muted);
+      cursor: pointer;
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .tbd-sm-icon-button:hover { color: var(--tbd-sm-text); border-color: var(--tbd-sm-line-strong); background: rgba(20, 55, 84, .85); }
+    .tbd-sm-icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .tbd-sm-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
+      gap: 12px;
+      min-height: 0;
+      padding: 16px 22px;
+      overflow: auto;
+    }
+    .tbd-sm-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: 8px;
+      border: 1px solid var(--tbd-sm-line);
+      border-radius: 12px;
+      background: rgba(8, 22, 42, .82);
+      color: var(--tbd-sm-text);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color .15s, background .15s, transform .15s;
+    }
+    .tbd-sm-card:focus-visible { outline: 2px solid var(--tbd-sm-accent); outline-offset: 2px; }
+    .tbd-sm-card:hover { border-color: var(--tbd-sm-line-strong); background: rgba(13, 38, 66, .9); transform: translateY(-1px); }
+    .tbd-sm-card.is-active { border-color: var(--tbd-sm-accent); box-shadow: 0 0 0 1px var(--tbd-sm-accent-soft), 0 0 22px rgba(75, 201, 255, .1); }
+    .tbd-sm-thumb {
+      position: relative;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid rgba(75, 201, 255, .2);
+      border-radius: 8px;
+      background: radial-gradient(circle at 70% 20%, var(--tbd-sm-accent-soft), transparent 46%), linear-gradient(135deg, #0c233d, #040d1c);
+    }
+    .tbd-sm-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .tbd-sm-placeholder {
+      color: rgba(150, 207, 240, .62);
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .tbd-sm-placeholder svg { display: block; width: 34px; height: 34px; margin: 0 auto 7px; opacity: .8; }
+    .tbd-sm-active-badge {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      padding: 3px 6px;
+      border: 1px solid rgba(75, 201, 255, .45);
+      border-radius: 4px;
+      background: rgba(3, 21, 38, .86);
+      color: var(--tbd-sm-accent);
+      font-size: 9px;
+      font-weight: 650;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .tbd-sm-card-copy { min-width: 0; padding: 9px 2px 1px; }
+    .tbd-sm-card-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 650; }
+    .tbd-sm-card-meta { margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--tbd-sm-muted); font-size: 10px; }
+    .tbd-sm-card-description {
+      display: -webkit-box;
+      margin-top: 7px;
+      overflow: hidden;
+      color: #8ca9bf;
+      font-size: 11px;
+      line-height: 1.4;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .tbd-sm-empty { grid-column: 1 / -1; padding: 30px 10px; color: var(--tbd-sm-muted); font-size: 13px; text-align: center; }
+    .tbd-sm-delete {
+      position: absolute;
+      top: 7px;
+      left: 7px;
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      border: 1px solid rgba(255, 125, 125, .35);
+      border-radius: 6px;
+      background: rgba(3, 21, 38, .84);
+      color: var(--tbd-sm-danger);
+      cursor: pointer;
+      opacity: .74;
+      transition: opacity .15s, border-color .15s, background .15s;
+    }
+    .tbd-sm-delete:hover { opacity: 1; border-color: rgba(255, 125, 125, .7); background: rgba(46, 16, 22, .92); }
+    .tbd-sm-delete:focus-visible { outline: 2px solid var(--tbd-sm-danger); outline-offset: 1px; opacity: 1; }
+    .tbd-sm-delete .tbd-sm-icon { width: 14px; height: 14px; }
+    .tbd-sm-confirm {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(2, 8, 17, .78);
+      backdrop-filter: blur(4px);
+    }
+    .tbd-sm-confirm[hidden] { display: none; }
+    .tbd-sm-confirm-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: min(348px, 100%);
+      padding: 18px;
+      border: 1px solid var(--tbd-sm-line-strong);
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(12, 34, 60, .99), rgba(4, 12, 26, .99));
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .5);
+    }
+    .tbd-sm-confirm-title { font-size: 15px; font-weight: 650; }
+    .tbd-sm-confirm-body { color: var(--tbd-sm-muted); font-size: 12px; line-height: 1.6; }
+    .tbd-sm-confirm-name { color: var(--tbd-sm-text); font-weight: 600; }
+    .tbd-sm-confirm-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+    .tbd-sm-action.tbd-sm-danger { border-color: rgba(255, 125, 125, .45); color: var(--tbd-sm-danger); }
+    .tbd-sm-action.tbd-sm-danger:hover:not(:disabled) { border-color: rgba(255, 125, 125, .72); background: rgba(46, 16, 22, .82); }
+    .tbd-sm-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 14px 22px 18px;
+      border-top: 1px solid var(--tbd-sm-line);
+    }
+    .tbd-sm-status { flex: 1 1 220px; min-width: 0; color: var(--tbd-sm-muted); font-size: 12px; line-height: 1.45; }
+    .tbd-sm-status[data-tone="error"] { color: var(--tbd-sm-danger); }
+    .tbd-sm-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--tbd-sm-line);
+      border-radius: 8px;
+      background: rgba(10, 30, 52, .8);
+      color: var(--tbd-sm-text);
+      cursor: pointer;
+      font-size: 12px;
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .tbd-sm-action:hover:not(:disabled) { border-color: var(--tbd-sm-line-strong); background: rgba(20, 55, 84, .9); }
+    .tbd-sm-action.tbd-sm-primary { border-color: rgba(75, 201, 255, .44); color: var(--tbd-sm-accent); }
+    .tbd-sm-action:disabled { opacity: .38; cursor: not-allowed; }
+    .tbd-sm-action .tbd-sm-icon { width: 16px; height: 16px; }
+    .tbd-sm-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 10px 22px 0;
+      border-bottom: 1px solid var(--tbd-sm-line);
+      overflow-x: auto;
+    }
+    .tbd-sm-tab {
+      flex: 0 0 auto;
+      padding: 9px 12px 10px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: var(--tbd-sm-muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .tbd-sm-tab:hover { color: var(--tbd-sm-text); background: rgba(20, 55, 84, .32); }
+    .tbd-sm-tab[aria-selected="true"] { border-bottom-color: var(--tbd-sm-accent); color: var(--tbd-sm-accent); background: rgba(75, 201, 255, .08); }
+    .tbd-sm-body { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; overflow: hidden; }
+    .tbd-sm-panel { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; overflow: auto; }
+    .tbd-sm-panel[hidden] { display: none; }
+    .tbd-sm-settings { display: grid; gap: 9px; padding: 18px 22px; }
+    .tbd-sm-setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-width: 0;
+      padding: 14px 16px;
+      border: 1px solid var(--tbd-sm-line);
+      border-radius: 10px;
+      background: rgba(8, 22, 42, .68);
+    }
+    .tbd-sm-setting-copy { min-width: 0; }
+    .tbd-sm-setting-title { font-size: 13px; font-weight: 650; line-height: 1.35; }
+    .tbd-sm-setting-hint { margin-top: 4px; color: var(--tbd-sm-muted); font-size: 11px; line-height: 1.45; }
+    .tbd-sm-select {
+      flex: 0 0 auto;
+      min-width: 150px;
+      height: 34px;
+      padding: 0 30px 0 10px;
+      border: 1px solid var(--tbd-sm-line);
+      border-radius: 8px;
+      background: #0a1c2e;
+      color: var(--tbd-sm-text);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .tbd-sm-select:focus-visible { outline: 2px solid rgba(75, 201, 255, .45); outline-offset: 2px; }
+    .tbd-sm-zoom { display: flex; flex: 0 0 auto; align-items: center; gap: 10px; }
+    .tbd-sm-range { width: 150px; margin: 0; accent-color: var(--tbd-sm-accent); cursor: pointer; }
+    .tbd-sm-range:focus-visible { outline: 2px solid rgba(75, 201, 255, .45); outline-offset: 2px; }
+    .tbd-sm-zoom-value {
+      min-width: 42px;
+      color: var(--tbd-sm-text);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+    .tbd-sm-apply {
+      flex: 0 0 auto;
+      height: 30px;
+      padding: 0 12px;
+      border: 1px solid rgba(75, 201, 255, .44);
+      border-radius: 8px;
+      background: rgba(13, 38, 66, .9);
+      color: var(--tbd-sm-accent);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      transition: border-color .15s ease, background .15s ease, opacity .15s ease;
+    }
+    .tbd-sm-apply:hover:not(:disabled) { border-color: var(--tbd-sm-line-strong); background: rgba(20, 55, 84, .95); }
+    .tbd-sm-apply:focus-visible { outline: 2px solid rgba(75, 201, 255, .45); outline-offset: 2px; }
+    .tbd-sm-apply:disabled { opacity: .4; cursor: default; }
+    .tbd-sm-checkbox {
+      flex: 0 0 auto;
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      accent-color: var(--tbd-sm-accent);
+      cursor: pointer;
+    }
+    .tbd-sm-settings-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 4px 22px 18px;
+    }
+    .tbd-sm-about { padding: 22px; }
+    .tbd-sm-about-card {
+      padding: 20px;
+      border: 1px solid var(--tbd-sm-line);
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(12, 36, 62, .9), rgba(5, 16, 30, .9));
+    }
+    .tbd-sm-about-name { font-size: 19px; font-weight: 650; }
+    .tbd-sm-about-description { margin-top: 6px; color: var(--tbd-sm-muted); font-size: 12px; line-height: 1.55; }
+    .tbd-sm-about-grid { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 9px 14px; margin-top: 18px; font-size: 12px; }
+    .tbd-sm-about-label { color: var(--tbd-sm-muted); }
+    .tbd-sm-about-value { color: var(--tbd-sm-text); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    .tbd-sm-about-link {
+      color: var(--tbd-sm-accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(75, 201, 255, .45);
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .tbd-sm-about-link:hover { color: #9fe3ff; border-bottom-color: #9fe3ff; background: rgba(75, 201, 255, .08); }
+    .tbd-sm-about-link:focus-visible { outline: 2px solid rgba(75, 201, 255, .45); outline-offset: 2px; border-radius: 2px; }
+    .tbd-sm-footer [hidden] { display: none; }
+    @media (max-width: 720px) {
+      .tbd-sm-overlay { padding: 10px; }
+      .tbd-sm-header { padding: 16px 16px 12px; }
+      .tbd-sm-title { font-size: 20px; }
+      .tbd-sm-tabs { padding: 8px 16px 0; }
+      .tbd-sm-tab { padding: 8px 9px 9px; font-size: 11px; }
+      .tbd-sm-settings { gap: 8px; padding: 12px 16px; }
+      .tbd-sm-setting-row { gap: 12px; padding: 11px 12px; }
+      .tbd-sm-setting-hint { display: none; }
+      .tbd-sm-select { min-width: 120px; max-width: 145px; }
+      .tbd-sm-range { width: 108px; }
+      .tbd-sm-zoom { gap: 8px; }
+      .tbd-sm-settings-actions { padding: 2px 16px 14px; }
+      .tbd-sm-about { padding: 16px; }
+      .tbd-sm-about-grid { grid-template-columns: 86px minmax(0, 1fr); }
+      .tbd-sm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 12px 16px; }
+      .tbd-sm-card { padding: 6px; }
+      .tbd-sm-card-name { font-size: 13px; }
+      .tbd-sm-footer { padding: 12px 16px 14px; }
+      .tbd-sm-status { flex-basis: 100%; order: 2; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .tbd-sm-card, .tbd-sm-icon-button, .tbd-sm-action { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="tbd-sm-overlay" data-tbd-skin-manager>
+    <section class="tbd-sm-dialog" id="tbd-sm-dialog" role="dialog" aria-modal="true" aria-labelledby="tbd-sm-title">
+      <header class="tbd-sm-header">
+        <div class="tbd-sm-heading">
+          <div class="tbd-sm-kicker" data-tbd-label="kicker">THEBOOSTDECK</div>
+          <h2 class="tbd-sm-title" id="tbd-sm-title" data-tbd-label="title">控制中心</h2>
+          <p class="tbd-sm-subtitle" data-tbd-label="subtitle">管理外观、刷新频率和启动行为。</p>
+        </div>
+        <button class="tbd-sm-icon-button tbd-sm-close" type="button" data-tbd-close data-tbd-aria-label="close" aria-label="关闭控制中心">
+          <svg class="tbd-sm-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <nav class="tbd-sm-tabs" role="tablist" aria-label="TheBoostDeck settings">
+        <button class="tbd-sm-tab" type="button" role="tab" data-tbd-tab="general" aria-selected="true" data-tbd-label="tabGeneral">通用</button>
+        <button class="tbd-sm-tab" type="button" role="tab" data-tbd-tab="skins" aria-selected="false" data-tbd-label="tabSkins">皮肤</button>
+        <button class="tbd-sm-tab" type="button" role="tab" data-tbd-tab="about" aria-selected="false" data-tbd-label="tabAbout">关于</button>
+      </nav>
+
+      <div class="tbd-sm-body">
+        <section class="tbd-sm-panel" data-tbd-panel="general" role="tabpanel" hidden>
+          <div class="tbd-sm-settings">
+            <div class="tbd-sm-setting-row">
+              <div class="tbd-sm-setting-copy">
+                <div class="tbd-sm-setting-title" data-tbd-label="languageTitle">界面语言</div>
+                <div class="tbd-sm-setting-hint" data-tbd-label="languageHint">切换后立即应用到宿主和皮肤。</div>
+              </div>
+              <select class="tbd-sm-select" data-tbd-setting="language" aria-label="界面语言">
+                <option value="zh-CN">简体中文</option>
+                <option value="en-US">English</option>
+              </select>
+            </div>
+
+            <div class="tbd-sm-setting-row">
+              <div class="tbd-sm-setting-copy">
+                <div class="tbd-sm-setting-title" data-tbd-label="refreshTitle">刷新频率</div>
+                <div class="tbd-sm-setting-hint" data-tbd-label="refreshHint">控制硬件数据的采样间隔。</div>
+              </div>
+              <select class="tbd-sm-select" data-tbd-setting="refresh" aria-label="刷新频率"></select>
+            </div>
+
+            <div class="tbd-sm-setting-row">
+              <div class="tbd-sm-setting-copy">
+                <div class="tbd-sm-setting-title" data-tbd-label="zoomTitle">缩放</div>
+                <div class="tbd-sm-setting-hint" data-tbd-label="zoomHint">调整界面缩放，效果等同于浏览器的 Ctrl + 滚轮。</div>
+              </div>
+              <div class="tbd-sm-zoom">
+                <input class="tbd-sm-range" type="range" min="50" max="200" step="5" value="100" data-tbd-setting="zoom" aria-label="缩放">
+                <span class="tbd-sm-zoom-value" data-tbd-zoom-value>100%</span>
+                <button class="tbd-sm-apply" type="button" data-tbd-zoom-apply data-tbd-label="zoomApply">应用</button>
+              </div>
+            </div>
+
+            <div class="tbd-sm-setting-row">
+              <div class="tbd-sm-setting-copy">
+                <div class="tbd-sm-setting-title" data-tbd-label="topmostTitle">始终置顶</div>
+                <div class="tbd-sm-setting-hint" data-tbd-label="topmostHint">让副屏窗口保持在其他窗口上方。</div>
+              </div>
+              <input class="tbd-sm-checkbox" type="checkbox" data-tbd-setting="topmost" aria-label="始终置顶">
+            </div>
+
+            <div class="tbd-sm-setting-row">
+              <div class="tbd-sm-setting-copy">
+                <div class="tbd-sm-setting-title" data-tbd-label="startupTitle">开机自启</div>
+                <div class="tbd-sm-setting-hint" data-tbd-label="startupHint">登录 Windows 后自动启动 TheBoostDeck。</div>
+              </div>
+              <input class="tbd-sm-checkbox" type="checkbox" data-tbd-setting="startup" aria-label="开机自启">
+            </div>
+          </div>
+          <div class="tbd-sm-settings-actions">
+            <button class="tbd-sm-action" type="button" data-tbd-hide data-tbd-label="hide">隐藏到托盘</button>
+            <button class="tbd-sm-action" type="button" data-tbd-exit data-tbd-label="exit">退出程序</button>
+          </div>
+        </section>
+
+        <section class="tbd-sm-panel" data-tbd-panel="skins" role="tabpanel">
+          <div class="tbd-sm-grid" data-tbd-grid aria-live="polite">
+            <div class="tbd-sm-empty" data-tbd-label="loading">正在读取皮肤列表…</div>
+          </div>
+        </section>
+
+        <section class="tbd-sm-panel" data-tbd-panel="about" role="tabpanel" hidden>
+          <div class="tbd-sm-about">
+            <div class="tbd-sm-about-card">
+              <div class="tbd-sm-about-name">TheBoostDeck</div>
+              <div class="tbd-sm-about-description" data-tbd-label="aboutDescription">面向游戏玩家副屏的 Windows 性能监控 HUD。</div>
+              <div class="tbd-sm-about-grid">
+                <div class="tbd-sm-about-label" data-tbd-label="versionLabel">版本</div>
+                <div class="tbd-sm-about-value" data-tbd-about-version>--</div>
+                <div class="tbd-sm-about-label" data-tbd-label="buildLabel">构建</div>
+                <div class="tbd-sm-about-value" data-tbd-about-build>--</div>
+                <div class="tbd-sm-about-label" data-tbd-label="authorLabel">作者</div>
+                <div class="tbd-sm-about-value">灵魂调音师</div>
+                <div class="tbd-sm-about-label" data-tbd-label="bilibiliLabel">B站主页</div>
+                <div class="tbd-sm-about-value"><a class="tbd-sm-about-link" href="https://space.bilibili.com/21205390" target="_blank" rel="noopener noreferrer" data-tbd-external="https://space.bilibili.com/21205390">space.bilibili.com/21205390</a></div>
+                <div class="tbd-sm-about-label" data-tbd-label="githubLabel">GitHub</div>
+                <div class="tbd-sm-about-value"><a class="tbd-sm-about-link" href="https://github.com/CasterQi/TheBoostDeck" target="_blank" rel="noopener noreferrer" data-tbd-external="https://github.com/CasterQi/TheBoostDeck">github.com/CasterQi/TheBoostDeck</a></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="tbd-sm-footer">
+        <div class="tbd-sm-status" data-tbd-status aria-live="polite"></div>
+        <button class="tbd-sm-action" type="button" data-tbd-export-skill data-tbd-skins-only data-tbd-title="exportSkillHint" hidden>
+          <svg class="tbd-sm-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.1 5.2L19 10l-4.9 1.8L12 17l-2.1-5.2L5 10l4.9-1.8zM19 15l1 2.4L22.5 18l-2.5.9L19 21l-1-2.1L15.5 18l2.5-.6z"/></svg>
+          <span data-tbd-label="exportSkill">导出 Skill</span>
+        </button>
+        <button class="tbd-sm-action" type="button" data-tbd-export-current disabled data-tbd-skins-only data-tbd-title="exportDisabled" hidden>
+          <svg class="tbd-sm-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          <span data-tbd-label="exportCurrent">导出当前皮肤</span>
+        </button>
+        <button class="tbd-sm-action" type="button" data-tbd-restore-builtin data-tbd-skins-only hidden>
+          <svg class="tbd-sm-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.3M4 4v5h5"/></svg>
+          <span data-tbd-label="restoreBuiltIn">恢复内置皮肤</span>
+        </button>
+        <button class="tbd-sm-action" type="button" data-tbd-restore-bundled data-tbd-skins-only data-tbd-title="restoreBundledHint">
+          <svg class="tbd-sm-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/></svg>
+          <span data-tbd-label="restoreBundled">恢复自带皮肤</span>
+        </button>
+        <button class="tbd-sm-action tbd-sm-primary" type="button" data-tbd-import data-tbd-skins-only hidden>
+          <svg class="tbd-sm-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V9m0 0l-4 4m4-4l4 4M5 3h14"/></svg>
+          <span data-tbd-label="import">导入皮肤</span>
+        </button>
+      </footer>
+
+      <div class="tbd-sm-confirm" data-tbd-confirm hidden>
+        <div class="tbd-sm-confirm-box" role="alertdialog" aria-modal="true" aria-labelledby="tbd-sm-confirm-title" aria-describedby="tbd-sm-confirm-body">
+          <div class="tbd-sm-confirm-title" id="tbd-sm-confirm-title" data-tbd-label="deleteConfirmTitle">删除皮肤</div>
+          <div class="tbd-sm-confirm-body" id="tbd-sm-confirm-body">
+            <span data-tbd-label="deleteConfirmBody">将删除该皮肤包及解压缓存，此操作不可恢复。</span>
+            <div class="tbd-sm-confirm-name" data-tbd-confirm-name></div>
+          </div>
+          <div class="tbd-sm-confirm-actions">
+            <button class="tbd-sm-action" type="button" data-tbd-confirm-cancel data-tbd-label="cancel">取消</button>
+            <button class="tbd-sm-action tbd-sm-danger" type="button" data-tbd-confirm-accept data-tbd-label="deleteAction">删除</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const LABELS = {
+        "zh-CN": {
+          kicker: "THEBOOSTDECK",
+          title: "控制中心",
+          subtitle: "管理外观、刷新频率和启动行为。",
+          close: "关闭控制中心",
+          tabGeneral: "通用",
+          tabSkins: "皮肤",
+          tabAbout: "关于",
+          languageTitle: "界面语言",
+          languageHint: "切换后立即应用到宿主和皮肤。",
+          refreshTitle: "刷新频率",
+          refreshHint: "控制硬件数据的采样间隔。",
+          zoomTitle: "缩放",
+          zoomHint: "调整仪表盘的显示比例，每个皮肤独立保存。",
+          zoomApply: "应用",
+          topmostTitle: "始终置顶",
+          topmostHint: "让副屏窗口保持在其他窗口上方。",
+          startupTitle: "开机自启",
+          startupHint: "登录 Windows 后自动启动 TheBoostDeck。",
+          hide: "隐藏到托盘",
+          exit: "退出程序",
+          aboutDescription: "面向游戏玩家副屏的 Windows 性能监控 HUD。",
+          versionLabel: "版本",
+          buildLabel: "构建",
+          authorLabel: "作者",
+          bilibiliLabel: "B站主页",
+          githubLabel: "GitHub",
+          loading: "正在读取皮肤列表…",
+          empty: "还没有可用的皮肤。",
+          count: "共 {count} 个皮肤",
+          countOne: "共 1 个皮肤",
+          active: "使用中",
+          builtIn: "内置",
+          noPreview: "无预览图",
+          import: "导入皮肤",
+          exportSkill: "导出 Skill",
+          exportSkillHint: "导出包含本机传感器清单的皮肤制作 Skill",
+          exportCurrent: "导出当前皮肤",
+          exportDisabled: "内置皮肤不可导出",
+          requestFailed: "无法读取皮肤列表。",
+          selecting: "正在切换皮肤…",
+          actionFailed: "操作失败。",
+          settingsFailed: "设置更新失败。",
+          webOnly: "当前不在 TheBoostDeck 宿主中，无法读取设置。",
+          deleteSkin: "删除皮肤",
+          deleteConfirmTitle: "删除皮肤",
+          deleteConfirmBody: "将删除该皮肤包及其解压缓存，此操作不可恢复。",
+          deleteBuiltInBody: "内置皮肤内置于程序，删除后仅从皮肤列表移除，并继续作为加载失败时的回落皮肤。",
+          deleteAction: "删除",
+          cancel: "取消",
+          deleting: "正在删除皮肤…",
+          deleteLast: "请至少保留一个已安装的皮肤，再移除内置皮肤。",
+          restoreBuiltIn: "恢复内置皮肤",
+          restoreBundled: "恢复自带皮肤",
+          restoreBundledHint: "重新安装随程序附带的默认皮肤包"
+        },
+        "en-US": {
+          kicker: "THEBOOSTDECK",
+          title: "Control center",
+          subtitle: "Manage appearance, refresh cadence, and startup behavior.",
+          close: "Close control center",
+          tabGeneral: "General",
+          tabSkins: "Skins",
+          tabAbout: "About",
+          languageTitle: "Interface language",
+          languageHint: "Applies to the host and skins immediately.",
+          refreshTitle: "Refresh rate",
+          refreshHint: "Sets the hardware sampling interval.",
+          zoomTitle: "Zoom",
+          zoomHint: "Scales the dashboard. Each skin keeps its own zoom level.",
+          zoomApply: "Apply",
+          topmostTitle: "Always on top",
+          topmostHint: "Keep the secondary-display window above other windows.",
+          startupTitle: "Start with Windows",
+          startupHint: "Launch TheBoostDeck after you sign in.",
+          hide: "Hide to tray",
+          exit: "Exit application",
+          aboutDescription: "A Windows performance HUD for a gamer's secondary display.",
+          versionLabel: "Version",
+          buildLabel: "Build",
+          authorLabel: "Author",
+          bilibiliLabel: "Bilibili",
+          githubLabel: "GitHub",
+          loading: "Reading skin list…",
+          empty: "No skins are available yet.",
+          count: "{count} skins available",
+          countOne: "1 skin available",
+          active: "Active",
+          builtIn: "Built in",
+          noPreview: "No preview",
+          import: "Import skin",
+          exportSkill: "Export skill",
+          exportSkillHint: "Export a skin-authoring skill with this machine's sensor inventory",
+          exportCurrent: "Export active skin",
+          exportDisabled: "Built-in skins cannot be exported",
+          requestFailed: "Could not load the skin list.",
+          selecting: "Switching skin…",
+          actionFailed: "The action failed.",
+          settingsFailed: "Could not update the setting.",
+          webOnly: "TheBoostDeck host is not available, so settings cannot be read.",
+          deleteSkin: "Delete skin",
+          deleteConfirmTitle: "Delete skin",
+          deleteConfirmBody: "The skin package and its extracted cache will be deleted. This cannot be undone.",
+          deleteBuiltInBody: "The built-in skin ships with the application. Deleting it only removes it from the skin list; it stays available as the fallback when a skin fails to load.",
+          deleteAction: "Delete",
+          cancel: "Cancel",
+          deleting: "Deleting skin…",
+          deleteLast: "Keep at least one installed skin before removing the built-in skin.",
+          restoreBuiltIn: "Restore built-in skin",
+          restoreBundled: "Restore bundled skins",
+          restoreBundledHint: "Reinstall the default skin packages shipped with the app"
+        }
+      };
+
+      const root = document.querySelector("[data-tbd-skin-manager]");
+      const closeButton = root.querySelector("[data-tbd-close]");
+      const grid = root.querySelector("[data-tbd-grid]");
+      const status = root.querySelector("[data-tbd-status]");
+      const exportButton = root.querySelector("[data-tbd-export-current]");
+      const importButton = root.querySelector("[data-tbd-import]");
+      const exportSkillButton = root.querySelector("[data-tbd-export-skill]");
+      const restoreBuiltInButton = root.querySelector("[data-tbd-restore-builtin]");
+      const restoreBundledButton = root.querySelector("[data-tbd-restore-bundled]");
+      const confirmOverlay = root.querySelector("[data-tbd-confirm]");
+      const confirmName = root.querySelector("[data-tbd-confirm-name]");
+      const confirmBodyText = root.querySelector("[data-tbd-confirm-body] [data-tbd-label='deleteConfirmBody']");
+      const confirmCancel = root.querySelector("[data-tbd-confirm-cancel]");
+      const confirmAccept = root.querySelector("[data-tbd-confirm-accept]");
+      const hideButton = root.querySelector("[data-tbd-hide]");
+      const exitButton = root.querySelector("[data-tbd-exit]");
+      const tabs = [...root.querySelectorAll("[data-tbd-tab]")];
+      const panels = [...root.querySelectorAll("[data-tbd-panel]")];
+      const skinsOnlyActions = [...root.querySelectorAll("[data-tbd-skins-only]")];
+      const languageSelect = root.querySelector("[data-tbd-setting='language']");
+      const refreshSelect = root.querySelector("[data-tbd-setting='refresh']");
+      const zoomRange = root.querySelector("[data-tbd-setting='zoom']");
+      const zoomValue = root.querySelector("[data-tbd-zoom-value]");
+      const zoomApplyButton = root.querySelector("[data-tbd-zoom-apply]");
+      const topmostCheckbox = root.querySelector("[data-tbd-setting='topmost']");
+      const startupCheckbox = root.querySelector("[data-tbd-setting='startup']");
+      const aboutVersion = root.querySelector("[data-tbd-about-version]");
+      const aboutBuild = root.querySelector("[data-tbd-about-build]");
+      const queryParams = new URLSearchParams(location.search);
+      const queryLanguage = queryParams.get("lang");
+      const queryTab = queryParams.get("tab");
+      let language = normalizeLanguage(queryLanguage || document.documentElement.lang || navigator.language);
+      let labels = LABELS[language] || LABELS["zh-CN"];
+      let catalog = null;
+      let settings = null;
+      let pendingDeleteId = "";
+      let pendingDeleteBuiltIn = false;
+      let appliedZoom = 100;
+      const refreshOptions = [100, 250, 500, 1000, 2000, 5000];
+
+      function normalizeLanguage(value) {
+        var text = String(value || "").toLowerCase();
+        return text.indexOf("en") === 0 ? "en-US" : "zh-CN";
+      }
+
+      function postHost(type, payload) {
+        if (window.parent === window) return false;
+        window.parent.postMessage({
+          __tbdHostManagerRequest: true,
+          type: type,
+          payload: payload || {}
+        }, "*");
+        return true;
+      }
+
+      function closeHost() {
+        if (window.parent === window) return;
+        window.parent.postMessage({ __tbdHostManagerRequest: true, type: "close" }, "*");
+      }
+
+      function setStatus(message, isError) {
+        status.textContent = message || "";
+        status.dataset.tone = isError ? "error" : "info";
+      }
+
+      function createSvg(pathData) {
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("class", "tbd-sm-icon");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("aria-hidden", "true");
+        var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", pathData);
+        svg.appendChild(path);
+        return svg;
+      }
+
+      function createPlaceholder() {
+        var placeholder = document.createElement("div");
+        placeholder.className = "tbd-sm-placeholder";
+        placeholder.appendChild(createSvg("M12 3l3 5.4L22 12l-7 3.6L12 21l-3-5.4L2 12l7-3.6z"));
+        var text = document.createElement("div");
+        text.textContent = labels.noPreview;
+        placeholder.appendChild(text);
+        return placeholder;
+      }
+
+      function makeEmpty(message) {
+        var empty = document.createElement("div");
+        empty.className = "tbd-sm-empty";
+        empty.textContent = message;
+        return empty;
+      }
+
+      function countText(count) {
+        return count === 1 ? labels.countOne : labels.count.replace("{count}", String(count));
+      }
+
+      function formatRefresh(ms) {
+        var seconds = Number((ms / 1000).toFixed(2));
+        return language === "en-US" ? seconds + " s" : seconds + " 秒";
+      }
+
+      function syncZoomControls() {
+        var value = Number(zoomRange.value);
+        zoomValue.textContent = String(value) + "%";
+        zoomApplyButton.disabled = value === appliedZoom;
+      }
+
+      function renderRefreshOptions() {        var selected = settings && settings.refreshIntervalMs ? String(settings.refreshIntervalMs) : refreshSelect.value;
+        refreshSelect.replaceChildren();
+        refreshOptions.forEach(function (ms) {
+          var option = document.createElement("option");
+          option.value = String(ms);
+          option.textContent = formatRefresh(ms);
+          if (selected === String(ms)) option.selected = true;
+          refreshSelect.appendChild(option);
+        });
+      }
+
+      function switchTab(tab, load) {
+        var next = tab === "skins" || tab === "about" ? tab : "general";
+        var shouldLoad = load !== false;
+        tabs.forEach(function (button) {
+          button.setAttribute("aria-selected", String(button.dataset.tbdTab === next));
+        });
+        panels.forEach(function (panel) {
+          panel.hidden = panel.dataset.tbdPanel !== next;
+        });
+        skinsOnlyActions.forEach(function (element) {
+          element.hidden = next !== "skins";
+        });
+        if (next === "skins" && shouldLoad) {
+          if (catalog) renderCatalog(catalog);
+          else requestSkins();
+        } else if (next === "general" && shouldLoad && !settings) {
+          requestSettings();
+        }
+      }
+
+      function requestSettings() {
+        if (!postHost("request", { type: "request-settings" })) {
+          setStatus(labels.webOnly, true);
+          return false;
+        }
+        return true;
+      }
+
+      function openExternal(url) {
+        var target = String(url || "");
+        if (!/^https?:\/\//i.test(target)) return;
+        if (!postHost("request", { type: "open-external", url: target })) {
+          window.open(target, "_blank", "noopener,noreferrer");
+        }
+      }
+
+      function applySettings(message) {
+        settings = message && typeof message === "object" ? message : {};
+        if (message.language) setLanguage(message.language);
+        languageSelect.value = language;
+        if (message.refreshIntervalMs) renderRefreshOptions();
+        if (message.zoomPercent) {
+          appliedZoom = Number(message.zoomPercent);
+          zoomRange.value = String(appliedZoom);
+        }
+        syncZoomControls();
+        topmostCheckbox.checked = Boolean(message.topmost);
+        startupCheckbox.checked = Boolean(message.startup);
+        if (message.version) aboutVersion.textContent = String(message.version);
+        if (message.buildDate) aboutBuild.textContent = String(message.buildDate);
+      }
+
+      function updateExportButton() {
+        var active = catalog && Array.isArray(catalog.skins)
+          ? catalog.skins.find(function (skin) { return String(skin.id) === String(catalog.activeId); })
+          : null;
+        var canExport = Boolean(active && !active.isBuiltIn && active.canExport !== false);
+        exportButton.disabled = !canExport;
+        exportButton.title = canExport ? "" : (active && active.isBuiltIn ? labels.exportDisabled : "");
+      }
+
+      function closeDeleteConfirm() {
+        pendingDeleteId = "";
+        pendingDeleteBuiltIn = false;
+        if (confirmOverlay) confirmOverlay.hidden = true;
+      }
+
+      function openDeleteConfirm(skin) {
+        pendingDeleteId = String(skin.id || "");
+        pendingDeleteBuiltIn = Boolean(skin.isBuiltIn);
+        if (!pendingDeleteId) return;
+        if (confirmName) confirmName.textContent = String(skin.name || pendingDeleteId);
+        if (confirmBodyText) confirmBodyText.textContent = pendingDeleteBuiltIn ? labels.deleteBuiltInBody : labels.deleteConfirmBody;
+        if (confirmOverlay) {
+          confirmOverlay.hidden = false;
+          if (confirmCancel) confirmCancel.focus();
+        }
+      }
+
+      function renderRestoreBuiltIn() {
+        if (!restoreBuiltInButton) return;
+        var skinsPanel = panels.find(function (panel) { return panel.dataset.tbdPanel === "skins"; });
+        var onSkinsTab = Boolean(skinsPanel && !skinsPanel.hidden);
+        restoreBuiltInButton.hidden = !(onSkinsTab && catalog && catalog.builtInHidden === true);
+      }
+
+      function renderCatalog(nextCatalog) {
+        catalog = nextCatalog && typeof nextCatalog === "object" ? nextCatalog : { activeId: "", skins: [] };
+        var skins = Array.isArray(catalog.skins) ? catalog.skins : [];
+        grid.replaceChildren();
+
+        if (!skins.length) {
+          grid.appendChild(makeEmpty(labels.empty));
+          updateExportButton();
+          renderRestoreBuiltIn();
+          setStatus(labels.empty, false);
+          return;
+        }
+
+        var fragment = document.createDocumentFragment();
+        skins.forEach(function (skin) {
+          var item = skin && typeof skin === "object" ? skin : {};
+          var isActive = String(item.id || "") === String(catalog.activeId || "");
+          var card = document.createElement("div");
+          card.className = "tbd-sm-card" + (isActive ? " is-active" : "");
+          card.dataset.skinId = String(item.id || "");
+          card.setAttribute("role", "button");
+          card.setAttribute("tabindex", "0");
+          card.setAttribute("aria-pressed", String(isActive));
+          card.title = String(item.name || item.id || "");
+
+          var thumb = document.createElement("div");
+          thumb.className = "tbd-sm-thumb";
+          if (item.previewUrl) {
+            var image = document.createElement("img");
+            image.src = String(item.previewUrl);
+            image.alt = String(item.name || "");
+            image.loading = "lazy";
+            image.addEventListener("error", function () {
+              image.remove();
+              thumb.appendChild(createPlaceholder());
+            }, { once: true });
+            thumb.appendChild(image);
+          } else {
+            thumb.appendChild(createPlaceholder());
+          }
+          if (isActive) {
+            var badge = document.createElement("span");
+            badge.className = "tbd-sm-active-badge";
+            badge.textContent = labels.active;
+            thumb.appendChild(badge);
+          }
+
+          var deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.className = "tbd-sm-delete";
+          deleteButton.title = labels.deleteSkin;
+          deleteButton.setAttribute("aria-label", labels.deleteSkin + ": " + String(item.name || item.id || ""));
+          deleteButton.appendChild(createSvg("M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"));
+          deleteButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            openDeleteConfirm(item);
+          });
+          deleteButton.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") event.stopPropagation();
+          });
+          thumb.appendChild(deleteButton);
+
+          var copy = document.createElement("div");
+          copy.className = "tbd-sm-card-copy";
+          var name = document.createElement("div");
+          name.className = "tbd-sm-card-name";
+          name.textContent = String(item.name || item.id || "");
+          var meta = document.createElement("div");
+          meta.className = "tbd-sm-card-meta";
+          var metaParts = [];
+          if (item.isBuiltIn) {
+            metaParts.push(labels.builtIn);
+          } else {
+            if (item.version) metaParts.push(String(item.version));
+            if (item.author) metaParts.push(String(item.author));
+          }
+          meta.textContent = metaParts.join(" · ");
+          var description = document.createElement("div");
+          description.className = "tbd-sm-card-description";
+          description.textContent = String(item.description || "");
+          copy.appendChild(name);
+          if (meta.textContent) copy.appendChild(meta);
+          if (description.textContent) copy.appendChild(description);
+          card.appendChild(thumb);
+          card.appendChild(copy);
+
+          card.addEventListener("click", function () {
+            if (isActive) {
+              setStatus(labels.active, false);
+              return;
+            }
+            setStatus(labels.selecting, false);
+            if (!postHost("request", { type: "set-skin", id: item.id })) {
+              setStatus(labels.webOnly, true);
+            }
+          });
+          card.addEventListener("keydown", function (event) {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            card.click();
+          });
+          fragment.appendChild(card);
+        });
+
+        grid.appendChild(fragment);
+        updateExportButton();
+        renderRestoreBuiltIn();
+        var statusText = status.textContent;
+        if (!statusText || statusText === labels.loading || statusText === labels.empty) {
+          setStatus(countText(skins.length), false);
+        }
+      }
+
+      function applyLabels() {
+        labels = LABELS[language] || LABELS["zh-CN"];
+        root.querySelectorAll("[data-tbd-label]").forEach(function (element) {
+          var key = element.dataset.tbdLabel;
+          if (labels[key]) element.textContent = labels[key];
+        });
+        root.querySelectorAll("[data-tbd-aria-label]").forEach(function (element) {
+          var key = element.dataset.tbdAriaLabel;
+          if (labels[key]) element.setAttribute("aria-label", labels[key]);
+        });
+        root.querySelectorAll("[data-tbd-title]").forEach(function (element) {
+          var key = element.dataset.tbdTitle;
+          if (labels[key]) element.title = labels[key];
+        });
+        closeButton.title = labels.close;
+        importButton.title = labels.import;
+        exportSkillButton.title = labels.exportSkillHint;
+        document.documentElement.lang = language;
+        updateExportButton();
+        if (catalog) renderCatalog(catalog);
+      }
+
+      function setLanguage(value) {
+        var next = normalizeLanguage(value);
+        if (next !== language) {
+          language = next;
+          applyLabels();
+        }
+      }
+
+      function requestSkins() {
+        if (!postHost("request", { type: "request-skins" })) {
+          setStatus(labels.webOnly, true);
+          return false;
+        }
+        return true;
+      }
+
+      closeButton.addEventListener("click", closeHost);
+      root.addEventListener("click", function (event) {
+        if (event.target === root) closeHost();
+      });
+      importButton.addEventListener("click", function () {
+        setStatus("", false);
+        if (!postHost("request", { type: "import-skin" })) setStatus(labels.webOnly, true);
+      });
+      exportButton.addEventListener("click", function () {
+        if (!catalog || !catalog.activeId) return;
+        if (!postHost("request", { type: "export-skin", id: catalog.activeId })) setStatus(labels.webOnly, true);
+      });
+      exportSkillButton.addEventListener("click", function () {
+        setStatus("", false);
+        if (!postHost("request", { type: "export-skill" })) setStatus(labels.webOnly, true);
+      });
+      tabs.forEach(function (button) {
+        button.addEventListener("click", function () {
+          switchTab(button.dataset.tbdTab);
+        });
+      });
+      root.querySelectorAll("[data-tbd-external]").forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          openExternal(link.dataset.tbdExternal);
+        });
+      });
+      languageSelect.addEventListener("change", function () {
+        if (!postHost("request", { type: "set-language", language: languageSelect.value })) {
+          setStatus(labels.webOnly, true);
+        }
+      });
+      refreshSelect.addEventListener("change", function () {
+        var value = Number(refreshSelect.value);
+        if (!postHost("request", { type: "set-refresh-interval", value: value })) {
+          setStatus(labels.webOnly, true);
+        }
+      });
+      zoomRange.addEventListener("input", syncZoomControls);
+      zoomApplyButton.addEventListener("click", function () {
+        var value = Number(zoomRange.value);
+        if (value === appliedZoom) return;
+        if (!postHost("request", { type: "set-zoom", value: value })) {
+          setStatus(labels.webOnly, true);
+          return;
+        }
+        appliedZoom = value;
+        syncZoomControls();
+      });
+      topmostCheckbox.addEventListener("change", function () {
+        if (!postHost("request", { type: "set-topmost", value: topmostCheckbox.checked })) {
+          setStatus(labels.webOnly, true);
+        }
+      });
+      startupCheckbox.addEventListener("change", function () {
+        if (!postHost("request", { type: "set-startup", enabled: startupCheckbox.checked })) {
+          setStatus(labels.webOnly, true);
+        }
+      });
+      hideButton.addEventListener("click", function () {
+        if (!postHost("request", { type: "hide-window" })) setStatus(labels.webOnly, true);
+      });
+      exitButton.addEventListener("click", function () {
+        if (!postHost("request", { type: "close-window" })) setStatus(labels.webOnly, true);
+      });
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          if (confirmOverlay && !confirmOverlay.hidden) {
+            event.preventDefault();
+            closeDeleteConfirm();
+            return;
+          }
+          event.preventDefault();
+          closeHost();
+        }
+      });
+      if (confirmCancel) confirmCancel.addEventListener("click", closeDeleteConfirm);
+      if (confirmAccept) confirmAccept.addEventListener("click", function () {
+        var id = pendingDeleteId;
+        closeDeleteConfirm();
+        if (!id) return;
+        setStatus(labels.deleting, false);
+        if (!postHost("request", { type: "delete-skin", id: id })) {
+          setStatus(labels.webOnly, true);
+        }
+      });
+      if (confirmOverlay) {
+        confirmOverlay.addEventListener("click", function (event) {
+          if (event.target === confirmOverlay) closeDeleteConfirm();
+        });
+      }
+      if (restoreBuiltInButton) {
+        restoreBuiltInButton.addEventListener("click", function () {
+          setStatus("", false);
+          if (!postHost("request", { type: "restore-built-in-skin" })) setStatus(labels.webOnly, true);
+        });
+      }
+      if (restoreBundledButton) {
+        restoreBundledButton.addEventListener("click", function () {
+          setStatus("", false);
+          if (!postHost("request", { type: "restore-bundled-skins" })) setStatus(labels.webOnly, true);
+        });
+      }
+      window.addEventListener("message", function (event) {
+        var data = event.data;
+        if (!data) return;
+        if (data.__tbdHostManagerNavigate === true) {
+          switchTab(data.tab);
+          return;
+        }
+        if (data.__tbdHostManagerMessage !== true) return;
+        var message = data.payload;
+        if (typeof message === "string") {
+          try { message = JSON.parse(message); } catch { return; }
+        }
+        if (!message || typeof message !== "object") return;
+        if (message.type === "skin-catalog") renderCatalog(message);
+        if (message.type === "settings") applySettings(message);
+        if (message.type === "settings-error") {
+          setStatus(message.message || labels.settingsFailed, true);
+        }
+        if (message.type === "skin-action") {
+          var ok = message.ok !== false;
+          setStatus(message.message || (ok ? "" : labels.actionFailed), !ok);
+        }
+      });
+
+      applyLabels();
+      renderRefreshOptions();
+      var initialTab = queryTab === "skins" || queryTab === "about" ? queryTab : "general";
+      switchTab(initialTab, false);
+      requestSettings();
+      if (initialTab === "skins") requestSkins();
+      closeButton.focus();
+    })();
+  </script>
+</body>
+</html>

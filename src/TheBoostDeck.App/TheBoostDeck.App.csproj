@@ -19,15 +19,48 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>TheBoostDeck</AssemblyName>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <Product>TheBoostDeck</Product>
     <Authors>TheBoostDeck contributors</Authors>
     <Description>Responsive secondary-display hardware monitoring for Windows.</Description>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Assets\app.ico" LogicalName="TheBoostDeck.Assets.app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Web\dashboard.html" LogicalName="TheBoostDeck.Web.dashboard.html" />
+    <EmbeddedResource Include="Web\host-skin-manager.html" LogicalName="TheBoostDeck.Web.host-skin-manager.html" />
     <EmbeddedResource Include="Web\logo.png" LogicalName="TheBoostDeck.Web.logo.png" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="BundledSkins\*.boostskin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\PawnIO_setup.exe">
+      <Link>PawnIO_setup.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="CopyPawnIoInstallerToPublish" AfterTargets="Publish">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\Assets\PawnIO_setup.exe"
+          DestinationFolder="$(PublishDir)"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\..\THIRD-PARTY-NOTICES.md"
+          DestinationFolder="$(PublishDir)"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\..\licenses\PawnIO-GPL-2.0.txt;$(MSBuildProjectDirectory)\..\..\licenses\PawnIO-NOTICE.txt"
+          DestinationFolder="$(PublishDir)\licenses"
+          SkipUnchangedFiles="true" />
+  </Target>
 
 </Project>

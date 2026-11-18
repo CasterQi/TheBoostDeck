@@ -34,7 +34,7 @@ public static class PawnIoDependency
                 return new SensorDriverInfo
                 {
                     Status = "missing",
-                    Reason = "未检测到 PawnIO 2.2.0 或更高版本；CPU 温度、频率和功耗可能不可用。请安装 PawnIO 后重启 TheBoostDeck。"
+                    Reason = "未检测到 PawnIO 2.2.0 或更高版本；TheBoostDeck 会在启动时尝试使用随包安装器。若安装未完成，请允许 Windows UAC 并重新启动 TheBoostDeck 后重试。CPU 温度、频率和功耗可能不可用。"
                 };
             }
 
@@ -45,7 +45,7 @@ public static class PawnIoDependency
                 {
                     Status = "outdated",
                     Version = highestVersion.ToString(),
-                    Reason = $"PawnIO {highestVersion} 低于要求的 {RequiredVersionText}；CPU 温度、频率和功耗可能不可用，请更新驱动后重启 TheBoostDeck。"
+                    Reason = $"PawnIO {highestVersion} 低于要求的 {RequiredVersionText}；请运行随包安装器更新。CPU 温度、频率和功耗可能不可用。"
                 };
             }
 

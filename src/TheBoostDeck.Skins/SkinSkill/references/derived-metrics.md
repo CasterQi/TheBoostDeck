@@ -23,8 +23,14 @@ The host sends only the canonical `snapshot` fields. A skin may calculate additi
 | Drive free | `storage.drives[i].total - storage.drives[i].used` | drive total, used | GB; one value per drive |
 | Drive free percent | `(total - used) / total * 100` | drive total, used | Prefer the host drive usage when available |
 | Total free storage | sum of every drive free value | every drive total, used | Only when every drive is available |
+| Total storage capacity | sum of every drive `total` | every drive total | Use it to fill a composition that expects more modules than this machine reports |
+| Total storage used | sum of every drive `used` | every drive used | Pairs with total capacity; show usage percent against the capacity |
 | Combined network throughput | `network.download + network.upload` | download, upload | B/s; this is not an internet speed test |
 | CPU + GPU power | `cpu.power + gpu.power` | CPU power, GPU power | Label it as a partial compute-power estimate, never as total PSU draw |
+
+## Filling a composition on a sparse machine
+
+When a reference image asks for more modules than this machine can supply, derived values are the first filler. Use them in this order: total compute power (CPU + GPU), total storage capacity, total storage used, total free storage, memory free, VRAM free, combined network throughput. Every filler still needs its inputs available in the same snapshot, and must be labeled as derived. Never repeat one metric in two modules to fill slots.
 
 A skin may define another deterministic formula when the user asks for it, but it must satisfy the rules above and show its inputs in the UI or documentation.
 

@@ -19,6 +19,7 @@ public static class WebAssetExtractor
         using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read);
         stream.CopyTo(file);
 
+        ExtractHostSkinManager(directory, assembly);
         ExtractLogo(directory, assembly);
 
         var themesDirectory = Path.Combine(
@@ -56,5 +57,14 @@ public static class WebAssetExtractor
         using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read);
         stream.CopyTo(file);
         return path;
+    }
+
+    private static void ExtractHostSkinManager(string directory, Assembly assembly)
+    {
+        var path = Path.Combine(directory, "host-skin-manager.html");
+        using var stream = assembly.GetManifestResourceStream("TheBoostDeck.Web.host-skin-manager.html")
+                           ?? throw new InvalidOperationException("The embedded host skin manager resource is missing.");
+        using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read);
+        stream.CopyTo(file);
     }
 }

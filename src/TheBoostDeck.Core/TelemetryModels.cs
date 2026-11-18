@@ -43,6 +43,14 @@ public sealed record CpuMetrics
 public sealed record GpuMetrics
 {
     public string Name { get; init; } = "GPU";
+
+    /// <summary>
+    /// "discrete" for a dedicated GPU, "integrated" for an iGPU, "none" when no
+    /// physical GPU could be enumerated. Skins use it to collapse the GPU module
+    /// instead of painting an empty panel with dashes.
+    /// </summary>
+    public string Kind { get; init; } = "unknown";
+
     public MetricValue Usage { get; init; } = MetricValue.Unavailable("%", "尚未采集");
     public MetricValue Temperature { get; init; } = MetricValue.Unavailable("°C", "尚未采集");
     public MetricValue Power { get; init; } = MetricValue.Unavailable("W", "尚未采集");
@@ -72,6 +80,9 @@ public sealed record DriveMetrics
 public sealed record StorageMetrics
 {
     public IReadOnlyList<DriveMetrics> Drives { get; init; } = Array.Empty<DriveMetrics>();
+    public int DriveCount { get; init; }
+    public MetricValue TotalCapacity { get; init; } = MetricValue.Unavailable("GB", "尚未采集");
+    public MetricValue UsedTotal { get; init; } = MetricValue.Unavailable("GB", "尚未采集");
     public MetricValue ReadRate { get; init; } = MetricValue.Unavailable("B/s", "尚未采集");
     public MetricValue WriteRate { get; init; } = MetricValue.Unavailable("B/s", "尚未采集");
 }
@@ -83,11 +94,28 @@ public sealed record NetworkMetrics
     public MetricValue Upload { get; init; } = MetricValue.Unavailable("B/s", "尚未采集");
 }
 
+public sealed record FanReading
+{
+    public string Name { get; init; } = string.Empty;
+    public string Hardware { get; init; } = string.Empty;
+
+    /// <summary>"cpu", "gpu", or "system". GPU fans also stay in GpuMetrics.FanSpeed.</summary>
+    public string Role { get; init; } = "system";
+    public MetricValue Speed { get; init; } = MetricValue.Unavailable("RPM", "尚未采集");
+}
+
 public sealed record SystemMetrics
 {
     public MetricValue MotherboardTemperature { get; init; } = MetricValue.Unavailable("°C", "尚未采集");
     public MetricValue Power { get; init; } = MetricValue.Unavailable("W", "尚未采集");
     public string PowerSource { get; init; } = "未知";
+
+    /// <summary>
+    /// Every readable fan, not just the CPU one. A case with six fans still
+    /// exposes a single CPU/GPU value elsewhere; skins use this list to show
+    /// the extras without pretending the machine has one fan.
+    /// </summary>
+    public IReadOnlyList<FanReading> Fans { get; init; } = Array.Empty<FanReading>();
 }
 
 public sealed record SensorDriverInfo
