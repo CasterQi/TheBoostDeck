@@ -173,7 +173,7 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, ITelemetryInven
         return new CpuMetrics
         {
             Name = cpu.Name,
-            Usage = ReadSensor(cpu, SensorType.Load, "CPU Total", "%", "未检测到 CPU 总占用传感器"),
+            Usage = ReadCpuUsage(cpu),
             Temperature = ReadSensorAny(cpu, SensorType.Temperature, CpuTemperatureSensors, "°C",
                 "未检测到 CPU 封装温度传感器（Intel 通常为 CPU Package，AMD 通常为 Core (Tctl/Tdie)）"),
             Power = ReadSensorAny(cpu, SensorType.Power, CpuPowerSensors, "W",
@@ -181,6 +181,19 @@ public sealed class LhmTelemetryCollector : ITelemetryCollector, ITelemetryInven
             Frequency = ReadAverageCpuFrequency(cpu),
             FanSpeed = ReadCpuFan(hardware)
         };
+    }
+
+    private static MetricValue ReadCpuUsage(IHardware cpu)
+    {
+        // Task Manager uses "Processor Information\% Processor Utility", which
+        // weights busy time by the current turbo ratio. LHM's "CPU Total" uses
+        // the plain "% Processor Time" counter and reads low on boosting CPUs,
+        // so prefer the Windows utility counter and fall back to LHM if PDH is
+        // unavailable on this machine.
+        if (CpuUsageReader.TryRead(out var percent))
+            return MetricValue.Available(Math.Round(percent, 1), "%", "Windows Processor Utility（与任务管理器同口径）");
+
+        return ReadSensor(cpu, SensorType.Load, "CPU Total", "%", "未检测到 CPU 总占用传感器");
     }
 
     private static GpuMetrics CaptureGpu(IReadOnlyList<IHardware> hardware)
