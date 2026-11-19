@@ -35,6 +35,7 @@ public partial class MainWindow : Window
     private bool _skinHostConfigured;
     private bool _fallbackAttempted;
     private bool _reopenSkinManager;
+    private DateTime? _hiddenSinceUtc;
     private readonly System.Windows.Media.Brush? _defaultBackground;
     private HwndSource? _windowSource;
 
@@ -782,8 +783,25 @@ public partial class MainWindow : Window
     {
         _app.Telemetry.SetPaused(!IsVisible);
         SendHostSettings();
-        if (IsVisible)
-            SendLatestSnapshot();
+
+        if (!IsVisible)
+        {
+            _hiddenSinceUtc = DateTime.UtcNow;
+            return;
+        }
+
+        var hiddenFor = _hiddenSinceUtc is null ? TimeSpan.Zero : DateTime.UtcNow - _hiddenSinceUtc.Value;
+        _hiddenSinceUtc = null;
+        SendLatestSnapshot();
+
+        // WebView2 can suspend its composition while the host window sits in the
+        // tray. After a long hide the surface may come back black; reloading the
+        // local skin page is the same recovery as switching skins, while a short
+        // hide only needs a repaint.
+        if (hiddenFor >= TimeSpan.FromSeconds(30))
+            WebView.CoreWebView2?.Reload();
+        else
+            WebView.InvalidateVisual();
     }
 
     private void OnStateChanged(object? sender, EventArgs e)
