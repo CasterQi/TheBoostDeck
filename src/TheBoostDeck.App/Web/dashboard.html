@@ -701,6 +701,7 @@
           "issue.networkDownload": "网络下载",
           "issue.networkUpload": "网络上传",
           "disk.readRate": "读 {rate}",
+          "disk.rates": "读 {read} · 写 {write} MB/s",
           "drive.localDisk": "本地磁盘"
         },
         "en-US": {
@@ -801,6 +802,7 @@
           "issue.networkDownload": "Network download",
           "issue.networkUpload": "Network upload",
           "disk.readRate": "R {rate}",
+          "disk.rates": "R {read} · W {write} MB/s",
           "drive.localDisk": "Local disk"
         }
       };
@@ -966,9 +968,27 @@
         const megabits = Math.max(0, bytes) * 8 / 1_000_000;
         return megabits >= 100 ? `${fixed(megabits, 0)} Mbps` : `${fixed(megabits, megabits >= 10 ? 1 : 2)} Mbps`;
       }
-      function diskRate(bytes) {
+      function diskNumber(bytes) {
         const megabytes = Math.max(0, bytes) / 1_048_576;
-        return megabytes >= 100 ? `${fixed(megabytes, 0)} MB/s` : `${fixed(megabytes, 1)} MB/s`;
+        return megabytes >= 100 ? fixed(megabytes, 0) : fixed(megabytes, 1);
+      }
+      function setDiskRate(read, write) {
+        const element = $("disk-current");
+        const isAvailable = metric => metric && metric.status === "available" && Number.isFinite(metric.value);
+        const readAvailable = isAvailable(read);
+        const writeAvailable = isAvailable(write);
+        if (readAvailable || writeAvailable) {
+          setText("disk-current", t("disk.rates", {
+            read: readAvailable ? diskNumber(read.value) : "--",
+            write: writeAvailable ? diskNumber(write.value) : "--"
+          }));
+          element.dataset.unavailable = "false";
+          element.title = (readAvailable ? read.source : write.source) || t("diagnostics.trueSensorData");
+        } else {
+          setText("disk-current", translateReason(read?.reason) || translateReason(write?.reason) || t("diagnostics.sensorUnavailable"));
+          element.dataset.unavailable = "true";
+          element.title = translateReason(read?.reason) || t("diagnostics.sensorUnavailable");
+        }
       }
 
       function updateGauge(id, metric) {
@@ -1227,7 +1247,7 @@
         updateGauge("vram-gauge", snapshot.gpu.memoryUsage);
 
         syncDrives(snapshot.storage.drives);
-        setMetric("disk-current", snapshot.storage.readRate, value => t("disk.readRate", { rate: diskRate(value) }));
+        setDiskRate(snapshot.storage.readRate, snapshot.storage.writeRate);
         setMetric("network-download", snapshot.network.download, networkRate);
         setMetric("network-upload", snapshot.network.upload, networkRate);
         setMetric("system-temperature", snapshot.system.motherboardTemperature, temperature);
