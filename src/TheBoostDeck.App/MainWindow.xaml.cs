@@ -999,14 +999,34 @@ public partial class MainWindow : Window
 
     private void EnsureVisible()
     {
-        var virtualLeft = SystemParameters.VirtualScreenLeft;
-        var virtualTop = SystemParameters.VirtualScreenTop;
-        var virtualRight = virtualLeft + SystemParameters.VirtualScreenWidth;
-        var virtualBottom = virtualTop + SystemParameters.VirtualScreenHeight;
-        var visible = Left < virtualRight - 80 && Left + Width > virtualLeft + 80 &&
-                      Top < virtualBottom - 80 && Top + Height > virtualTop + 80;
-        if (!visible && WinForms.Screen.PrimaryScreen is not null)
-            MoveToScreen(WinForms.Screen.PrimaryScreen);
+        if (WindowState != WindowState.Normal)
+            return;
+
+        var handle = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+        if (handle == IntPtr.Zero)
+            return;
+
+        var monitor = MonitorFromWindow(handle, MonitorDefaultToNearest);
+        var monitorInfo = new MonitorInfo { Size = Marshal.SizeOf<MonitorInfo>() };
+        if (!GetMonitorInfo(monitor, ref monitorInfo))
+            return;
+
+        var work = monitorInfo.WorkArea;
+        var dpi = VisualTreeHelper.GetDpi(this);
+        var widthPx = (int)Math.Round(Math.Max(ActualWidth, Width) * dpi.DpiScaleX);
+        var heightPx = (int)Math.Round(Math.Max(ActualHeight, Height) * dpi.DpiScaleY);
+        var leftPx = (int)Math.Round(Left * dpi.DpiScaleX);
+        var topPx = (int)Math.Round(Top * dpi.DpiScaleY);
+
+        // The top strip is the drag region. Keep it fully on screen with enough
+        // width to grab; otherwise the window is effectively unreachable for users.
+        var visibleWidth = Math.Min(leftPx + widthPx, work.Right) - Math.Max(leftPx, work.Left);
+        if (topPx >= work.Top && topPx + 48 <= work.Bottom && visibleWidth >= 120)
+            return;
+
+        var x = Math.Max(work.Left, Math.Min(leftPx, work.Right - widthPx));
+        var y = Math.Max(work.Top, Math.Min(topPx, work.Bottom - heightPx));
+        SetWindowPos(handle, IntPtr.Zero, x, y, 0, 0, SwpNoSize | SwpNoZOrder | SwpNoActivate);
     }
 
     private void OnDisplaySettingsChanged(object? sender, EventArgs e) =>
